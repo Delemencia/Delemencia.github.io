@@ -268,10 +268,22 @@ function login(){
   loadChat()
 }
 
-function loadChat(){
-  show("chatScreen")
-  renderUsers()
+function renderUsers(){
+  let users = getUsers()
+  let usersDiv = document.getElementById("users")
+  usersDiv.innerHTML=""
+
+  Object.keys(users).forEach(u=>{
+    if(u===currentUser) return
+    let d=document.createElement("div")
+    d.className="user"
+    d.textContent=u
+    d.onclick=()=>{currentChat=u; renderMsgs()}
+    usersDiv.appendChild(d)
+  })
 }
+
+
 
 function renderUsers(){
   let users = getUsers()
