@@ -10,162 +10,74 @@ body {
   margin:0;
   background:#e6f1fb;
   color:#000;
-  overflow:hidden;
 }
 
-.screen {
-  display:none;
-  min-height:100vh;
-  padding:40px;
-}
+.screen { display:none; min-height:100vh; padding:40px; }
 
 .auth-box {
   width:380px;
   margin:80px auto;
-  background:#ffffff;
+  background:#fff;
   padding:30px;
   border-radius:8px;
   box-shadow:0 4px 10px rgba(0,0,0,0.2);
   text-align:center;
 }
 
-.auth-box h1 {
-  margin-bottom:20px;
-  color:#0078d7;
-}
-
+.auth-box h1 { margin-bottom:20px; color:#0078d7; }
 .auth-box input {
-  width:100%;
-  padding:10px;
-  margin-bottom:12px;
-  border:1px solid #ccc;
-  border-radius:4px;
-  font-size:14px;
+  width:100%; padding:10px; margin-bottom:12px;
+  border:1px solid #ccc; border-radius:4px; font-size:14px;
 }
-
 .auth-box button {
-  width:100%;
-  padding:10px;
-  margin-bottom:8px;
-  border:none;
-  border-radius:4px;
-  background:#0078d7;
-  color:white;
-  font-weight:bold;
+  width:100%; padding:10px; margin-bottom:8px;
+  border:none; border-radius:4px; background:#0078d7; color:white; font-weight:bold;
   cursor:pointer;
 }
-
 .auth-box .link {
-  display:block;
-  margin-top:8px;
-  font-size:13px;
-  color:#0078d7;
-  cursor:pointer;
-  text-decoration:underline;
+  display:block; margin-top:8px; font-size:13px; color:#0078d7;
+  cursor:pointer; text-decoration:underline;
 }
 
-#chatScreen {
-  display:flex;
-  height:100vh;
-}
-
+/* Chat Screen */
+#chatScreen { display:flex; height:100vh; }
 #users {
-  width:200px;
-  background:#d0e7fb;
-  border-right:1px solid #a1c4e6;
-  overflow-y:auto;
+  width:200px; background:#d0e7fb; border-right:1px solid #a1c4e6; overflow-y:auto;
+  padding-top:10px;
 }
-
 .user {
-  padding:10px;
-  border-bottom:1px solid #a1c4e6;
-  cursor:pointer;
+  padding:10px; border-bottom:1px solid #a1c4e6; cursor:pointer;
 }
-
-.user:hover {
-  background:#b4d4f2;
-}
+.user:hover { background:#b4d4f2; }
 
 #chat {
-  flex:1;
-  display:flex;
-  flex-direction:column;
+  flex:1; display:flex; flex-direction:column;
 }
-
 #messages {
-  flex:1;
-  padding:15px;
-  overflow-y:auto;
-  background:#f0f6fc;
+  flex:1; padding:15px; overflow-y:auto; background:#f0f6fc;
 }
-
 .msg {
-  font-size:14px;
-  margin-bottom:8px;
-  padding:6px 10px;
-  border-radius:6px;
-  display:inline-block;
-  background:#d0e7fb;
+  font-size:14px; margin-bottom:8px; padding:6px 10px; border-radius:6px;
+  display:inline-block; background:#d0e7fb;
 }
-
-.msg.self {
-  background:#0078d7;
-  color:white;
-  margin-left:auto;
-}
+.msg.self { background:#0078d7; color:white; margin-left:auto; }
 
 #sendBox {
-  display:flex;
-  border-top:1px solid #a1c4e6;
-  padding:10px;
-  background:#f0f6fc;
+  display:flex; border-top:1px solid #a1c4e6; padding:10px; background:#f0f6fc;
 }
-
 #sendBox input {
-  flex:1;
-  padding:8px;
-  border:1px solid #ccc;
-  border-radius:4px 0 0 4px;
+  flex:1; padding:8px; border:1px solid #ccc; border-radius:4px 0 0 4px;
 }
-
 #sendBox button {
-  padding:8px 12px;
-  border:none;
-  background:#0078d7;
-  color:white;
-  cursor:pointer;
+  padding:8px 12px; border:none; background:#0078d7; color:white; cursor:pointer;
   border-radius:0 4px 4px 0;
 }
 
-#settings {
-  display:none;
-  padding:20px;
-  background:#f0f6fc;
-}
-
-.setting {
-  margin-bottom:20px;
-}
-
-.setting h3 {
-  margin-bottom:6px;
-}
-
-.setting button {
-  margin-right:6px;
-  padding:6px 10px;
-  border:none;
-  background:#0078d7;
-  color:white;
-  cursor:pointer;
-  border-radius:4px;
-}
-
-.setting input {
-  padding:6px;
-  border:1px solid #ccc;
-  border-radius:4px;
-}
+/* Settings */
+#settings { display:none; padding:20px; background:#f0f6fc; }
+.setting { margin-bottom:20px; }
+.setting h3 { margin-bottom:6px; }
+.setting button { margin-right:6px; padding:6px 10px; border:none; background:#0078d7; color:white; cursor:pointer; border-radius:4px; }
 </style>
 </head>
 <body>
@@ -181,7 +93,7 @@ body {
 <div id="register" class="screen">
   <div class="auth-box">
     <h1>Create account</h1>
-    <input id="regUser" placeholder="Username">
+    <input id="regUser" placeholder="Username (3-20 letters/numbers)">
     <input id="regPass" type="password" placeholder="Password">
     <button onclick="register()">Create</button>
     <div class="link" onclick="show('welcome')">Back</div>
@@ -212,62 +124,52 @@ body {
 
 <div id="settings" class="screen">
   <div class="setting">
-    <h3>Appearance</h3>
-    <button onclick="setTheme('light')">Light</button>
-    <button onclick="setTheme('blue')">Blue</button>
+    <h3>Themes</h3>
+    <button onclick="setTheme('white')">White</button>
+    <button onclick="setTheme('nebula')">Nebula</button>
     <button onclick="setTheme('dark')">Dark</button>
   </div>
-
   <div class="setting">
-    <h3>Change username</h3>
-    <input id="newUser">
-    <button onclick="changeUsername()">Change</button>
-  </div>
-
-  <div class="setting">
-    <h3>Change password</h3>
-    <input id="newPass" type="password">
-    <button onclick="changePassword()">Change</button>
-  </div>
-
-  <div class="setting">
-    <h3>Account</h3>
-    <button onclick="deleteAccount()">Delete account</button>
     <button onclick="logout()">Logout</button>
     <button onclick="show('chatScreen')">Back</button>
   </div>
 </div>
 
 <script>
-let currentUser=null
-let currentChat=null
-const getUsers=()=>JSON.parse(localStorage.getItem("users")||"{}")
-const saveUsers=u=>localStorage.setItem("users",JSON.stringify(u))
+let currentUser = null
+let currentChat = null
+
+const getUsers = () => JSON.parse(localStorage.getItem("users")||"{}")
+const saveUsers = u => localStorage.setItem("users",JSON.stringify(u))
 
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
   document.getElementById(id).style.display="block"
 }
 
+function validUsername(u){
+  return /^[a-zA-Z0-9]{3,20}$/.test(u)
+}
+
 function register(){
-  let u=regUser.value.trim()
-  let p=regPass.value
-  let users=getUsers()
-  if(!u || !p || users[u]) return alert("Invalid")
-  users[u]={pass:p,msgs:{}}
+  let u = regUser.value.trim()
+  let p = regPass.value
+  let users = getUsers()
+  if(!validUsername(u) || !p || users[u]) return alert("Invalid username or password")
+  users[u] = {pass:p, msgs:{}}
   saveUsers(users)
-  currentUser=u
-  localStorage.currentUser=u
+  currentUser = u
+  localStorage.currentUser = u
   loadChat()
 }
 
 function login(){
-  let users=getUsers()
-  let u=logUser.value.trim()
-  let p=logPass.value
-  if(!users[u] || users[u].pass!==p) return alert("Wrong login")
-  currentUser=u
-  localStorage.currentUser=u
+  let u = logUser.value.trim()
+  let p = logPass.value
+  let users = getUsers()
+  if(!users[u] || users[u].pass !== p) return alert("Wrong login")
+  currentUser = u
+  localStorage.currentUser = u
   loadChat()
 }
 
@@ -278,89 +180,67 @@ function loadChat(){
 }
 
 function renderUsers(){
-  let users=getUsers()
-  let usersDiv=document.getElementById("users")
+  let users = getUsers()
+  let usersDiv = document.getElementById("users")
   usersDiv.innerHTML=""
   Object.keys(users).forEach(u=>{
     if(u===currentUser) return
-    let d=document.createElement("div")
-    d.className="user"
-    d.textContent=u
-    d.onclick=()=>{currentChat=u; renderMsgs()}
-    usersDiv.appendChild(d)
+    let div = document.createElement("div")
+    div.className = "user"
+    div.textContent = u
+    div.onclick = ()=>{currentChat=u; renderMsgs()}
+    usersDiv.appendChild(div)
   })
 }
 
 function send(){
-  if(!currentChat) return
-  let users=getUsers()
+  if(!currentChat || !msgInput.value) return
+  let users = getUsers()
   users[currentUser].msgs[currentChat] ||= []
   users[currentChat].msgs[currentUser] ||= []
-  users[currentUser].msgs[currentChat].push(currentUser+": "+msgInput.value)
-  users[currentChat].msgs[currentUser].push(currentUser+": "+msgInput.value)
+  let msgText = msgInput.value
+  users[currentUser].msgs[currentChat].push(currentUser+": "+msgText)
+  users[currentChat].msgs[currentUser].push(currentUser+": "+msgText)
   msgInput.value=""
   saveUsers(users)
   renderMsgs()
 }
 
 function renderMsgs(){
-  let users=getUsers()
-  let messagesDiv=document.getElementById("messages")
+  let messagesDiv = document.getElementById("messages")
   messagesDiv.innerHTML=""
-  (users[currentUser].msgs[currentChat]||[]).forEach(m=>{
-    let div=document.createElement("div")
-    div.className="msg"
+  if(!currentChat) return
+  let users = getUsers()
+  let msgs = users[currentUser].msgs[currentChat]||[]
+  msgs.forEach(m=>{
+    let div = document.createElement("div")
+    div.className = "msg"
     if(m.startsWith(currentUser+":")) div.classList.add("self")
-    div.textContent=m
+    div.textContent = m
     messagesDiv.appendChild(div)
   })
+  messagesDiv.scrollTop = messagesDiv.scrollHeight
 }
 
 function logout(){
   localStorage.removeItem("currentUser")
-  currentUser=null
+  currentUser = null
+  currentChat = null
   show("welcome")
 }
 
-function deleteAccount(){
-  let users=getUsers()
-  delete users[currentUser]
-  saveUsers(users)
-  logout()
-}
-
-function changePassword(){
-  let users=getUsers()
-  users[currentUser].pass=newPass.value
-  saveUsers(users)
-  alert("Changed")
-}
-
-function changeUsername(){
-  let users=getUsers()
-  let n=newUser.value
-  if(!n || users[n]) return alert("Invalid")
-  users[n]=users[currentUser]
-  delete users[currentUser]
-  currentUser=n
-  saveUsers(users)
-  localStorage.currentUser=n
-  alert("Changed")
-}
-
 function setTheme(t){
-  if(t==="light") document.body.style.background="#e6f1fb"
-  if(t==="blue") document.body.style.background="#d0e7fb"
+  if(t==="white") document.body.style.background="#e6f1fb"
   if(t==="dark") document.body.style.background="#111"
+  if(t==="nebula") document.body.style.background="#12002b"
 }
 
 if(localStorage.currentUser){
-  currentUser=localStorage.currentUser
+  currentUser = localStorage.currentUser
   loadChat()
 }else{
   show("welcome")
 }
 </script>
-
 </body>
 </html>
