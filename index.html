@@ -1,231 +1,170 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Delemencia 1.0 :D</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
-      color: black;
-      text-align: center;
-      overflow: hidden;
-    }
+<title>Delemencia 1.0 :D</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #c0c0c0;
+  color: black;
+}
 
-    .screen {
-      display: none;
-      margin-top: 150px;
-    }
+.screen { display: none; padding: 20px; }
 
-    input, select {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      width: 220px;
-      border-radius: 5px;
-      border: 1px solid #888;
-    }
+input, select { display: block; margin: 10px 0; padding: 5px; width: 200px; }
 
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      background: #1e90ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+button { margin: 5px 0; padding: 5px 10px; background: #1e90ff; color: white; border: none; cursor: pointer; }
 
-    #chatBox {
-      width: 60%;
-      height: 300px;
-      border: 1px solid #888;
-      margin: 20px auto;
-      padding: 10px;
-      overflow-y: auto;
-      text-align: left;
-      background: white;
-    }
+#chatContainer { display: flex; height: 400px; }
+#contacts { width: 150px; background: #eee; padding: 5px; overflow-y: auto; }
+.contact { padding: 2px 5px; cursor: pointer; border-bottom: 1px solid #ccc; }
+.contact:hover { background: #ddd; }
+#chatBox { flex: 1; padding: 5px; border-left: 1px solid #aaa; overflow-y: auto; background: #fff; font-size: 12px; line-height: 16px; }
+.message { margin: 2px 0; text-align: left; }
 
-    #messageInput {
-      width: 60%;
-      padding: 10px;
-    }
-
-    .cloud {
-      position: absolute;
-      background: rgba(255,255,255,0.3);
-      border-radius: 50%;
-      width: 100px;
-      height: 60px;
-      animation: moveClouds linear infinite;
-    }
-
-    @keyframes moveClouds {
-      0% { transform: translateX(-150px); }
-      100% { transform: translateX(100vw); }
-    }
-
-    .drop {
-      position: absolute;
-      width: 2px;
-      height: 10px;
-      background: rgba(0,0,0,0.2);
-      animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-      0% { transform: translateY(-10px); }
-      100% { transform: translateY(100vh); }
-    }
-  </style>
+#messageInput { width: 100%; padding: 5px; margin-top: 5px; }
+#addUserInput { width: 100%; padding: 3px; margin-top: 5px; font-size: 12px; }
+</style>
 </head>
 <body>
-  <div id="welcome" class="screen">
-    <h1>Welcome to Delemencia 1.0</h1>
-    <button onclick="showRegister()">Register</button>
-    <button onclick="showLogin()">Login</button>
-  </div>
 
-  <div id="register" class="screen">
-    <h2>Register</h2>
-    <input id="regUser" placeholder="Username (3-20 letters)">
-    <button onclick="register()">Register</button>
-    <br>
-    <button onclick="showWelcome()">Back</button>
-  </div>
+<div id="welcome" class="screen">
+<h1>Delemencia 1.0</h1>
+<button onclick="showRegister()">Register</button>
+<button onclick="showLogin()">Login</button>
+</div>
 
-  <div id="login" class="screen">
-    <h2>Login</h2>
-    <input id="logUser" placeholder="Username">
-    <button onclick="login()">Login</button>
-    <br>
-    <button onclick="showWelcome()">Back</button>
-  </div>
+<div id="register" class="screen">
+<h2>Register</h2>
+<input id="regUser" placeholder="Username 3-20 letters">
+<input id="regPass" type="password" placeholder="Password 3-20 chars">
+<button onclick="register()">Register</button>
+<button onclick="showWelcome()">Back</button>
+</div>
 
-  <div id="chat" class="screen">
-    <h2>Delemencia 1</h2>
+<div id="login" class="screen">
+<h2>Login</h2>
+<input id="logUser" placeholder="Username">
+<input id="logPass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button onclick="showWelcome()">Back</button>
+</div>
+
+<div id="chat" class="screen">
+<h2>Delemencia 1 Chat</h2>
+<div id="chatContainer">
+  <div id="contacts">
+    <b>Contacts</b>
+    <div id="contactList"></div>
+    <input id="addUserInput" placeholder="Add username">
+    <button onclick="addUser()">Add</button>
+  </div>
+  <div style="flex:1; display:flex; flex-direction:column;">
     <div id="chatBox"></div>
-    <input id="messageInput" placeholder="Type a message">
+    <input id="messageInput" placeholder="Type message">
     <button onclick="sendMessage()">Send</button>
-    <br>
     <button onclick="logout()">Logout</button>
   </div>
+</div>
+</div>
 
-  <script>
-    var currentUser = null;
+<script>
+var currentUser = null;
+var currentChat = null;
 
-    function hideAll() {
-      document.getElementById("welcome").style.display = "none";
-      document.getElementById("register").style.display = "none";
-      document.getElementById("login").style.display = "none";
-      document.getElementById("chat").style.display = "none";
-    }
+function hideAll() {
+  document.getElementById("welcome").style.display = "none";
+  document.getElementById("register").style.display = "none";
+  document.getElementById("login").style.display = "none";
+  document.getElementById("chat").style.display = "none";
+}
 
-    function showWelcome() {
-      hideAll();
-      document.getElementById("welcome").style.display = "block";
-    }
+function showWelcome() { hideAll(); document.getElementById("welcome").style.display="block"; }
+function showRegister() { hideAll(); document.getElementById("register").style.display="block"; }
+function showLogin() { hideAll(); document.getElementById("login").style.display="block"; }
+function showChat() { hideAll(); document.getElementById("chat").style.display="block"; renderContacts(); }
 
-    function showRegister() {
-      hideAll();
-      document.getElementById("register").style.display = "block";
-    }
+function getUsers() { return JSON.parse(localStorage.getItem("users") || "{}"); }
+function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
 
-    function showLogin() {
-      hideAll();
-      document.getElementById("login").style.display = "block";
-    }
+function register() {
+  var u = document.getElementById("regUser").value.trim();
+  var p = document.getElementById("regPass").value;
+  if(u.length<3||u.length>20||!/^[a-zA-Z]+$/.test(u)) { alert("Username 3-20 letters"); return; }
+  if(p.length<3||p.length>20) { alert("Password 3-20 chars"); return; }
+  var users = getUsers();
+  if(users[u]) { alert("Username exists"); return; }
+  users[u] = {password:p, contacts:[], messages:{}};
+  saveUsers(users);
+  currentUser = u;
+  showChat();
+}
 
-    function showChat() {
-      hideAll();
-      document.getElementById("chat").style.display = "block";
-      renderMessages();
-    }
+function login() {
+  var u = document.getElementById("logUser").value.trim();
+  var p = document.getElementById("logPass").value;
+  var users = getUsers();
+  if(users[u] && users[u].password===p) { currentUser=u; showChat(); } 
+  else { alert("Wrong username or password"); }
+}
 
-    function register() {
-      var username = document.getElementById("regUser").value.trim();
-      if(username.length < 3 || username.length > 20 || !/^[a-zA-Z]+$/.test(username)) {
-        alert("Username must be 3-20 letters only");
-        return;
-      }
-      var users = JSON.parse(localStorage.getItem("users") || "{}");
-      if(users[username]) {
-        alert("Username already exists");
-        return;
-      }
-      users[username] = {messages: ["Hello welcome to Delemencia!"]};
-      localStorage.setItem("users", JSON.stringify(users));
-      currentUser = username;
-      showChat();
-    }
+function logout() { currentUser=null; currentChat=null; showWelcome(); }
 
-    function login() {
-      var username = document.getElementById("logUser").value.trim();
-      var users = JSON.parse(localStorage.getItem("users") || "{}");
-      if(users[username]) {
-        currentUser = username;
-        showChat();
-      } else {
-        alert("Username not found");
-      }
-    }
+function addUser() {
+  var newUser = document.getElementById("addUserInput").value.trim();
+  var users = getUsers();
+  if(!users[newUser]) { alert("User not found"); return; }
+  if(newUser===currentUser) { alert("Cannot add yourself"); return; }
+  if(users[currentUser].contacts.indexOf(newUser)===-1) users[currentUser].contacts.push(newUser);
+  if(!users[currentUser].messages[newUser]) users[currentUser].messages[newUser]=["Hello welcome to Delemencia!"];
+  saveUsers(users);
+  document.getElementById("addUserInput").value="";
+  renderContacts();
+}
 
-    function logout() {
-      currentUser = null;
-      showWelcome();
-    }
+function renderContacts() {
+  var users = getUsers();
+  var list = document.getElementById("contactList");
+  list.innerHTML="";
+  users[currentUser].contacts.forEach(function(c){
+    var div = document.createElement("div");
+    div.textContent=c;
+    div.className="contact";
+    div.onclick=function(){currentChat=c; renderMessages();};
+    list.appendChild(div);
+  });
+}
 
-    function sendMessage() {
-      var msgInput = document.getElementById("messageInput");
-      var message = msgInput.value.trim();
-      if(message === "") return;
-      var users = JSON.parse(localStorage.getItem("users") || "{}");
-      users[currentUser].messages.push(message);
-      localStorage.setItem("users", JSON.stringify(users));
-      msgInput.value = "";
-      renderMessages();
-    }
+function sendMessage() {
+  var msg = document.getElementById("messageInput").value.trim();
+  if(!msg||!currentChat) return;
+  var users = getUsers();
+  if(!users[currentUser].messages[currentChat]) users[currentUser].messages[currentChat]=[];
+  if(!users[currentChat].messages[currentUser]) users[currentChat].messages[currentUser]=[];
+  users[currentUser].messages[currentChat].push(currentUser+": "+msg);
+  users[currentChat].messages[currentUser].push(currentUser+": "+msg);
+  saveUsers(users);
+  document.getElementById("messageInput").value="";
+  renderMessages();
+}
 
-    function renderMessages() {
-      var chatBox = document.getElementById("chatBox");
-      chatBox.innerHTML = "";
-      if(!currentUser) return;
-      var users = JSON.parse(localStorage.getItem("users") || "{}");
-      var messages = users[currentUser].messages;
-      messages.forEach(function(msg){
-        var p = document.createElement("p");
-        p.textContent = msg;
-        chatBox.appendChild(p);
-      });
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    showWelcome();
-
-    var body = document.body;
-
-    for(var i = 0; i < 5; i++) {
-      var cloud = document.createElement("div");
-      cloud.className = "cloud";
-      cloud.style.top = Math.random() * 200 + "px";
-      cloud.style.left = Math.random() * 100 + "vw";
-      cloud.style.width = 80 + Math.random() * 120 + "px";
-      cloud.style.height = 40 + Math.random() * 60 + "px";
-      cloud.style.animationDuration = 60 + Math.random() * 60 + "s";
-      body.appendChild(cloud);
-    }
-
-    for(var i = 0; i < 100; i++) {
-      var drop = document.createElement("div");
-      drop.className = "drop";
-      drop.style.left = Math.random() * 100 + "vw";
-      drop.style.animationDuration = 0.5 + Math.random() * 0.5 + "s";
-      drop.style.animationDelay = Math.random() * 5 + "s";
-      body.appendChild(drop);
-    }
-  </script>
+function renderMessages() {
+  if(!currentChat) return;
+  var users = getUsers();
+  var chatBox = document.getElementById("chatBox");
+  chatBox.innerHTML="";
+  var msgs = users[currentUser].messages[currentChat] || [];
+  msgs.forEach(function(m){
+    var p=document.createElement("div");
+    p.textContent=m;
+    p.className="message";
+    chatBox.appendChild(p);
+  });
+  chatBox.scrollTop=chatBox.scrollHeight;
+}
+showWelcome();
+</script>
 </body>
 </html>
