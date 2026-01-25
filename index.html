@@ -1,155 +1,151 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Delemencia 1.0 :D</title>
+<head>
+  <title>Delemencia 1.0 :D</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
+      overflow: hidden;
+      color: black;
+      text-align: center;
+      position: relative;
+    }
 
-    <style>
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(270deg, #0a1a33, #0d2a5c);
-        background-size: 400% 400%;
-        animation: bgMove 10s ease infinite;
-        color: white;
-        text-align: center;
-      }
+    .screen {
+      display: none;
+      margin-top: 150px;
+      position: relative;
+      z-index: 2;
+    }
 
-      @keyframes bgMove {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 220px;
+      border-radius: 5px;
+      border: 1px solid #888;
+    }
 
-      .screen {
-        display: none;
-        margin-top: 150px;
-      }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-      input {
-        display: block;
-        margin: 10px auto;
-        padding: 10px;
-        width: 220px;
-        border-radius: 5px;
-        border: none;
-      }
+    .cloud {
+      position: absolute;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      width: 100px;
+      height: 60px;
+      animation: moveClouds linear infinite;
+    }
 
-      button {
-        margin: 10px;
-        padding: 10px 20px;
-        background: #1e90ff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-    </style>
-  </head>
+    @keyframes moveClouds {
+      0% { transform: translateX(-150px); }
+      100% { transform: translateX(100vw); }
+    }
 
-  <body>
+    .drop {
+      position: absolute;
+      width: 2px;
+      height: 10px;
+      background: rgba(0,0,0,0.2);
+      animation: fall linear infinite;
+    }
 
-    <div id="welcome" class="screen">
-      <h1>Welcome to Delemencia 1.0</h1>
-      <button onclick="showRegister()">Register</button>
-      <button onclick="showLogin()">Login</button>
-    </div>
+    @keyframes fall {
+      0% { transform: translateY(-10px); }
+      100% { transform: translateY(100vh); }
+    }
+  </style>
+</head>
+<body>
+  <div id="welcome" class="screen">
+    <h1>Welcome to Delemencia 1.0</h1>
+    <button onclick="showRegister()">Register</button>
+    <button onclick="showLogin()">Login</button>
+  </div>
 
-    <div id="register" class="screen">
-      <h2>Register</h2>
-      <input id="regUser" placeholder="Username">
-      <input id="regPass" type="password" placeholder="Password">
-      <button onclick="register()">Register</button>
-      <br>
-      <button onclick="showWelcome()">Back</button>
-    </div>
+  <div id="register" class="screen">
+    <h2>Register</h2>
+    <input id="regUser" placeholder="Username">
+    <input id="regPass" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <br>
+    <button onclick="showWelcome()">Back</button>
+  </div>
 
-    <div id="login" class="screen">
-      <h2>Login</h2>
-      <input id="logUser" placeholder="Username">
-      <input id="logPass" type="password" placeholder="Password">
-      <button onclick="login()">Login</button>
-      <br>
-      <button onclick="showWelcome()">Back</button>
-    </div>
+  <div id="login" class="screen">
+    <h2>Login</h2>
+    <input id="logUser" placeholder="Username">
+    <input id="logPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <br>
+    <button onclick="showWelcome()">Back</button>
+  </div>
 
-    <script>
-      function hideAll() {
-        document.getElementById("welcome").style.display = "none";
-        document.getElementById("register").style.display = "none";
-        document.getElementById("login").style.display = "none";
-      }
+  <script>
+    function hideAll() {
+      document.getElementById("welcome").style.display = "none";
+      document.getElementById("register").style.display = "none";
+      document.getElementById("login").style.display = "none";
+    }
 
-      function showWelcome() {
-        hideAll();
-        document.getElementById("welcome").style.display = "block";
-      }
+    function showWelcome() {
+      hideAll();
+      document.getElementById("welcome").style.display = "block";
+    }
 
-      function showRegister() {
-        hideAll();
-        document.getElementById("register").style.display = "block";
-      }
+    function showRegister() {
+      hideAll();
+      document.getElementById("register").style.display = "block";
+    }
 
-      function showLogin() {
-        hideAll();
-        document.getElementById("login").style.display = "block";
-      }
+    function showLogin() {
+      hideAll();
+      document.getElementById("login").style.display = "block";
+    }
 
-      function register() {
-        alert("Registered!");
-      }
+    function register() {
+      alert("Registered!");
+    }
 
-      function login() {
-        alert("Logged in!");
-      }
+    function login() {
+      alert("Logged in!");
+    }
 
-      showWelcome();
-    </script>
-    <div id="clouds"></div>
-    <div id="rain"></div>
-    <style>
-      body {
-        background: #c0c0c0;
-        overflow: hidden;
-      }
+    showWelcome();
 
-      #clouds {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 200%;
-        height: 100%;
-        background: url('https://i.ibb.co/6v1Fv0K/clouds.png'_ repeat-x;
-        animation: moveClouds 120s linear infinite;
-        z-index: -2;
-        opacity: 0.5;
-      }
+    const body = document.body;
 
+    for (let i = 0; i < 5; i++) {
+      const cloud = document.createElement("div");
+      cloud.className = "cloud";
+      cloud.style.top = Math.random() * 200 + "px";
+      cloud.style.left = Math.random() * 100 + "vw";
+      cloud.style.width = 80 + Math.random() * 120 + "px";
+      cloud.style.height = 40 + Math.random() * 60 + "px";
+      cloud.style.animationDuration = 60 + Math.random() * 60 + "s";
+      body.appendChild(cloud);
+    }
 
-      #rain {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  .drop {
-    position: absolute;
-    width: 2px;
-    height: 10px;
-    background: rgba(0,0,0,0.2);
-    animation: fall linear infinite;
-  }
-
-  @keyframes fall {
-    0% { transform: translateY(-10px); }
-    100% { transform: translateY(100vh); }
-  }
-</style>
-  
-
-  </body>
+    for (let i = 0; i < 100; i++) {
+      const drop = document.createElement("div");
+      drop.className = "drop";
+      drop.style.left = Math.random() * 100 + "vw";
+      drop.style.animationDuration = 0.5 + Math.random() * 0.5 + "s";
+      drop.style.animationDelay = Math.random() * 5 + "s";
+      body.appendChild(drop);
+    }
+  </script>
+</body>
 </html>
