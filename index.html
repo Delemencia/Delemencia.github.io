@@ -22,7 +22,7 @@ button { margin:5px; padding:5px 10px; background:#0074D9; color:white; border:n
 #chatBox { flex:1; padding:5px; overflow-y:auto; background:#fff; }
 .message { margin:2px 0; text-align:left; }
 #messageInput { width:100%; padding:5px; }
-#addUserSelect { width:100%; padding:3px; margin-bottom:3px; font-size:12px; }
+#addUserInput { width:100%; padding:3px; font-size:12px; margin-bottom:3px; }
 #settingsScreen { display:none; padding:20px; background:#001f3f; color:white; text-align:center; }
 
 h1,h2 { margin:10px 0; }
@@ -60,7 +60,7 @@ h1,h2 { margin:10px 0; }
   <div id="sidebar">
     <b>Contacts</b>
     <div id="contactList"></div>
-    <select id="addUserSelect"></select>
+    <input id="addUserInput" placeholder="Add username">
     <button onclick="addUser()">Add</button>
     <button onclick="showSettings()">Settings</button>
   </div>
@@ -126,16 +126,17 @@ function login(){
 function logout(){ currentUser=null; currentChat=null; saveCurrentUser(); showWelcome(); }
 
 function addUser(){
-  var select=document.getElementById("addUserSelect");
-  var newUser=select.value;
+  var newUser=document.getElementById("addUserInput").value.trim();
   var users=getUsers();
-  if(!newUser || newUser===currentUser) return;
+  if(!newUser){ alert("Enter a username"); return; }
+  if(!users[newUser]){ alert("User not found"); return; }
+  if(newUser===currentUser){ alert("Cannot add yourself"); return; }
   if(users[currentUser].contacts.indexOf(newUser)===-1) users[currentUser].contacts.push(newUser);
   if(!users[currentUser].messages[newUser]) users[currentUser].messages[newUser]=["Hello welcome to Delemencia!"];
   if(!users[newUser].messages[currentUser]) users[newUser].messages[currentUser]=["Hello welcome to Delemencia!"];
   saveUsers(users);
+  document.getElementById("addUserInput").value="";
   renderContacts();
-  populateAddUserSelect();
 }
 
 function renderContacts(){
@@ -148,18 +149,6 @@ function renderContacts(){
     div.className="contact";
     div.onclick=function(){ currentChat=c; renderMessages(); };
     list.appendChild(div);
-  });
-}
-
-function populateAddUserSelect(){
-  var select=document.getElementById("addUserSelect");
-  select.innerHTML="";
-  var users=getUsers();
-  Object.keys(users).forEach(function(u){
-    if(u!==currentUser && users[currentUser].contacts.indexOf(u)===-1){
-      var option=document.createElement("option");
-      option.value=u; option.text=u; select.appendChild(option);
-    }
   });
 }
 
@@ -191,6 +180,7 @@ function renderMessages(){
   });
   chatBox.scrollTop=chatBox.scrollHeight;
 }
+
 
 function initLines(){
   var container=document.getElementById("lines");
