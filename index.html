@@ -3,36 +3,27 @@
   <head>
     <title>Delemencia 1.0 :D</title>
 
-
-
     <style>
       body {
-         margin: 0;
-         font-family: Arial, Helvetica, sans-serif;
-         background: linear-gradient(270deg, #0a1a33, #0d2a5c);
-         background-size: 400% 400%;
-         animation: bgMove 10s easy infinite;
-         color: white;
-         text-align: center;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(270deg, #0a1a33, #0d2a5c);
+        background-size: 400% 400%;
+        animation: bgMove 10s ease infinite;
+        color: white;
+        text-align: center;
       }
-
-      
-
 
       @keyframes bgMove {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50% }
+        100% { background-position: 0% 50%; }
       }
-
-      
-
 
       .screen {
         display: none;
-        margin-top: 150px
+        margin-top: 150px;
       }
-
 
       input {
         display: block;
@@ -53,18 +44,18 @@
         font-size: 16px;
         cursor: pointer;
       }
-      </style>
+    </style>
   </head>
 
   <body>
 
-    <div =id"welcome" class="screen">
+    <div id="welcome" class="screen">
       <h1>Welcome to Delemencia 1.0</h1>
       <button onclick="showRegister()">Register</button>
-      <button onclick=showLogin()">Login</button>
+      <button onclick="showLogin()">Login</button>
     </div>
 
-    <div =id"register" class="screen">
+    <div id="register" class="screen">
       <h2>Register</h2>
       <input id="regUser" placeholder="Username">
       <input id="regPass" type="password" placeholder="Password">
@@ -76,7 +67,9 @@
     <div id="login" class="screen">
       <h2>Login</h2>
       <input id="logUser" placeholder="Username">
-      <input id="logPass type="password" placeholder="Password">
+      <input id="logPass" type="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <br>
       <button onclick="showWelcome()">Back</button>
     </div>
 
@@ -85,7 +78,6 @@
         document.getElementById("welcome").style.display = "none";
         document.getElementById("register").style.display = "none";
         document.getElementById("login").style.display = "none";
-
       }
 
       function showWelcome() {
@@ -94,41 +86,25 @@
       }
 
       function showRegister() {
-      hideAll();
-      document.getElementById("register").style.display = "block";
-    }
+        hideAll();
+        document.getElementById("register").style.display = "block";
+      }
 
-    function showLogin() {
-      hideAll();
-      document.getElementById("login").style.display = "block";
-    }
+      function showLogin() {
+        hideAll();
+        document.getElementById("login").style.display = "block";
+      }
 
-    function register() {
-      alert("Registered!");
-    }
+      function register() {
+        alert("Registered!");
+      }
 
-    function login() {
-      alert("Logged in!");
-    }
+      function login() {
+        alert("Logged in!");
+      }
 
-    showWelcome();
-  </script>
+      showWelcome();
+    </script>
 
-</body>
+  </body>
 </html>
-
-      
-      
-      
-  
-      
-    
-
-
-
-
-
-
-  
-                                     
- 
