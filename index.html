@@ -2,26 +2,23 @@
 <html>
 <head>
   <title>Delemencia 1.0 :D</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
-      overflow: hidden;
       color: black;
       text-align: center;
-      position: relative;
+      overflow: hidden;
     }
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-    
+
     .screen {
       display: none;
       margin-top: 150px;
-      position: relative;
-      z-index: 2;
     }
 
-    input {
+    input, select {
       display: block;
       margin: 10px auto;
       padding: 10px;
@@ -39,6 +36,22 @@
       border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
+    }
+
+    #chatBox {
+      width: 60%;
+      height: 300px;
+      border: 1px solid #888;
+      margin: 20px auto;
+      padding: 10px;
+      overflow-y: auto;
+      text-align: left;
+      background: white;
+    }
+
+    #messageInput {
+      width: 60%;
+      padding: 10px;
     }
 
     .cloud {
@@ -78,8 +91,7 @@
 
   <div id="register" class="screen">
     <h2>Register</h2>
-    <input id="regUser" placeholder="Username">
-    <input id="regPass" type="password" placeholder="Password">
+    <input id="regUser" placeholder="Username (3-20 letters)">
     <button onclick="register()">Register</button>
     <br>
     <button onclick="showWelcome()">Back</button>
@@ -88,17 +100,28 @@
   <div id="login" class="screen">
     <h2>Login</h2>
     <input id="logUser" placeholder="Username">
-    <input id="logPass" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
     <br>
     <button onclick="showWelcome()">Back</button>
   </div>
 
+  <div id="chat" class="screen">
+    <h2>Delemencia 1</h2>
+    <div id="chatBox"></div>
+    <input id="messageInput" placeholder="Type a message">
+    <button onclick="sendMessage()">Send</button>
+    <br>
+    <button onclick="logout()">Logout</button>
+  </div>
+
   <script>
+    var currentUser = null;
+
     function hideAll() {
       document.getElementById("welcome").style.display = "none";
       document.getElementById("register").style.display = "none";
       document.getElementById("login").style.display = "none";
+      document.getElementById("chat").style.display = "none";
     }
 
     function showWelcome() {
@@ -116,20 +139,76 @@
       document.getElementById("login").style.display = "block";
     }
 
+    function showChat() {
+      hideAll();
+      document.getElementById("chat").style.display = "block";
+      renderMessages();
+    }
+
     function register() {
-      alert("Registered!");
+      var username = document.getElementById("regUser").value.trim();
+      if(username.length < 3 || username.length > 20 || !/^[a-zA-Z]+$/.test(username)) {
+        alert("Username must be 3-20 letters only");
+        return;
+      }
+      var users = JSON.parse(localStorage.getItem("users") || "{}");
+      if(users[username]) {
+        alert("Username already exists");
+        return;
+      }
+      users[username] = {messages: ["Hello welcome to Delemencia!"]};
+      localStorage.setItem("users", JSON.stringify(users));
+      currentUser = username;
+      showChat();
     }
 
     function login() {
-      alert("Logged in!");
+      var username = document.getElementById("logUser").value.trim();
+      var users = JSON.parse(localStorage.getItem("users") || "{}");
+      if(users[username]) {
+        currentUser = username;
+        showChat();
+      } else {
+        alert("Username not found");
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      showWelcome();
+    }
+
+    function sendMessage() {
+      var msgInput = document.getElementById("messageInput");
+      var message = msgInput.value.trim();
+      if(message === "") return;
+      var users = JSON.parse(localStorage.getItem("users") || "{}");
+      users[currentUser].messages.push(message);
+      localStorage.setItem("users", JSON.stringify(users));
+      msgInput.value = "";
+      renderMessages();
+    }
+
+    function renderMessages() {
+      var chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = "";
+      if(!currentUser) return;
+      var users = JSON.parse(localStorage.getItem("users") || "{}");
+      var messages = users[currentUser].messages;
+      messages.forEach(function(msg){
+        var p = document.createElement("p");
+        p.textContent = msg;
+        chatBox.appendChild(p);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     showWelcome();
 
-    const body = document.body;
+    var body = document.body;
 
-    for (let i = 0; i < 5; i++) {
-      const cloud = document.createElement("div");
+    for(var i = 0; i < 5; i++) {
+      var cloud = document.createElement("div");
       cloud.className = "cloud";
       cloud.style.top = Math.random() * 200 + "px";
       cloud.style.left = Math.random() * 100 + "vw";
@@ -139,8 +218,8 @@
       body.appendChild(cloud);
     }
 
-    for (let i = 0; i < 100; i++) {
-      const drop = document.createElement("div");
+    for(var i = 0; i < 100; i++) {
+      var drop = document.createElement("div");
       drop.className = "drop";
       drop.style.left = Math.random() * 100 + "vw";
       drop.style.animationDuration = 0.5 + Math.random() * 0.5 + "s";
