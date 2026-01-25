@@ -105,6 +105,51 @@
 
       showWelcome();
     </script>
+    <div id="clouds"></div>
+    <div id="rain"></div>
+    <style>
+      body {
+        background: #c0c0c0;
+        overflow: hidden;
+      }
+
+      #clouds {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background: url('https://i.ibb.co/6v1Fv0K/clouds.png'_ repeat-x;
+        animation: moveClouds 120s linear infinite;
+        z-index: -2;
+        opacity: 0.5;
+      }
+
+
+      #rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .drop {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: rgba(0,0,0,0.2);
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10px); }
+    100% { transform: translateY(100vh); }
+  }
+</style>
+  
 
   </body>
 </html>
