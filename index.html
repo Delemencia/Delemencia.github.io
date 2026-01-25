@@ -2,30 +2,104 @@
 <html>
 <head>
 <title>Delemencia 1.0</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" href="favicon.ico">
 <style>
-body { margin:0; font-family: Arial, Helvetica, sans-serif; background:#001f3f; color:white; overflow:hidden; }
-.screen { display:none; padding:20px; text-align:center; }
+body {
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#0b1d33;
+  color:white;
+  overflow:hidden;
+}
 
-input, select { display:block; margin:5px auto; padding:5px; width:200px; }
-button { margin:5px; padding:5px 10px; background:#0074D9; color:white; border:none; cursor:pointer; }
+.screen {
+  display:none;
+  padding:20px;
+  text-align:center;
+}
 
-#lines { position:absolute; width:100%; height:100%; top:0; left:0; z-index:-1; overflow:hidden; }
-.line { position:absolute; width:2px; height:100%; background:rgba(0,100,255,0.3); }
+input {
+  display:block;
+  margin:6px auto;
+  padding:6px;
+  width:200px;
+}
 
-#app { display:flex; height:400px; background:#fff; color:black; }
-#sidebar { width:150px; background:#eee; padding:5px; overflow-y:auto; }
-#sidebar b { display:block; margin-bottom:5px; color:black; }
-.contact { padding:2px 5px; cursor:pointer; border-bottom:1px solid #ccc; }
-.contact:hover { background:#ddd; }
-#chatArea { flex:1; border-left:1px solid #aaa; display:flex; flex-direction:column; font-size:12px; }
-#chatBox { flex:1; padding:5px; overflow-y:auto; background:#fff; }
-.message { margin:2px 0; text-align:left; }
-#messageInput { width:100%; padding:5px; }
-#addUserInput { width:100%; padding:3px; font-size:12px; margin-bottom:3px; }
-#settingsScreen { display:none; padding:20px; background:#001f3f; color:white; text-align:center; }
+button {
+  padding:6px 12px;
+  margin:5px;
+  background:#1e90ff;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
 
-h1,h2 { margin:10px 0; }
+#lines {
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+.line {
+  position:absolute;
+  width:2px;
+  height:100%;
+  background:rgba(0,120,255,0.3);
+}
+
+#app {
+  display:flex;
+  height:420px;
+  background:white;
+  color:black;
+}
+
+#sidebar {
+  width:170px;
+  background:#e6e6e6;
+  padding:5px;
+  overflow-y:auto;
+}
+
+.contact {
+  padding:4px;
+  font-size:12px;
+  cursor:pointer;
+  border-bottom:1px solid #ccc;
+}
+
+.contact.active {
+  background:#cfdfff;
+}
+
+#chatArea {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+#chatBox {
+  flex:1;
+  padding:5px;
+  overflow-y:auto;
+  font-size:12px;
+}
+
+.message {
+  margin:2px 0;
+}
+
+#messageInput {
+  width:100%;
+  box-sizing:border-box;
+}
+
+.dark { background:#0b1d33; color:white; }
+.light { background:#f2f2f2; color:black; }
+.nebula {
+  background:radial-gradient(circle at top, #4b0082, #000010);
+  color:white;
+}
 </style>
 </head>
 <body>
@@ -33,15 +107,15 @@ h1,h2 { margin:10px 0; }
 <div id="lines"></div>
 
 <div id="welcome" class="screen">
-<h1>Welcome to Delemencia 1.0</h1>
+<h1>Delemencia 1.0</h1>
 <button onclick="showRegister()">Register</button>
 <button onclick="showLogin()">Login</button>
 </div>
 
 <div id="register" class="screen">
 <h2>Register</h2>
-<input id="regUser" placeholder="Username 3-20 letters">
-<input id="regPass" type="password" placeholder="Password 3-20 chars">
+<input id="regUser" placeholder="Username">
+<input id="regPass" type="password" placeholder="Password">
 <button onclick="register()">Register</button>
 <button onclick="showWelcome()">Back</button>
 </div>
@@ -55,7 +129,6 @@ h1,h2 { margin:10px 0; }
 </div>
 
 <div id="chat" class="screen">
-<h2>Delemencia Chat</h2>
 <div id="app">
   <div id="sidebar">
     <b>Contacts</b>
@@ -72,145 +145,172 @@ h1,h2 { margin:10px 0; }
 </div>
 </div>
 
-<div id="settingsScreen" class="screen">
+<div id="settings" class="screen">
 <h2>Settings</h2>
+
+<b>Appearance</b>
+<button onclick="setTheme('dark')">Dark</button>
+<button onclick="setTheme('light')">Light</button>
+<button onclick="setTheme('nebula')">Nebula</button>
+
+<h3>Profile</h3>
+<div id="profileName"></div>
+
+<input id="newPass" type="password" placeholder="New password">
+<button onclick="changePassword()">Change Password</button>
+
+<button onclick="deleteAccount()">Delete Account</button>
 <button onclick="logout()">Logout</button>
 <button onclick="showChat()">Back</button>
 </div>
 
 <script>
-var currentUser=null;
-var currentChat=null;
+var currentUser=null
+var currentChat=null
 
-function getUsers(){ return JSON.parse(localStorage.getItem("users")||"{}"); }
-function saveUsers(users){ localStorage.setItem("users", JSON.stringify(users)); }
-function saveCurrentUser(){ localStorage.setItem("currentUser", currentUser||""); }
-function loadCurrentUser(){ var u=localStorage.getItem("currentUser"); if(u) currentUser=u; }
+function users(){ return JSON.parse(localStorage.getItem("users")||"{}") }
+function saveUsers(u){ localStorage.setItem("users",JSON.stringify(u)) }
 
 function hideAll(){
-  document.getElementById("welcome").style.display="none";
-  document.getElementById("register").style.display="none";
-  document.getElementById("login").style.display="none";
-  document.getElementById("chat").style.display="none";
-  document.getElementById("settingsScreen").style.display="none";
+  document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
 }
 
-function showWelcome(){ hideAll(); document.getElementById("welcome").style.display="block"; }
-function showRegister(){ hideAll(); document.getElementById("register").style.display="block"; }
-function showLogin(){ hideAll(); document.getElementById("login").style.display="block"; }
-function showChat(){ hideAll(); document.getElementById("chat").style.display="block"; renderContacts(); renderMessages(); }
-function showSettings(){ hideAll(); document.getElementById("settingsScreen").style.display="block"; }
+function showWelcome(){ hideAll(); welcome.style.display="block" }
+function showRegister(){ hideAll(); register.style.display="block" }
+function showLogin(){ hideAll(); login.style.display="block" }
+function showChat(){
+  hideAll()
+  chat.style.display="block"
+  profileName.textContent="Logged in as: "+currentUser
+  renderContacts()
+  renderMessages()
+}
+function showSettings(){ hideAll(); settings.style.display="block" }
 
 function register(){
-  var u=document.getElementById("regUser").value.trim();
-  var p=document.getElementById("regPass").value;
-  if(u.length<3||u.length>20||!/^[a-zA-Z]+$/.test(u)){ alert("Username 3-20 letters"); return; }
-  if(p.length<3||p.length>20){ alert("Password 3-20 chars"); return; }
-  var users=getUsers();
-  if(users[u]){ alert("Username exists"); return; }
-  users[u]={password:p, contacts:[], messages:{}};
-  saveUsers(users);
-  currentUser=u;
-  saveCurrentUser();
-  showChat();
+  var u=regUser.value.trim()
+  var p=regPass.value
+  if(u.length<3||p.length<3){ alert("Too short"); return }
+  var us=users()
+  if(us[u]){ alert("Exists"); return }
+  us[u]={password:p,contacts:[],messages:{},theme:"dark"}
+  saveUsers(us)
+  currentUser=u
+  localStorage.setItem("currentUser",u)
+  showChat()
 }
 
 function login(){
-  var u=document.getElementById("logUser").value.trim();
-  var p=document.getElementById("logPass").value;
-  var users=getUsers();
-  if(users[u]&&users[u].password===p){ currentUser=u; saveCurrentUser(); showChat(); }
-  else { alert("Wrong username or password"); }
+  var u=logUser.value.trim()
+  var p=logPass.value
+  var us=users()
+  if(us[u]&&us[u].password===p){
+    currentUser=u
+    localStorage.setItem("currentUser",u)
+    setTheme(us[u].theme)
+    showChat()
+  } else alert("Wrong login")
 }
 
-function logout(){ currentUser=null; currentChat=null; saveCurrentUser(); showWelcome(); }
+function logout(){
+  localStorage.removeItem("currentUser")
+  currentUser=null
+  showWelcome()
+}
 
 function addUser(){
-  var newUser=document.getElementById("addUserInput").value.trim();
-  var users=getUsers();
-  if(!newUser){ alert("Enter a username"); return; }
-  if(!users[newUser]){ alert("User not found"); return; }
-  if(newUser===currentUser){ alert("Cannot add yourself"); return; }
-  if(users[currentUser].contacts.indexOf(newUser)===-1) users[currentUser].contacts.push(newUser);
-  if(!users[currentUser].messages[newUser]) users[currentUser].messages[newUser]=["Hello welcome to Delemencia!"];
-  if(!users[newUser].messages[currentUser]) users[newUser].messages[currentUser]=["Hello welcome to Delemencia!"];
-  saveUsers(users);
-  document.getElementById("addUserInput").value="";
-  renderContacts();
+  var name=addUserInput.value.trim()
+  var us=users()
+  if(!us[name]||name===currentUser) return
+  if(!us[currentUser].contacts.includes(name)){
+    us[currentUser].contacts.push(name)
+    us[currentUser].messages[name]=["Hello welcome to Delemencia!"]
+    us[name].messages[currentUser]=["Hello welcome to Delemencia!"]
+    saveUsers(us)
+    currentChat=name
+    renderContacts()
+    renderMessages()
+  }
 }
 
 function renderContacts(){
-  var users=getUsers();
-  var list=document.getElementById("contactList");
-  list.innerHTML="";
-  users[currentUser].contacts.forEach(function(c){
-    var div=document.createElement("div");
-    div.textContent=c;
-    div.className="contact";
-    div.onclick=function(){ currentChat=c; renderMessages(); };
-    list.appendChild(div);
-  });
-}
-
-function sendMessage(){
-  if(!currentChat) return;
-  var msg=document.getElementById("messageInput").value.trim();
-  if(!msg) return;
-  var users=getUsers();
-  if(!users[currentUser].messages[currentChat]) users[currentUser].messages[currentChat]=[];
-  if(!users[currentChat].messages[currentUser]) users[currentChat].messages[currentUser]=[];
-  users[currentUser].messages[currentChat].push(currentUser+": "+msg);
-  users[currentChat].messages[currentUser].push(currentUser+": "+msg);
-  saveUsers(users);
-  document.getElementById("messageInput").value="";
-  renderMessages();
+  var us=users()
+  contactList.innerHTML=""
+  us[currentUser].contacts.forEach(c=>{
+    var d=document.createElement("div")
+    d.textContent=c
+    d.className="contact"+(c===currentChat?" active":"")
+    d.onclick=()=>{ currentChat=c; renderContacts(); renderMessages() }
+    contactList.appendChild(d)
+  })
 }
 
 function renderMessages(){
-  var chatBox=document.getElementById("chatBox");
-  chatBox.innerHTML="";
-  if(!currentChat) return;
-  var users=getUsers();
-  var msgs=users[currentUser].messages[currentChat]||[];
-  msgs.forEach(function(m){
-    var p=document.createElement("div");
-    p.textContent=m;
-    p.className="message";
-    chatBox.appendChild(p);
-  });
-  chatBox.scrollTop=chatBox.scrollHeight;
+  chatBox.innerHTML=""
+  if(!currentChat) return
+  users()[currentUser].messages[currentChat].forEach(m=>{
+    var d=document.createElement("div")
+    d.textContent=m
+    d.className="message"
+    chatBox.appendChild(d)
+  })
 }
 
+function sendMessage(){
+  if(!currentChat||!messageInput.value) return
+  var us=users()
+  us[currentUser].messages[currentChat].push(currentUser+": "+messageInput.value)
+  us[currentChat].messages[currentUser].push(currentUser+": "+messageInput.value)
+  saveUsers(us)
+  messageInput.value=""
+  renderMessages()
+}
+
+function setTheme(t){
+  document.body.className=t
+  var us=users()
+  if(us[currentUser]){ us[currentUser].theme=t; saveUsers(us) }
+}
+
+function changePassword(){
+  var us=users()
+  if(newPass.value.length<3) return
+  us[currentUser].password=newPass.value
+  saveUsers(us)
+  alert("Password changed")
+}
+
+function deleteAccount(){
+  var us=users()
+  delete us[currentUser]
+  saveUsers(us)
+  logout()
+}
 
 function initLines(){
-  var container=document.getElementById("lines");
-  for(var i=0;i<20;i++){
-    var line=document.createElement("div");
-    line.className="line";
-    line.style.left=Math.random()*100+"%";
-    line.style.height=(10+Math.random()*90)+"%";
-    line.speed=0.5+Math.random()*1;
-    container.appendChild(line);
+  for(var i=0;i<25;i++){
+    var l=document.createElement("div")
+    l.className="line"
+    l.style.left=Math.random()*100+"%"
+    l.speed=0.3+Math.random()
+    lines.appendChild(l)
   }
-  requestAnimationFrame(moveLines);
+  function move(){
+    document.querySelectorAll(".line").forEach(l=>{
+      var x=parseFloat(l.style.left)
+      x-=l.speed
+      if(x<0) x=100
+      l.style.left=x+"%"
+    })
+    requestAnimationFrame(move)
+  }
+  move()
 }
 
-function moveLines(){
-  var lines=document.getElementsByClassName("line");
-  for(var i=0;i<lines.length;i++){
-    var left=parseFloat(lines[i].style.left);
-    left-=lines[i].speed;
-    if(left<-1) left=100;
-    lines[i].style.left=left+"%";
-  }
-  requestAnimationFrame(moveLines);
-}
-
-
-loadCurrentUser();
-if(currentUser){ showChat(); }
-else{ showWelcome(); }
-initLines();
+var saved=localStorage.getItem("currentUser")
+if(saved){ currentUser=saved; setTheme(users()[saved].theme); showChat() }
+else showWelcome()
+initLines()
 </script>
 </body>
 </html>
