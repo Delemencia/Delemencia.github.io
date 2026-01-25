@@ -43,5 +43,92 @@
         border: none;
       }
 
+      button {
+        margin: 10px;
+        padding: 10px 20px;
+        background: #1e90ff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      </style>
+  </head>
+
+  <body>
+
+    <div =id"welcome" class="screen">
+      <h1>Welcome to Delemencia 1.0</h1>
+      <button onclick="showRegister()">Register</button>
+      <button onclick=showLogin()">Login</button>
+    </div>
+
+    <div =id"register" class="screen">
+      <h2>Register</h2>
+      <input id="regUser" placeholder="Username">
+      <input id="regPass" type="password" placeholder="Password">
+      <button onclick="register()">Register</button>
+      <br>
+      <button onclick="showWelcome()">Back</button>
+    </div>
+
+    <div id="login" class="screen">
+      <h2>Login</h2>
+      <input id="logUser" placeholder="Username">
+      <input id="logPass type="password" placeholder="Password">
+      <button onclick="showWelcome()">Back</button>
+    </div>
+
+    <script>
+      function hideAll() {
+        document.getElementById("welcome").style.display = "none";
+        document.getElementById("register").style.display = "none";
+        document.getElementById("login").style.display = "none";
+
+      }
+
+      function showWelcome() {
+        hideAll();
+        document.getElementById("welcome").style.display = "block";
+      }
+
+      function showRegister() {
+      hideAll();
+      document.getElementById("register").style.display = "block";
+    }
+
+    function showLogin() {
+      hideAll();
+      document.getElementById("login").style.display = "block";
+    }
+
+    function register() {
+      alert("Registered!");
+    }
+
+    function login() {
+      alert("Logged in!");
+    }
+
+    showWelcome();
+  </script>
+
+</body>
+</html>
+
+      
+      
+      
+  
+      
+    
+
+
+
+
+
+
+  
                                      
  
