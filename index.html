@@ -17,29 +17,29 @@ body {
 .auth-box {
   width:380px;
   margin:80px auto;
-  background:#fff;
+  background:linear-gradient(to bottom right,#1c1c2e,#3a3a5c);
   padding:30px;
   border-radius:8px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
   text-align:center;
+  color:white;
 }
 
-.auth-box h1 { margin-bottom:20px; color:#0078d7; }
+.auth-box h1 { margin-bottom:20px; color:#00aaff; }
 .auth-box input {
   width:100%; padding:10px; margin-bottom:12px;
   border:1px solid #ccc; border-radius:4px; font-size:14px;
 }
 .auth-box button {
   width:100%; padding:10px; margin-bottom:8px;
-  border:none; border-radius:4px; background:#0078d7; color:white; font-weight:bold;
+  border:none; border-radius:4px; background:#00aaff; color:white; font-weight:bold;
   cursor:pointer;
 }
 .auth-box .link {
-  display:block; margin-top:8px; font-size:13px; color:#0078d7;
+  display:block; margin-top:8px; font-size:13px; color:#00aaff;
   cursor:pointer; text-decoration:underline;
 }
 
-/* Chat Screen */
 #chatScreen { display:flex; height:100vh; }
 #users {
   width:200px; background:#d0e7fb; border-right:1px solid #a1c4e6; overflow-y:auto;
@@ -73,7 +73,6 @@ body {
   border-radius:0 4px 4px 0;
 }
 
-/* Settings */
 #settings { display:none; padding:20px; background:#f0f6fc; }
 .setting { margin-bottom:20px; }
 .setting h3 { margin-bottom:6px; }
@@ -117,7 +116,6 @@ body {
     <div id="sendBox">
       <input id="msgInput" placeholder="Type a message">
       <button onclick="send()">Send</button>
-      <button onclick="show('settings')">⚙</button>
     </div>
   </div>
 </div>
@@ -136,40 +134,35 @@ body {
 </div>
 
 <script>
-let currentUser = null
-let currentChat = null
+let currentUser=null
+let currentChat=null
+let messageList=[]
 
-const getUsers = () => JSON.parse(localStorage.getItem("users")||"{}")
-const saveUsers = u => localStorage.setItem("users",JSON.stringify(u))
+const getUsers=()=>JSON.parse(localStorage.getItem("users")||"{}")
+const saveUsers=u=>localStorage.setItem("users",JSON.stringify(u))
 
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
   document.getElementById(id).style.display="block"
 }
 
-function validUsername(u){
-  return /^[a-zA-Z0-9]{3,20}$/.test(u)
-}
+function validUsername(u){ return /^[a-zA-Z0-9]{3,20}$/.test(u) }
 
 function register(){
-  let u = regUser.value.trim()
-  let p = regPass.value
-  let users = getUsers()
-  if(!validUsername(u) || !p || users[u]) return alert("Invalid username or password")
-  users[u] = {pass:p, msgs:{}}
+  let u=regUser.value.trim(), p=regPass.value, users=getUsers()
+  if(!validUsername(u)||!p||users[u]) return alert("Invalid username or password")
+  users[u]={pass:p,msgs:{}}
   saveUsers(users)
-  currentUser = u
-  localStorage.currentUser = u
+  currentUser=u
+  localStorage.currentUser=u
   loadChat()
 }
 
 function login(){
-  let u = logUser.value.trim()
-  let p = logPass.value
-  let users = getUsers()
-  if(!users[u] || users[u].pass !== p) return alert("Wrong login")
-  currentUser = u
-  localStorage.currentUser = u
+  let u=logUser.value.trim(), p=logPass.value, users=getUsers()
+  if(!users[u]||users[u].pass!==p) return alert("Wrong login")
+  currentUser=u
+  localStorage.currentUser=u
   loadChat()
 }
 
@@ -180,63 +173,63 @@ function loadChat(){
 }
 
 function renderUsers(){
-  let users = getUsers()
-  let usersDiv = document.getElementById("users")
+  let users=getUsers()
+  let usersDiv=document.getElementById("users")
   usersDiv.innerHTML=""
   Object.keys(users).forEach(u=>{
     if(u===currentUser) return
-    let div = document.createElement("div")
-    div.className = "user"
-    div.textContent = u
-    div.onclick = ()=>{currentChat=u; renderMsgs()}
+    let div=document.createElement("div")
+    div.className="user"
+    div.textContent=u
+    div.onclick=()=>{ if(!messageList.includes(u)) messageList.push(u); currentChat=u; renderMsgs() }
     usersDiv.appendChild(div)
   })
 }
 
 function send(){
-  if(!currentChat || !msgInput.value) return
-  let users = getUsers()
-  users[currentUser].msgs[currentChat] ||= []
-  users[currentChat].msgs[currentUser] ||= []
-  let msgText = msgInput.value
-  users[currentUser].msgs[currentChat].push(currentUser+": "+msgText)
-  users[currentChat].msgs[currentUser].push(currentUser+": "+msgText)
+  if(!currentChat||!msgInput.value) return
+  let users=getUsers()
+  users[currentUser].msgs[currentChat]||(users[currentUser].msgs[currentChat]=[])
+  users[currentChat].msgs[currentUser]||(users[currentChat].msgs[currentUser]=[])
+  let msg=msgInput.value
+  users[currentUser].msgs[currentChat].push(currentUser+": "+msg)
+  users[currentChat].msgs[currentUser].push(currentUser+": "+msg)
   msgInput.value=""
   saveUsers(users)
   renderMsgs()
 }
 
 function renderMsgs(){
-  let messagesDiv = document.getElementById("messages")
+  let messagesDiv=document.getElementById("messages")
   messagesDiv.innerHTML=""
-  if(!currentChat) return
-  let users = getUsers()
-  let msgs = users[currentUser].msgs[currentChat]||[]
+  if(!currentChat||!messageList.includes(currentChat)) return
+  let users=getUsers(), msgs=users[currentUser].msgs[currentChat]||[]
   msgs.forEach(m=>{
-    let div = document.createElement("div")
-    div.className = "msg"
+    let div=document.createElement("div")
+    div.className="msg"
     if(m.startsWith(currentUser+":")) div.classList.add("self")
-    div.textContent = m
+    div.textContent=m
     messagesDiv.appendChild(div)
   })
-  messagesDiv.scrollTop = messagesDiv.scrollHeight
+  messagesDiv.scrollTop=messagesDiv.scrollHeight
 }
 
 function logout(){
   localStorage.removeItem("currentUser")
-  currentUser = null
-  currentChat = null
+  currentUser=null
+  currentChat=null
+  messageList=[]
   show("welcome")
 }
 
 function setTheme(t){
   if(t==="white") document.body.style.background="#e6f1fb"
   if(t==="dark") document.body.style.background="#111"
-  if(t==="nebula") document.body.style.background="#12002b"
+  if(t==="nebula") document.body.style.background="linear-gradient(to bottom right,#12002b,#1a0a3a)"
 }
 
 if(localStorage.currentUser){
-  currentUser = localStorage.currentUser
+  currentUser=localStorage.currentUser
   loadChat()
 }else{
   show("welcome")
