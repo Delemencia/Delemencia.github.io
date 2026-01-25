@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Delemencia</title>
+<title>PreWorked Delemencia :D</title>
 <link rel="icon" href="favicon.ico">
 <style>
 * { box-sizing:border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; }
@@ -55,11 +55,25 @@ body { height:100vh; display:flex; background:#e6f1fb; color:#000; }
 #sendBox button { padding:8px 12px; border:none; background:#0078d7; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
 #sendBox button.settings { margin-left:6px; border-radius:4px; background:#555; }
 
-#settings { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#f0f6fc; width:400px; padding:20px; border-radius:6px; box-shadow:0 0 15px rgba(0,0,0,0.3); }
-.setting { margin-bottom:20px; }
-.setting h3 { font-size:16px; font-weight:bold; margin-bottom:6px; }
-.setting button { margin-right:6px; padding:6px 10px; border:none; background:#0078d7; color:white; cursor:pointer; border-radius:4px; }
-.setting button.delete { background:#aa0000; }
+#settings {
+  display:none;
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  width:500px; max-width:90%;
+  background:#f0f6fc;
+  padding:25px;
+  border-radius:6px;
+  box-shadow:0 0 15px rgba(0,0,0,0.4);
+}
+
+#settings h2 { text-align:center; color:#0078d7; margin-bottom:20px; }
+.setting-section { margin-bottom:25px; }
+.setting-section h3 { margin-bottom:10px; font-size:16px; font-weight:bold; }
+.setting-section button { margin-right:10px; padding:6px 12px; border:none; background:#0078d7; color:white; border-radius:4px; cursor:pointer; }
+.setting-section button.delete { background:#aa0000; }
+.setting-section button.back { background:#555; }
+
 </style>
 </head>
 <body>
@@ -116,25 +130,27 @@ body { height:100vh; display:flex; background:#e6f1fb; color:#000; }
 </div>
 
 <div id="settings">
-  <div class="setting">
+  <h2>Settings</h2>
+  <div class="setting-section">
     <h3>Themes</h3>
     <button onclick="setTheme('white')">White</button>
     <button onclick="setTheme('nebula')">Nebula</button>
     <button onclick="setTheme('dark')">Dark</button>
     <button onclick="setTheme('crimson')">Crimson Moon</button>
   </div>
-  <div class="setting">
+  <div class="setting-section">
+    <h3>Account</h3>
     <button class="delete" onclick="deleteAccount()">Delete Account</button>
-    <button onclick="hideSettings()">Back</button>
+    <button class="back" onclick="hideSettings()">Back</button>
   </div>
 </div>
 
 <script>
-let currentUser = null;
-let currentChat = null;
-let contactsList = [];
+let currentUser=null;
+let currentChat=null;
+let contactsList=[];
 
-const getUsers = () => JSON.parse(localStorage.getItem("users")||"{}");
+const getUsers = ()=>JSON.parse(localStorage.getItem("users")||"{}");
 const saveUsers = u => localStorage.setItem("users", JSON.stringify(u));
 
 function showScreen(id){
@@ -142,21 +158,21 @@ function showScreen(id){
   document.getElementById(id).style.display='block';
 }
 
-function validUsername(u){ return /^[a-zA-Z0-9]{3,20}$/.test(u) }
+function validUsername(u){ return /^[a-zA-Z0-9]{3,20}$/.test(u); }
 
 function register(){
   let u = regUser.value.trim(), p = regPass.value;
   let users = getUsers();
-  if(!validUsername(u) || !p || users[u]) return alert("Invalid username or password");
-  users[u] = {pass:p,msgs:{}};
+  if(!validUsername(u)||!p||users[u]) return alert("Invalid username or password");
+  users[u]={pass:p,msgs:{}};
   saveUsers(users);
   currentUser=u; localStorage.currentUser=u;
   loadMain();
 }
 
 function login(){
-  let u=logUser.value.trim(), p=logPass.value;
-  let users=getUsers();
+  let u = logUser.value.trim(), p = logPass.value;
+  let users = getUsers();
   if(!users[u]||users[u].pass!==p) return alert("Wrong login");
   currentUser=u; localStorage.currentUser=u;
   loadMain();
@@ -170,8 +186,8 @@ function loadMain(){
 
 function searchUser(){
   let query = document.getElementById("searchInput").value.trim();
+  if(query === currentUser) return alert("Cannot add yourself");
   let users = getUsers();
-  let contactsDiv = document.getElementById("contacts");
   if(!users[query]) { alert("User not found"); return; }
   if(!contactsList.includes(query)) contactsList.push(query);
   renderContacts();
@@ -223,7 +239,7 @@ function hideSettings(){ document.getElementById("settings").style.display='none
 
 function deleteAccount(){
   if(!confirm("Delete your account?")) return;
-  let users = getUsers();
+  let users=getUsers();
   delete users[currentUser];
   saveUsers(users);
   logout();
@@ -235,14 +251,38 @@ function logout(){
 }
 
 function setTheme(t){
-  if(t==='white') document.body.style.background='#e6f1fb';
-  if(t==='nebula') document.body.style.background='linear-gradient(to bottom right,#12002b,#1a0a3a)';
-  if(t==='dark') document.body.style.background='#111';
-  if(t==='crimson') document.body.style.background='linear-gradient(to bottom right,#8b0000,#4b0000)';
+  const body=document.body, sidebar=document.getElementById("sidebar"), chatPane=document.getElementById("chatPane"),
+        messages=document.getElementById("messages"), header=document.getElementById("chatHeader"),
+        sendBox=document.getElementById("sendBox"), contacts=document.getElementById("contacts");
+  if(t==='white'){
+    body.style.background="#e6f1fb"; sidebar.style.background="#f0f6fc"; chatPane.style.background="#ffffff";
+    messages.style.background="#e5eff8"; header.style.background="#f0f6fc"; sendBox.style.background="#ffffff"; contacts.style.background="#f0f6fc";
+    document.querySelectorAll(".msg").forEach(m=>m.style.background="#d0e7fb");
+    document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#0078d7");
+  }
+  if(t==='dark'){
+    body.style.background="#111"; sidebar.style.background="#1a1a1a"; chatPane.style.background="#222";
+    messages.style.background="#333"; header.style.background="#1a1a1a"; sendBox.style.background="#222"; contacts.style.background="#1a1a1a";
+    document.querySelectorAll(".msg").forEach(m=>m.style.background="#444");
+    document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#0078d7");
+  }
+  if(t==='nebula'){
+    body.style.background="linear-gradient(to bottom right,#12002b,#1a0a3a)"; sidebar.style.background="#1c1c2e"; chatPane.style.background="#2c2c4a";
+    messages.style.background="#1c1c2e"; header.style.background="#1c1c2e"; sendBox.style.background="#2c2c4a"; contacts.style.background="#1c1c2e";
+    document.querySelectorAll(".msg").forEach(m=>m.style.background="#3a3a5c");
+    document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#00aaff");
+  }
+  if(t==='crimson'){
+    body.style.background="linear-gradient(to bottom right,#8b0000,#4b0000)"; sidebar.style.background="#4b0000"; chatPane.style.background="#5c0000";
+    messages.style.background="#4b0000"; header.style.background="#4b0000"; sendBox.style.background="#5c0000"; contacts.style.background="#4b0000";
+    document.querySelectorAll(".msg").forEach(m=>m.style.background="#7a0000");
+    document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#ff4c4c");
+  }
 }
 
-if(localStorage.currentUser) currentUser=localStorage.currentUser, loadMain();
+if(localStorage.currentUser){ currentUser=localStorage.currentUser; loadMain(); } 
 else showScreen('welcome');
 </script>
+
 </body>
 </html>
