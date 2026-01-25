@@ -1,68 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Delemencia 1.0</title>
+<meta charset="UTF-8">
+<title>Delemencia 2013 Skype Style</title>
 <link rel="icon" href="favicon.ico">
 <style>
-* { box-sizing:border-box; font-family:Segoe UI, Arial; }
+* { box-sizing:border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; }
 
-body {
-  margin:0;
-  background:linear-gradient(to bottom right,#12002b,#1a0a3a);
-  color:white;
-}
+body { height:100vh; display:flex; background:#e6f1fb; color:#000; }
 
-.screen { display:none; min-height:100vh; padding:40px; }
+.screen { display:none; position:absolute; width:100%; height:100%; top:0; left:0; }
 
 .auth-box {
-  width:380px;
-  margin:80px auto;
-  background:linear-gradient(to bottom right,#1c1c2e,#3a3a5c);
-  padding:30px;
-  border-radius:8px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.3);
-  text-align:center;
+  width:380px; margin:auto; background:#fff; border-radius:6px; box-shadow:0 0 10px rgba(0,0,0,0.3);
+  padding:30px; text-align:center;
 }
 
-.auth-box h1 { margin-bottom:20px; color:#00aaff; }
-.auth-box input {
-  width:100%; padding:10px; margin-bottom:12px;
-  border:1px solid #ccc; border-radius:4px; font-size:14px;
-}
-.auth-box button {
-  width:100%; padding:10px; margin-bottom:8px;
-  border:none; border-radius:4px; background:#00aaff; color:white; font-weight:bold;
-  cursor:pointer;
-}
-.auth-box .link {
-  display:block; margin-top:8px; font-size:13px; color:#00aaff;
-  cursor:pointer; text-decoration:underline;
+.auth-box h1 { color:#0078d7; margin-bottom:20px; }
+.auth-box input { width:100%; padding:10px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px; font-size:14px; }
+.auth-box button { width:100%; padding:10px; margin-bottom:8px; border:none; border-radius:4px; background:#0078d7; color:white; font-weight:bold; cursor:pointer; }
+.auth-box .link { display:block; margin-top:8px; font-size:13px; color:#0078d7; cursor:pointer; text-decoration:underline; }
+
+#container { display:flex; height:100vh; width:100%; }
+
+#sidebar {
+  width:250px; background:#f0f6fc; border-right:1px solid #c4d9ed;
+  display:flex; flex-direction:column; padding:10px;
 }
 
-#chatScreen { display:flex; flex-direction:column; height:100vh; max-width:600px; margin:0 auto; }
 #searchBox { display:flex; margin-bottom:10px; }
-#searchBox input { flex:1; padding:8px; border-radius:4px 0 0 4px; border:1px solid #444; background:#2c2c4a; color:white; }
-#searchBox button { padding:8px 12px; border:none; background:#00aaff; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
-#searchResults { background:#1c1c2e; border-radius:6px; padding:5px; margin-bottom:10px; max-height:100px; overflow-y:auto; }
+#searchBox input { flex:1; padding:6px; border-radius:4px 0 0 4px; border:1px solid #ccc; }
+#searchBox button { padding:6px 12px; border:none; background:#0078d7; color:white; border-radius:0 4px 4px 0; cursor:pointer; }
 
-.userResult { padding:6px; cursor:pointer; border-bottom:1px solid #444; }
-.userResult:hover { background:#2c2c4a; }
+#contacts { flex:1; overflow-y:auto; }
+.contact { padding:6px; cursor:pointer; border-bottom:1px solid #c4d9ed; }
+.contact:hover { background:#d0e7fb; }
 
-#messages { flex:1; padding:15px; overflow-y:auto; background:#1c1c2e; border-radius:8px; margin-bottom:10px; }
-.msg { font-size:14px; margin-bottom:8px; padding:6px 10px; border-radius:6px; display:inline-block; background:#3a3a5c; }
-.msg.self { background:#00aaff; color:white; margin-left:auto; }
+#chatPane {
+  flex:1; display:flex; flex-direction:column; background:#ffffff;
+}
 
-#sendBox { display:flex; border-top:1px solid #444; padding:10px; }
-#sendBox input { flex:1; padding:8px; border:1px solid #444; border-radius:4px 0 0 4px; background:#2c2c4a; color:white; }
-#sendBox button { padding:8px 12px; border:none; background:#00aaff; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
-#sendBox button.settings { border-radius:4px; margin-left:6px; background:#555; }
+#chatHeader {
+  padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between; align-items:center; background:#f0f6fc;
+}
 
-#settings { display:none; padding:20px; background:#1c1c2e; color:white; width:400px; margin:40px auto; border-radius:8px; }
+#chatHeader span { font-weight:bold; color:#0078d7; }
+
+#messages { flex:1; padding:10px; overflow-y:auto; background:#e5eff8; }
+.msg { margin-bottom:6px; padding:6px 10px; border-radius:6px; display:inline-block; max-width:70%; word-wrap:break-word; background:#d0e7fb; }
+.msg.self { background:#0078d7; color:white; margin-left:auto; }
+
+#sendBox { display:flex; border-top:1px solid #ccc; padding:10px; }
+#sendBox input { flex:1; padding:8px; border-radius:4px 0 0 4px; border:1px solid #ccc; }
+#sendBox button { padding:8px 12px; border:none; background:#0078d7; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
+#sendBox button.settings { margin-left:6px; border-radius:4px; background:#555; }
+
+#settings { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#f0f6fc; width:400px; padding:20px; border-radius:6px; box-shadow:0 0 15px rgba(0,0,0,0.3); }
 .setting { margin-bottom:20px; }
-.setting h3 { margin-bottom:6px; font-size:16px; font-weight:bold; }
-.setting button { margin-right:6px; padding:6px 10px; border:none; background:#00aaff; color:white; cursor:pointer; border-radius:4px; }
+.setting h3 { font-size:16px; font-weight:bold; margin-bottom:6px; }
+.setting button { margin-right:6px; padding:6px 10px; border:none; background:#0078d7; color:white; cursor:pointer; border-radius:4px; }
 .setting button.delete { background:#aa0000; }
-
 </style>
 </head>
 <body>
@@ -70,8 +67,8 @@ body {
 <div id="welcome" class="screen">
   <div class="auth-box">
     <h1>Delemencia</h1>
-    <button onclick="show('login')">Sign in</button>
-    <div class="link" onclick="show('register')">Create an account</div>
+    <button onclick="showScreen('login')">Sign in</button>
+    <div class="link" onclick="showScreen('register')">Create an account</div>
   </div>
 </div>
 
@@ -81,7 +78,7 @@ body {
     <input id="regUser" placeholder="Username (3-20 letters/numbers)">
     <input id="regPass" type="password" placeholder="Password">
     <button onclick="register()">Create</button>
-    <div class="link" onclick="show('welcome')">Back</div>
+    <div class="link" onclick="showScreen('welcome')">Back</div>
   </div>
 </div>
 
@@ -91,25 +88,34 @@ body {
     <input id="logUser" placeholder="Username">
     <input id="logPass" type="password" placeholder="Password">
     <button onclick="login()">Sign in</button>
-    <div class="link" onclick="show('welcome')">Back</div>
+    <div class="link" onclick="showScreen('welcome')">Back</div>
   </div>
 </div>
 
-<div id="chatScreen" class="screen">
-  <div id="searchBox">
-    <input id="searchInput" placeholder="Search for a user">
-    <button onclick="searchUser()">Search</button>
-    <button class="settings" onclick="show('settings')">⚙</button>
-  </div>
-  <div id="searchResults"></div>
-  <div id="messages"></div>
-  <div id="sendBox">
-    <input id="msgInput" placeholder="Type a message">
-    <button onclick="send()">Send</button>
+<div id="mainScreen" class="screen">
+  <div id="container">
+    <div id="sidebar">
+      <div id="searchBox">
+        <input id="searchInput" placeholder="Search user">
+        <button onclick="searchUser()">Search</button>
+      </div>
+      <div id="contacts"></div>
+    </div>
+    <div id="chatPane">
+      <div id="chatHeader">
+        <span id="chatUser">Select a contact</span>
+        <button class="settings" onclick="showSettings()">⚙</button>
+      </div>
+      <div id="messages"></div>
+      <div id="sendBox">
+        <input id="msgInput" placeholder="Type a message">
+        <button onclick="send()">Send</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<div id="settings" class="screen">
+<div id="settings">
   <div class="setting">
     <h3>Themes</h3>
     <button onclick="setTheme('white')">White</button>
@@ -119,120 +125,124 @@ body {
   </div>
   <div class="setting">
     <button class="delete" onclick="deleteAccount()">Delete Account</button>
-    <button onclick="show('chatScreen')">Back</button>
+    <button onclick="hideSettings()">Back</button>
   </div>
 </div>
 
 <script>
-let currentUser=null
-let currentChat=null
-let messageList=[]
+let currentUser = null;
+let currentChat = null;
+let contactsList = [];
 
-const getUsers=()=>JSON.parse(localStorage.getItem("users")||"{}")
-const saveUsers=u=>localStorage.setItem("users",JSON.stringify(u))
+const getUsers = () => JSON.parse(localStorage.getItem("users")||"{}");
+const saveUsers = u => localStorage.setItem("users", JSON.stringify(u));
 
-function show(id){
-  document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
-  document.getElementById(id).style.display="block"
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s => s.style.display='none');
+  document.getElementById(id).style.display='block';
 }
 
 function validUsername(u){ return /^[a-zA-Z0-9]{3,20}$/.test(u) }
 
 function register(){
-  let u=regUser.value.trim(), p=regPass.value, users=getUsers()
-  if(!validUsername(u)||!p||users[u]) return alert("Invalid username or password")
-  users[u]={pass:p,msgs:{}}
-  saveUsers(users)
-  currentUser=u
-  localStorage.currentUser=u
-  loadChat()
+  let u = regUser.value.trim(), p = regPass.value;
+  let users = getUsers();
+  if(!validUsername(u) || !p || users[u]) return alert("Invalid username or password");
+  users[u] = {pass:p,msgs:{}};
+  saveUsers(users);
+  currentUser=u; localStorage.currentUser=u;
+  loadMain();
 }
 
 function login(){
-  let u=logUser.value.trim(), p=logPass.value, users=getUsers()
-  if(!users[u]||users[u].pass!==p) return alert("Wrong login")
-  currentUser=u
-  localStorage.currentUser=u
-  loadChat()
+  let u=logUser.value.trim(), p=logPass.value;
+  let users=getUsers();
+  if(!users[u]||users[u].pass!==p) return alert("Wrong login");
+  currentUser=u; localStorage.currentUser=u;
+  loadMain();
 }
 
-function loadChat(){
-  show("chatScreen")
-  renderMsgs()
-  document.getElementById("searchResults").innerHTML=""
+function loadMain(){
+  showScreen('mainScreen');
+  renderContacts();
+  renderMsgs();
 }
 
 function searchUser(){
-  let query=document.getElementById("searchInput").value.trim()
-  let users=getUsers()
-  let resultsDiv=document.getElementById("searchResults")
-  resultsDiv.innerHTML=""
-  if(!users[query]) { resultsDiv.innerHTML="<div style='padding:6px'>No user found</div>"; return }
-  let div=document.createElement("div")
-  div.className="userResult"
-  div.textContent=query
-  div.onclick=()=>{ currentChat=query; if(!messageList.includes(query)) messageList.push(query); renderMsgs(); resultsDiv.innerHTML="" }
-  resultsDiv.appendChild(div)
+  let query = document.getElementById("searchInput").value.trim();
+  let users = getUsers();
+  let contactsDiv = document.getElementById("contacts");
+  if(!users[query]) { alert("User not found"); return; }
+  if(!contactsList.includes(query)) contactsList.push(query);
+  renderContacts();
+}
+
+function renderContacts(){
+  let contactsDiv = document.getElementById("contacts");
+  contactsDiv.innerHTML="";
+  contactsList.forEach(u=>{
+    let div = document.createElement("div");
+    div.className="contact";
+    div.textContent = u;
+    div.onclick = ()=>{ currentChat=u; document.getElementById("chatUser").textContent=u; renderMsgs(); }
+    contactsDiv.appendChild(div);
+  });
 }
 
 function send(){
-  if(!currentChat) return alert("No user selected")
-  if(!msgInput.value) return
-  let users=getUsers()
-  users[currentUser].msgs[currentChat]||(users[currentUser].msgs[currentChat]=[])
-  users[currentChat].msgs[currentUser]||(users[currentChat].msgs[currentUser]=[])
-  let msg=msgInput.value
-  users[currentUser].msgs[currentChat].push(currentUser+": "+msg)
-  users[currentChat].msgs[currentUser].push(currentUser+": "+msg)
-  msgInput.value=""
-  saveUsers(users)
-  renderMsgs()
+  if(!currentChat || !msgInput.value) return alert("Select a contact or type a message");
+  let users = getUsers();
+  users[currentUser].msgs[currentChat] ||= [];
+  users[currentChat].msgs[currentUser] ||= [];
+  let msg = msgInput.value;
+  users[currentUser].msgs[currentChat].push(currentUser+": "+msg);
+  users[currentChat].msgs[currentUser].push(currentUser+": "+msg);
+  msgInput.value="";
+  saveUsers(users);
+  renderMsgs();
 }
 
 function renderMsgs(){
-  let messagesDiv=document.getElementById("messages")
-  messagesDiv.innerHTML=""
-  if(!currentChat||!messageList.includes(currentChat)) return
-  let users=getUsers(), msgs=users[currentUser].msgs[currentChat]||[]
+  let messagesDiv = document.getElementById("messages");
+  messagesDiv.innerHTML="";
+  if(!currentChat) return;
+  let users = getUsers();
+  let msgs = users[currentUser].msgs[currentChat] || [];
   msgs.forEach(m=>{
-    let div=document.createElement("div")
-    div.className="msg"
-    if(m.startsWith(currentUser+":")) div.classList.add("self")
-    div.textContent=m
-    messagesDiv.appendChild(div)
-  })
-  messagesDiv.scrollTop=messagesDiv.scrollHeight
+    let div = document.createElement("div");
+    div.className="msg";
+    if(m.startsWith(currentUser+":")) div.classList.add("self");
+    div.textContent = m;
+    messagesDiv.appendChild(div);
+  });
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function showSettings(){ document.getElementById("settings").style.display='block'; }
+function hideSettings(){ document.getElementById("settings").style.display='none'; }
+
+function deleteAccount(){
+  if(!confirm("Delete your account?")) return;
+  let users = getUsers();
+  delete users[currentUser];
+  saveUsers(users);
+  logout();
 }
 
 function logout(){
-  localStorage.removeItem("currentUser")
-  currentUser=null
-  currentChat=null
-  messageList=[]
-  show("welcome")
-}
-
-function deleteAccount(){
-  if(!confirm("Are you sure you want to delete your account?")) return
-  let users=getUsers()
-  delete users[currentUser]
-  saveUsers(users)
-  logout()
+  localStorage.removeItem("currentUser");
+  location.reload();
 }
 
 function setTheme(t){
-  if(t==="white") document.body.style.background="#e6f1fb"
-  if(t==="dark") document.body.style.background="#111"
-  if(t==="nebula") document.body.style.background="linear-gradient(to bottom right,#12002b,#1a0a3a)"
-  if(t==="crimson") document.body.style.background="linear-gradient(to bottom right,#8b0000,#4b0000)"
+  if(t==='white') document.body.style.background='#e6f1fb';
+  if(t==='nebula') document.body.style.background='linear-gradient(to bottom right,#12002b,#1a0a3a)';
+  if(t==='dark') document.body.style.background='#111';
+  if(t==='crimson') document.body.style.background='linear-gradient(to bottom right,#8b0000,#4b0000)';
 }
 
-if(localStorage.currentUser){
-  currentUser=localStorage.currentUser
-  loadChat()
-}else{
-  show("welcome")
-}
+if(localStorage.currentUser) currentUser=localStorage.currentUser, loadMain();
+else showScreen('welcome');
 </script>
 </body>
 </html>
