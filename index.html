@@ -5,293 +5,354 @@
 <link rel="icon" href="favicon.ico">
 
 <style>
+* { box-sizing:border-box; font-family:Segoe UI, Arial; }
+
 body {
   margin:0;
-  font-family: Arial, Helvetica, sans-serif;
-  background:#0b1d33;
+  background:#0078d7;
   color:white;
+  overflow:hidden;
+}
+
+#bg {
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 40px,
+      rgba(0,0,0,0) 40px,
+      rgba(0,0,0,0) 80px
+    );
+  animation:bgMove 25s linear infinite;
+}
+
+@keyframes bgMove {
+  from { background-position:0 0; }
+  to { background-position:500px 500px; }
 }
 
 .screen {
   display:none;
   min-height:100vh;
-  padding:20px;
-  text-align:center;
+  padding:40px;
 }
 
-button {
-  padding:8px 14px;
-  margin:6px;
-  background:#1e90ff;
+.auth-box {
+  width:380px;
+  margin:60px auto;
+}
+
+.auth-box h1 {
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.auth-box input {
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
   border:none;
-  color:white;
+  font-size:14px;
+}
+
+.auth-box button {
+  width:100%;
+  padding:10px;
+  border:none;
+  background:#e6e6e6;
+  color:black;
   cursor:pointer;
 }
 
-input {
-  padding:6px;
-  width:200px;
-  margin:6px auto;
-  display:block;
+.auth-box .link {
+  margin-top:10px;
+  font-size:13px;
+  text-align:center;
+  cursor:pointer;
+  text-decoration:underline;
 }
 
-#app {
+#chatApp {
   display:flex;
-  height:400px;
-  background:white;
-  color:black;
-  max-width:700px;
-  margin:0 auto;
+  height:100vh;
+  background:#111;
 }
 
-#sidebar {
-  width:180px;
-  background:#e6e6e6;
-  padding:5px;
+#users {
+  width:200px;
+  background:#1e1e1e;
   overflow-y:auto;
 }
 
-.contact {
-  padding:6px;
-  font-size:12px;
+.user {
+  padding:10px;
+  border-bottom:1px solid #333;
   cursor:pointer;
-  border-bottom:1px solid #ccc;
 }
 
-.contact.active {
-  background:#cfdfff;
+.user:hover {
+  background:#2a2a2a;
 }
 
-#chatArea {
+#chat {
   flex:1;
   display:flex;
   flex-direction:column;
 }
 
-#chatBox {
+#messages {
   flex:1;
-  padding:5px;
+  padding:10px;
   overflow-y:auto;
-  font-size:12px;
+  background:#0f0f0f;
 }
 
-.message {
-  margin:3px 0;
+.msg {
+  font-size:13px;
+  margin-bottom:5px;
 }
 
-#messageInput {
-  width:100%;
-  box-sizing:border-box;
+#sendBox {
+  display:flex;
 }
 
-.dark { background:#0b1d33; color:white; }
-.light { background:#f2f2f2; color:black; }
-.nebula {
-  background:radial-gradient(circle at top, #4b0082, #000010);
+#sendBox input {
+  flex:1;
+  padding:10px;
+  border:none;
+}
+
+#sendBox button {
+  padding:10px;
+  border:none;
+  background:#0078d7;
   color:white;
+}
+
+#settings {
+  background:#111;
+  color:white;
+  height:100vh;
+  overflow-y:auto;
+}
+
+.setting {
+  background:#1e1e1e;
+  padding:15px;
+  margin:15px;
+}
+
+.setting h3 {
+  margin-top:0;
+}
+
+.setting button {
+  margin-top:8px;
+  padding:6px;
+  border:none;
+  background:#0078d7;
+  color:white;
+  cursor:pointer;
 }
 </style>
 </head>
 
-<body class="dark">
+<body>
+<div id="bg"></div>
 
 <div id="welcome" class="screen">
-  <h1>Delemencia 1.0</h1>
-  <button onclick="show('register')">Register</button>
-  <button onclick="show('login')">Login</button>
+  <div class="auth-box">
+    <h1>Delemencia</h1>
+    <button onclick="show('login')">Sign in</button>
+    <div class="link" onclick="show('register')">Create an account</div>
+  </div>
 </div>
 
 <div id="register" class="screen">
-  <h2>Register</h2>
-  <input id="regUser" placeholder="Username">
-  <input id="regPass" type="password" placeholder="Password">
-  <button onclick="register()">Create Account</button>
-  <button onclick="show('welcome')">Back</button>
+  <div class="auth-box">
+    <h1>Create account</h1>
+    <input id="regUser" placeholder="Username">
+    <input id="regPass" type="password" placeholder="Password">
+    <button onclick="register()">Create</button>
+    <div class="link" onclick="show('welcome')">Back</div>
+  </div>
 </div>
 
 <div id="login" class="screen">
-  <h2>Login</h2>
-  <input id="logUser" placeholder="Username">
-  <input id="logPass" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <button onclick="show('welcome')">Back</button>
+  <div class="auth-box">
+    <h1>Sign in</h1>
+    <input id="logUser" placeholder="Username">
+    <input id="logPass" type="password" placeholder="Password">
+    <button onclick="login()">Sign in</button>
+    <div class="link" onclick="show('welcome')">Back</div>
+  </div>
 </div>
 
-<div id="chat" class="screen">
-  <h2>Delemencia Chat</h2>
+<div id="chatScreen" class="screen">
+  <div id="chatApp">
+    <div id="users"></div>
 
-  <div id="app">
-    <div id="sidebar">
-      <b>Contacts</b>
-      <div id="contactList"></div>
-      <input id="addUserInput" placeholder="Add username">
-      <button onclick="addContact()">Add</button>
-      <button onclick="show('settings')">Settings</button>
-    </div>
-
-    <div id="chatArea">
-      <div id="chatBox"></div>
-      <input id="messageInput" placeholder="Type message">
-      <button onclick="sendMessage()">Send</button>
+    <div id="chat">
+      <div id="messages"></div>
+      <div id="sendBox">
+        <input id="msgInput" placeholder="Type a message">
+        <button onclick="send()">Send</button>
+        <button onclick="show('settings')">⚙</button>
+      </div>
     </div>
   </div>
 </div>
 
 <div id="settings" class="screen">
-  <h2>Settings</h2>
+  <div class="setting">
+    <h3>Appearance</h3>
+    <button onclick="setTheme('dark')">Dark</button>
+    <button onclick="setTheme('nebula')">Nebula</button>
+    <button onclick="setTheme('light')">Light</button>
+  </div>
 
-  <h3>Appearance</h3>
-  <button onclick="setTheme('dark')">Dark</button>
-  <button onclick="setTheme('light')">Light</button>
-  <button onclick="setTheme('nebula')">Nebula</button>
+  <div class="setting">
+    <h3>Change username</h3>
+    <input id="newUser">
+    <button onclick="changeUsername()">Change</button>
+  </div>
 
-  <h3>Account</h3>
-  <button onclick="logout()">Logout</button>
-  <button onclick="deleteAccount()">Delete Account</button>
+  <div class="setting">
+    <h3>Change password</h3>
+    <input id="newPass" type="password">
+    <button onclick="changePassword()">Change</button>
+  </div>
 
-  <button onclick="show('chat')">Back</button>
+  <div class="setting">
+    <h3>Account</h3>
+    <button onclick="deleteAccount()">Delete account</button>
+    <button onclick="logout()">Logout</button>
+    <button onclick="show('chatScreen')">Back</button>
+  </div>
 </div>
 
 <script>
-var currentUser = null
-var currentChat = null
+let currentUser = null
+let currentChat = null
 
-function users() {
-  return JSON.parse(localStorage.getItem("users") || "{}")
+const getUsers = () => JSON.parse(localStorage.getItem("users") || "{}")
+const saveUsers = u => localStorage.setItem("users", JSON.stringify(u))
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
+  document.getElementById(id).style.display="block"
 }
 
-function saveUsers(u) {
-  localStorage.setItem("users", JSON.stringify(u))
-}
-
-function show(id) {
-  document.querySelectorAll(".screen").forEach(s => s.style.display = "none")
-  document.getElementById(id).style.display = "block"
-}
-
-function register() {
-  var u = regUser.value.trim()
-  var p = regPass.value
-  if (u.length < 3 || p.length < 3) return alert("Too short")
-
-  var us = users()
-  if (us[u]) return alert("Username exists")
-
-  us[u] = { password:p, contacts:[], messages:{}, theme:"dark" }
-  saveUsers(us)
-
+function register(){
+  let u = regUser.value.trim()
+  let p = regPass.value
+  let users = getUsers()
+  if(!u || !p || users[u]) return alert("Invalid")
+  users[u] = {pass:p, msgs:{}}
+  saveUsers(users)
   currentUser = u
-  localStorage.setItem("currentUser", u)
-  show("chat")
+  localStorage.currentUser = u
+  loadChat()
 }
 
-function login() {
-  var u = logUser.value.trim()
-  var p = logPass.value
-  var us = users()
-
-  if (us[u] && us[u].password === p) {
-    currentUser = u
-    localStorage.setItem("currentUser", u)
-    setTheme(us[u].theme)
-    show("chat")
-    renderContacts()
-  } else {
-    alert("Wrong login")
-  }
+function login(){
+  let users = getUsers()
+  let u = logUser.value.trim()
+  let p = logPass.value
+  if(!users[u] || users[u].pass !== p) return alert("Wrong login")
+  currentUser = u
+  localStorage.currentUser = u
+  loadChat()
 }
 
-function logout() {
+function loadChat(){
+  show("chatScreen")
+  renderUsers()
+}
+
+function renderUsers(){
+  let users = getUsers()
+  usersDiv.innerHTML=""
+  Object.keys(users).forEach(u=>{
+    if(u===currentUser) return
+    let d=document.createElement("div")
+    d.className="user"
+    d.textContent=u
+    d.onclick=()=>{currentChat=u; renderMsgs()}
+    usersDiv.appendChild(d)
+  })
+}
+
+function send(){
+  if(!currentChat) return
+  let users=getUsers()
+  users[currentUser].msgs[currentChat] ||= []
+  users[currentChat].msgs[currentUser] ||= []
+  users[currentUser].msgs[currentChat].push(currentUser+": "+msgInput.value)
+  users[currentChat].msgs[currentUser].push(currentUser+": "+msgInput.value)
+  msgInput.value=""
+  saveUsers(users)
+  renderMsgs()
+}
+
+function renderMsgs(){
+  let users=getUsers()
+  messages.innerHTML=""
+  ;(users[currentUser].msgs[currentChat]||[]).forEach(m=>{
+    let d=document.createElement("div")
+    d.className="msg"
+    d.textContent=m
+    messages.appendChild(d)
+  })
+}
+
+function logout(){
   localStorage.removeItem("currentUser")
-  currentUser = null
-  currentChat = null
+  currentUser=null
   show("welcome")
 }
 
-function addContact() {
-  var name = addUserInput.value.trim()
-  var us = users()
-
-  if (!us[name] || name === currentUser) return
-
-  if (!us[currentUser].contacts.includes(name)) {
-    us[currentUser].contacts.push(name)
-    us[currentUser].messages[name] = ["Hello welcome to Delemencia!"]
-    us[name].messages[currentUser] = ["Hello welcome to Delemencia!"]
-    saveUsers(us)
-    currentChat = name
-    renderContacts()
-    renderMessages()
-  }
-}
-
-function renderContacts() {
-  var us = users()
-  contactList.innerHTML = ""
-
-  us[currentUser].contacts.forEach(c => {
-    var d = document.createElement("div")
-    d.textContent = c
-    d.className = "contact" + (c === currentChat ? " active" : "")
-    d.onclick = () => {
-      currentChat = c
-      renderContacts()
-      renderMessages()
-    }
-    contactList.appendChild(d)
-  })
-}
-
-function renderMessages() {
-  chatBox.innerHTML = ""
-  if (!currentChat) return
-
-  users()[currentUser].messages[currentChat].forEach(m => {
-    var d = document.createElement("div")
-    d.textContent = m
-    d.className = "message"
-    chatBox.appendChild(d)
-  })
-}
-
-function sendMessage() {
-  if (!currentChat || !messageInput.value) return
-
-  var us = users()
-  us[currentUser].messages[currentChat].push(currentUser + ": " + messageInput.value)
-  us[currentChat].messages[currentUser].push(currentUser + ": " + messageInput.value)
-  saveUsers(us)
-
-  messageInput.value = ""
-  renderMessages()
-}
-
-function setTheme(t) {
-  document.body.className = t
-  var us = users()
-  if (currentUser) {
-    us[currentUser].theme = t
-    saveUsers(us)
-  }
-}
-
-function deleteAccount() {
-  var us = users()
-  delete us[currentUser]
-  saveUsers(us)
+function deleteAccount(){
+  let users=getUsers()
+  delete users[currentUser]
+  saveUsers(users)
   logout()
 }
 
-var saved = localStorage.getItem("currentUser")
-if (saved) {
-  currentUser = saved
-  setTheme(users()[saved].theme)
-  show("chat")
-  renderContacts()
-} else {
+function changePassword(){
+  let users=getUsers()
+  users[currentUser].pass=newPass.value
+  saveUsers(users)
+  alert("Changed")
+}
+
+function changeUsername(){
+  let users=getUsers()
+  let n=newUser.value
+  if(!n || users[n]) return alert("Invalid")
+  users[n]=users[currentUser]
+  delete users[currentUser]
+  currentUser=n
+  saveUsers(users)
+  localStorage.currentUser=n
+  alert("Changed")
+}
+
+function setTheme(t){
+  if(t==="light") document.body.style.background="#ddd"
+  if(t==="dark") document.body.style.background="#111"
+  if(t==="nebula") document.body.style.background="#12002b"
+}
+
+if(localStorage.currentUser){
+  currentUser=localStorage.currentUser
+  loadChat()
+}else{
   show("welcome")
 }
 </script>
-
 </body>
 </html>
