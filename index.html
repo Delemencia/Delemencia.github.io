@@ -39,36 +39,29 @@ body {
   cursor:pointer; text-decoration:underline;
 }
 
-#chatScreen { display:flex; flex-direction:column; height:100vh; }
-#messages {
-  flex:1; padding:15px; overflow-y:auto; background:#1c1c2e; margin-bottom:10px;
-  border-radius:8px;
-}
-.msg {
-  font-size:14px; margin-bottom:8px; padding:6px 10px; border-radius:6px;
-  display:inline-block; background:#3a3a5c;
-}
+#chatScreen { display:flex; flex-direction:column; height:100vh; max-width:600px; margin:0 auto; }
+#searchBox { display:flex; margin-bottom:10px; }
+#searchBox input { flex:1; padding:8px; border-radius:4px 0 0 4px; border:1px solid #444; background:#2c2c4a; color:white; }
+#searchBox button { padding:8px 12px; border:none; background:#00aaff; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
+#searchResults { background:#1c1c2e; border-radius:6px; padding:5px; margin-bottom:10px; max-height:100px; overflow-y:auto; }
+
+.userResult { padding:6px; cursor:pointer; border-bottom:1px solid #444; }
+.userResult:hover { background:#2c2c4a; }
+
+#messages { flex:1; padding:15px; overflow-y:auto; background:#1c1c2e; border-radius:8px; margin-bottom:10px; }
+.msg { font-size:14px; margin-bottom:8px; padding:6px 10px; border-radius:6px; display:inline-block; background:#3a3a5c; }
 .msg.self { background:#00aaff; color:white; margin-left:auto; }
 
-#sendBox {
-  display:flex; border-top:1px solid #444; padding:10px;
-}
-#sendBox input {
-  flex:1; padding:8px; border:1px solid #444; border-radius:4px 0 0 4px;
-  background:#2c2c4a; color:white;
-}
-#sendBox button {
-  padding:8px 12px; border:none; background:#00aaff; color:white; cursor:pointer;
-  border-radius:0 4px 4px 0;
-}
-#sendBox button.settings {
-  border-radius:4px; margin-left:6px; background:#555;
-}
+#sendBox { display:flex; border-top:1px solid #444; padding:10px; }
+#sendBox input { flex:1; padding:8px; border:1px solid #444; border-radius:4px 0 0 4px; background:#2c2c4a; color:white; }
+#sendBox button { padding:8px 12px; border:none; background:#00aaff; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
+#sendBox button.settings { border-radius:4px; margin-left:6px; background:#555; }
 
-#settings { display:none; padding:20px; background:#1c1c2e; color:white; }
+#settings { display:none; padding:20px; background:#1c1c2e; color:white; width:400px; margin:40px auto; border-radius:8px; }
 .setting { margin-bottom:20px; }
-.setting h3 { margin-bottom:6px; }
+.setting h3 { margin-bottom:6px; font-size:16px; font-weight:bold; }
 .setting button { margin-right:6px; padding:6px 10px; border:none; background:#00aaff; color:white; cursor:pointer; border-radius:4px; }
+.setting button.delete { background:#aa0000; }
 
 </style>
 </head>
@@ -103,11 +96,16 @@ body {
 </div>
 
 <div id="chatScreen" class="screen">
+  <div id="searchBox">
+    <input id="searchInput" placeholder="Search for a user">
+    <button onclick="searchUser()">Search</button>
+    <button class="settings" onclick="show('settings')">⚙</button>
+  </div>
+  <div id="searchResults"></div>
   <div id="messages"></div>
   <div id="sendBox">
     <input id="msgInput" placeholder="Type a message">
     <button onclick="send()">Send</button>
-    <button class="settings" onclick="show('settings')">⚙</button>
   </div>
 </div>
 
@@ -117,9 +115,10 @@ body {
     <button onclick="setTheme('white')">White</button>
     <button onclick="setTheme('nebula')">Nebula</button>
     <button onclick="setTheme('dark')">Dark</button>
+    <button onclick="setTheme('crimson')">Crimson Moon</button>
   </div>
   <div class="setting">
-    <button onclick="logout()">Logout</button>
+    <button class="delete" onclick="deleteAccount()">Delete Account</button>
     <button onclick="show('chatScreen')">Back</button>
   </div>
 </div>
@@ -160,6 +159,20 @@ function login(){
 function loadChat(){
   show("chatScreen")
   renderMsgs()
+  document.getElementById("searchResults").innerHTML=""
+}
+
+function searchUser(){
+  let query=document.getElementById("searchInput").value.trim()
+  let users=getUsers()
+  let resultsDiv=document.getElementById("searchResults")
+  resultsDiv.innerHTML=""
+  if(!users[query]) { resultsDiv.innerHTML="<div style='padding:6px'>No user found</div>"; return }
+  let div=document.createElement("div")
+  div.className="userResult"
+  div.textContent=query
+  div.onclick=()=>{ currentChat=query; if(!messageList.includes(query)) messageList.push(query); renderMsgs(); resultsDiv.innerHTML="" }
+  resultsDiv.appendChild(div)
 }
 
 function send(){
@@ -173,14 +186,6 @@ function send(){
   users[currentChat].msgs[currentUser].push(currentUser+": "+msg)
   msgInput.value=""
   saveUsers(users)
-  renderMsgs()
-}
-
-function lookupUser(username){
-  let users=getUsers()
-  if(!users[username]) return alert("User not found")
-  currentChat=username
-  if(!messageList.includes(username)) messageList.push(username)
   renderMsgs()
 }
 
@@ -207,10 +212,19 @@ function logout(){
   show("welcome")
 }
 
+function deleteAccount(){
+  if(!confirm("Are you sure you want to delete your account?")) return
+  let users=getUsers()
+  delete users[currentUser]
+  saveUsers(users)
+  logout()
+}
+
 function setTheme(t){
   if(t==="white") document.body.style.background="#e6f1fb"
   if(t==="dark") document.body.style.background="#111"
   if(t==="nebula") document.body.style.background="linear-gradient(to bottom right,#12002b,#1a0a3a)"
+  if(t==="crimson") document.body.style.background="linear-gradient(to bottom right,#8b0000,#4b0000)"
 }
 
 if(localStorage.currentUser){
