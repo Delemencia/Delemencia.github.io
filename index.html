@@ -8,29 +8,9 @@
 
 body {
   margin:0;
-  background:#1a1a1a;
-  color:white;
+  background:#e6f1fb;
+  color:#000;
   overflow:hidden;
-}
-
-#bg {
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  background:
-    repeating-linear-gradient(
-      135deg,
-      rgba(255,255,255,0.05) 0px,
-      rgba(255,255,255,0.05) 40px,
-      rgba(0,0,0,0) 40px,
-      rgba(0,0,0,0) 80px
-    );
-  animation:bgMove 25s linear infinite;
-}
-
-@keyframes bgMove {
-  from { background-position:0 0; }
-  to { background-position:500px 500px; }
 }
 
 .screen {
@@ -41,67 +21,69 @@ body {
 
 .auth-box {
   width:380px;
-  margin:60px auto;
-  background:#222;
-  padding:20px;
-  border-radius:10px;
+  margin:80px auto;
+  background:#ffffff;
+  padding:30px;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  text-align:center;
 }
 
 .auth-box h1 {
-  text-align:center;
   margin-bottom:20px;
+  color:#0078d7;
 }
 
 .auth-box input {
   width:100%;
-  padding:12px;
+  padding:10px;
   margin-bottom:12px;
-  border:none;
+  border:1px solid #ccc;
+  border-radius:4px;
   font-size:14px;
-  border-radius:6px;
-  background:#333;
-  color:white;
 }
 
 .auth-box button {
   width:100%;
   padding:10px;
+  margin-bottom:8px;
   border:none;
+  border-radius:4px;
   background:#0078d7;
   color:white;
+  font-weight:bold;
   cursor:pointer;
-  border-radius:6px;
 }
 
 .auth-box .link {
-  margin-top:10px;
+  display:block;
+  margin-top:8px;
   font-size:13px;
-  text-align:center;
+  color:#0078d7;
   cursor:pointer;
   text-decoration:underline;
-  color:#ccc;
 }
 
-#chatApp {
+#chatScreen {
   display:flex;
   height:100vh;
-  background:#111;
 }
 
 #users {
   width:200px;
-  background:#1e1e1e;
+  background:#d0e7fb;
+  border-right:1px solid #a1c4e6;
   overflow-y:auto;
 }
 
 .user {
   padding:10px;
-  border-bottom:1px solid #333;
+  border-bottom:1px solid #a1c4e6;
   cursor:pointer;
 }
 
 .user:hover {
-  background:#2a2a2a;
+  background:#b4d4f2;
 }
 
 #chat {
@@ -112,68 +94,81 @@ body {
 
 #messages {
   flex:1;
-  padding:10px;
+  padding:15px;
   overflow-y:auto;
-  background:#0f0f0f;
+  background:#f0f6fc;
 }
 
 .msg {
-  font-size:13px;
-  margin-bottom:5px;
+  font-size:14px;
+  margin-bottom:8px;
+  padding:6px 10px;
+  border-radius:6px;
+  display:inline-block;
+  background:#d0e7fb;
+}
+
+.msg.self {
+  background:#0078d7;
+  color:white;
+  margin-left:auto;
 }
 
 #sendBox {
   display:flex;
+  border-top:1px solid #a1c4e6;
+  padding:10px;
+  background:#f0f6fc;
 }
 
 #sendBox input {
   flex:1;
-  padding:10px;
-  border:none;
-  border-radius:6px 0 0 6px;
-  background:#222;
-  color:white;
+  padding:8px;
+  border:1px solid #ccc;
+  border-radius:4px 0 0 4px;
 }
 
 #sendBox button {
-  padding:10px;
+  padding:8px 12px;
   border:none;
   background:#0078d7;
   color:white;
   cursor:pointer;
+  border-radius:0 4px 4px 0;
 }
 
 #settings {
-  background:#111;
-  color:white;
-  height:100vh;
-  overflow-y:auto;
+  display:none;
+  padding:20px;
+  background:#f0f6fc;
 }
 
 .setting {
-  background:#1e1e1e;
-  padding:15px;
-  margin:15px;
-  border-radius:10px;
+  margin-bottom:20px;
 }
 
 .setting h3 {
-  margin-top:0;
+  margin-bottom:6px;
 }
 
 .setting button {
-  margin-top:8px;
-  padding:6px;
+  margin-right:6px;
+  padding:6px 10px;
   border:none;
   background:#0078d7;
   color:white;
   cursor:pointer;
-  border-radius:6px;
+  border-radius:4px;
+}
+
+.setting input {
+  padding:6px;
+  border:1px solid #ccc;
+  border-radius:4px;
 }
 </style>
 </head>
 <body>
-<div id="bg"></div>
 
 <div id="welcome" class="screen">
   <div class="auth-box">
@@ -204,15 +199,13 @@ body {
 </div>
 
 <div id="chatScreen" class="screen">
-  <div id="chatApp">
-    <div id="users"></div>
-    <div id="chat">
-      <div id="messages"></div>
-      <div id="sendBox">
-        <input id="msgInput" placeholder="Type a message">
-        <button onclick="send()">Send</button>
-        <button onclick="show('settings')">⚙</button>
-      </div>
+  <div id="users"></div>
+  <div id="chat">
+    <div id="messages"></div>
+    <div id="sendBox">
+      <input id="msgInput" placeholder="Type a message">
+      <button onclick="send()">Send</button>
+      <button onclick="show('settings')">⚙</button>
     </div>
   </div>
 </div>
@@ -220,20 +213,23 @@ body {
 <div id="settings" class="screen">
   <div class="setting">
     <h3>Appearance</h3>
-    <button onclick="setTheme('dark')">Dark</button>
-    <button onclick="setTheme('nebula')">Nebula</button>
     <button onclick="setTheme('light')">Light</button>
+    <button onclick="setTheme('blue')">Blue</button>
+    <button onclick="setTheme('dark')">Dark</button>
   </div>
+
   <div class="setting">
     <h3>Change username</h3>
     <input id="newUser">
     <button onclick="changeUsername()">Change</button>
   </div>
+
   <div class="setting">
     <h3>Change password</h3>
     <input id="newPass" type="password">
     <button onclick="changePassword()">Change</button>
   </div>
+
   <div class="setting">
     <h3>Account</h3>
     <button onclick="deleteAccount()">Delete account</button>
@@ -247,19 +243,124 @@ let currentUser=null
 let currentChat=null
 const getUsers=()=>JSON.parse(localStorage.getItem("users")||"{}")
 const saveUsers=u=>localStorage.setItem("users",JSON.stringify(u))
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.style.display="none");document.getElementById(id).style.display="block"}
-function register(){let u=regUser.value.trim(),p=regPass.value,users=getUsers();if(!u||!p||users[u])return alert("Invalid");users[u]={pass:p,msgs:{}};saveUsers(users);currentUser=u;localStorage.currentUser=u;loadChat()}
-function login(){let users=getUsers(),u=logUser.value.trim(),p=logPass.value;if(!users[u]||users[u].pass!==p)return alert("Wrong login");currentUser=u;localStorage.currentUser=u;loadChat()}
-function loadChat(){show("chatScreen");renderUsers();renderMsgs()}
-function renderUsers(){let users=getUsers(),usersDiv=document.getElementById("users");usersDiv.innerHTML="";Object.keys(users).forEach(u=>{if(u===currentUser)return;let d=document.createElement("div");d.className="user";d.textContent=u;d.onclick=()=>{currentChat=u;renderMsgs()};usersDiv.appendChild(d)})}
-function send(){if(!currentChat)return;let users=getUsers();users[currentUser].msgs[currentChat]||=[];users[currentChat].msgs[currentUser]||=[];users[currentUser].msgs[currentChat].push(currentUser+": "+msgInput.value);users[currentChat].msgs[currentUser].push(currentUser+": "+msgInput.value);msgInput.value="";saveUsers(users);renderMsgs()}
-function renderMsgs(){let users=getUsers();messages.innerHTML="";(users[currentUser].msgs[currentChat]||[]).forEach(m=>{let d=document.createElement("div");d.className="msg";d.textContent=m;messages.appendChild(d)})}
-function logout(){localStorage.removeItem("currentUser");currentUser=null;show("welcome")}
-function deleteAccount(){let users=getUsers();delete users[currentUser];saveUsers(users);logout()}
-function changePassword(){let users=getUsers();users[currentUser].pass=newPass.value;saveUsers(users);alert("Changed")}
-function changeUsername(){let users=getUsers();let n=newUser.value;if(!n||users[n])return alert("Invalid");users[n]=users[currentUser];delete users[currentUser];currentUser=n;saveUsers(users);localStorage.currentUser=n;alert("Changed")}
-function setTheme(t){if(t==="light")document.body.style.background="#ddd";if(t==="dark")document.body.style.background="#111";if(t==="nebula")document.body.style.background="#12002b"}
-if(localStorage.currentUser){currentUser=localStorage.currentUser;loadChat()}else{show("welcome")}
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
+  document.getElementById(id).style.display="block"
+}
+
+function register(){
+  let u=regUser.value.trim()
+  let p=regPass.value
+  let users=getUsers()
+  if(!u || !p || users[u]) return alert("Invalid")
+  users[u]={pass:p,msgs:{}}
+  saveUsers(users)
+  currentUser=u
+  localStorage.currentUser=u
+  loadChat()
+}
+
+function login(){
+  let users=getUsers()
+  let u=logUser.value.trim()
+  let p=logPass.value
+  if(!users[u] || users[u].pass!==p) return alert("Wrong login")
+  currentUser=u
+  localStorage.currentUser=u
+  loadChat()
+}
+
+function loadChat(){
+  show("chatScreen")
+  renderUsers()
+  renderMsgs()
+}
+
+function renderUsers(){
+  let users=getUsers()
+  let usersDiv=document.getElementById("users")
+  usersDiv.innerHTML=""
+  Object.keys(users).forEach(u=>{
+    if(u===currentUser) return
+    let d=document.createElement("div")
+    d.className="user"
+    d.textContent=u
+    d.onclick=()=>{currentChat=u; renderMsgs()}
+    usersDiv.appendChild(d)
+  })
+}
+
+function send(){
+  if(!currentChat) return
+  let users=getUsers()
+  users[currentUser].msgs[currentChat] ||= []
+  users[currentChat].msgs[currentUser] ||= []
+  users[currentUser].msgs[currentChat].push(currentUser+": "+msgInput.value)
+  users[currentChat].msgs[currentUser].push(currentUser+": "+msgInput.value)
+  msgInput.value=""
+  saveUsers(users)
+  renderMsgs()
+}
+
+function renderMsgs(){
+  let users=getUsers()
+  let messagesDiv=document.getElementById("messages")
+  messagesDiv.innerHTML=""
+  (users[currentUser].msgs[currentChat]||[]).forEach(m=>{
+    let div=document.createElement("div")
+    div.className="msg"
+    if(m.startsWith(currentUser+":")) div.classList.add("self")
+    div.textContent=m
+    messagesDiv.appendChild(div)
+  })
+}
+
+function logout(){
+  localStorage.removeItem("currentUser")
+  currentUser=null
+  show("welcome")
+}
+
+function deleteAccount(){
+  let users=getUsers()
+  delete users[currentUser]
+  saveUsers(users)
+  logout()
+}
+
+function changePassword(){
+  let users=getUsers()
+  users[currentUser].pass=newPass.value
+  saveUsers(users)
+  alert("Changed")
+}
+
+function changeUsername(){
+  let users=getUsers()
+  let n=newUser.value
+  if(!n || users[n]) return alert("Invalid")
+  users[n]=users[currentUser]
+  delete users[currentUser]
+  currentUser=n
+  saveUsers(users)
+  localStorage.currentUser=n
+  alert("Changed")
+}
+
+function setTheme(t){
+  if(t==="light") document.body.style.background="#e6f1fb"
+  if(t==="blue") document.body.style.background="#d0e7fb"
+  if(t==="dark") document.body.style.background="#111"
+}
+
+if(localStorage.currentUser){
+  currentUser=localStorage.currentUser
+  loadChat()
+}else{
+  show("welcome")
+}
 </script>
+
 </body>
 </html>
