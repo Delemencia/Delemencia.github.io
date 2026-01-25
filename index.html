@@ -1,31 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Delemencia 1.0 :D</title>
+<title>Delemencia 1.0</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #c0c0c0;
-  color: black;
-}
+body { margin:0; font-family: Arial, Helvetica, sans-serif; background: #c0c0c0; color: black; }
+.screen { display:none; padding:20px; }
 
-.screen { display: none; padding: 20px; }
+input { display:block; margin:5px 0; padding:5px; width:180px; }
+button { margin:5px 0; padding:5px 10px; background:#1e90ff; color:white; border:none; cursor:pointer; }
 
-input, select { display: block; margin: 10px 0; padding: 5px; width: 200px; }
-
-button { margin: 5px 0; padding: 5px 10px; background: #1e90ff; color: white; border: none; cursor: pointer; }
-
-#chatContainer { display: flex; height: 400px; }
-#contacts { width: 150px; background: #eee; padding: 5px; overflow-y: auto; }
-.contact { padding: 2px 5px; cursor: pointer; border-bottom: 1px solid #ccc; }
-.contact:hover { background: #ddd; }
-#chatBox { flex: 1; padding: 5px; border-left: 1px solid #aaa; overflow-y: auto; background: #fff; font-size: 12px; line-height: 16px; }
-.message { margin: 2px 0; text-align: left; }
-
-#messageInput { width: 100%; padding: 5px; margin-top: 5px; }
-#addUserInput { width: 100%; padding: 3px; margin-top: 5px; font-size: 12px; }
+#app { display:flex; height:400px; }
+#sidebar { width:150px; background:#eee; padding:5px; overflow-y:auto; }
+#sidebar b { display:block; margin-bottom:5px; }
+.contact { padding:2px 5px; cursor:pointer; border-bottom:1px solid #ccc; }
+.contact:hover { background:#ddd; }
+#chatArea { flex:1; border-left:1px solid #aaa; display:flex; flex-direction:column; background:#fff; font-size:12px; }
+#chatBox { flex:1; padding:5px; overflow-y:auto; }
+.message { margin:2px 0; text-align:left; }
+#messageInput { width:100%; padding:5px; }
+#addUserInput { width:100%; padding:3px; font-size:12px; }
+#settingsScreen { display:none; padding:20px; background:#c0c0c0; }
 </style>
 </head>
 <body>
@@ -54,69 +49,76 @@ button { margin: 5px 0; padding: 5px 10px; background: #1e90ff; color: white; bo
 
 <div id="chat" class="screen">
 <h2>Delemencia 1 Chat</h2>
-<div id="chatContainer">
-  <div id="contacts">
+<div id="app">
+  <div id="sidebar">
     <b>Contacts</b>
     <div id="contactList"></div>
     <input id="addUserInput" placeholder="Add username">
     <button onclick="addUser()">Add</button>
+    <button onclick="showSettings()">Settings</button>
   </div>
-  <div style="flex:1; display:flex; flex-direction:column;">
+  <div id="chatArea">
     <div id="chatBox"></div>
     <input id="messageInput" placeholder="Type message">
     <button onclick="sendMessage()">Send</button>
-    <button onclick="logout()">Logout</button>
   </div>
 </div>
 </div>
 
+<div id="settingsScreen">
+<h2>Settings</h2>
+<button onclick="logout()">Logout</button>
+<button onclick="showChat()">Back</button>
+</div>
+
 <script>
-var currentUser = null;
-var currentChat = null;
+var currentUser=null;
+var currentChat=null;
 
 function hideAll() {
-  document.getElementById("welcome").style.display = "none";
-  document.getElementById("register").style.display = "none";
-  document.getElementById("login").style.display = "none";
-  document.getElementById("chat").style.display = "none";
+  document.getElementById("welcome").style.display="none";
+  document.getElementById("register").style.display="none";
+  document.getElementById("login").style.display="none";
+  document.getElementById("chat").style.display="none";
+  document.getElementById("settingsScreen").style.display="none";
 }
 
-function showWelcome() { hideAll(); document.getElementById("welcome").style.display="block"; }
-function showRegister() { hideAll(); document.getElementById("register").style.display="block"; }
-function showLogin() { hideAll(); document.getElementById("login").style.display="block"; }
-function showChat() { hideAll(); document.getElementById("chat").style.display="block"; renderContacts(); }
+function showWelcome(){ hideAll(); document.getElementById("welcome").style.display="block"; }
+function showRegister(){ hideAll(); document.getElementById("register").style.display="block"; }
+function showLogin(){ hideAll(); document.getElementById("login").style.display="block"; }
+function showChat(){ hideAll(); document.getElementById("chat").style.display="block"; renderContacts(); renderMessages(); }
+function showSettings(){ hideAll(); document.getElementById("settingsScreen").style.display="block"; }
 
-function getUsers() { return JSON.parse(localStorage.getItem("users") || "{}"); }
-function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
+function getUsers(){ return JSON.parse(localStorage.getItem("users")||"{}"); }
+function saveUsers(users){ localStorage.setItem("users", JSON.stringify(users)); }
 
-function register() {
-  var u = document.getElementById("regUser").value.trim();
-  var p = document.getElementById("regPass").value;
-  if(u.length<3||u.length>20||!/^[a-zA-Z]+$/.test(u)) { alert("Username 3-20 letters"); return; }
-  if(p.length<3||p.length>20) { alert("Password 3-20 chars"); return; }
-  var users = getUsers();
-  if(users[u]) { alert("Username exists"); return; }
-  users[u] = {password:p, contacts:[], messages:{}};
+function register(){
+  var u=document.getElementById("regUser").value.trim();
+  var p=document.getElementById("regPass").value;
+  if(u.length<3||u.length>20||!/^[a-zA-Z]+$/.test(u)){ alert("Username 3-20 letters"); return; }
+  if(p.length<3||p.length>20){ alert("Password 3-20 chars"); return; }
+  var users=getUsers();
+  if(users[u]){ alert("Username exists"); return; }
+  users[u]={password:p, contacts:[], messages:{}};
   saveUsers(users);
-  currentUser = u;
+  currentUser=u;
   showChat();
 }
 
-function login() {
-  var u = document.getElementById("logUser").value.trim();
-  var p = document.getElementById("logPass").value;
-  var users = getUsers();
-  if(users[u] && users[u].password===p) { currentUser=u; showChat(); } 
-  else { alert("Wrong username or password"); }
+function login(){
+  var u=document.getElementById("logUser").value.trim();
+  var p=document.getElementById("logPass").value;
+  var users=getUsers();
+  if(users[u]&&users[u].password===p){ currentUser=u; showChat(); } else { alert("Wrong username or password"); }
 }
 
-function logout() { currentUser=null; currentChat=null; showWelcome(); }
+function logout(){ currentUser=null; currentChat=null; showWelcome(); }
 
-function addUser() {
-  var newUser = document.getElementById("addUserInput").value.trim();
-  var users = getUsers();
-  if(!users[newUser]) { alert("User not found"); return; }
-  if(newUser===currentUser) { alert("Cannot add yourself"); return; }
+function addUser(){
+  var newUser=document.getElementById("addUserInput").value.trim();
+  var users=getUsers();
+  if(!users[newUser]){ alert("User not found"); return; }
+  if(newUser===currentUser){ alert("Cannot add yourself"); return; }
   if(users[currentUser].contacts.indexOf(newUser)===-1) users[currentUser].contacts.push(newUser);
   if(!users[currentUser].messages[newUser]) users[currentUser].messages[newUser]=["Hello welcome to Delemencia!"];
   saveUsers(users);
@@ -124,23 +126,24 @@ function addUser() {
   renderContacts();
 }
 
-function renderContacts() {
-  var users = getUsers();
-  var list = document.getElementById("contactList");
+function renderContacts(){
+  var users=getUsers();
+  var list=document.getElementById("contactList");
   list.innerHTML="";
   users[currentUser].contacts.forEach(function(c){
-    var div = document.createElement("div");
+    var div=document.createElement("div");
     div.textContent=c;
     div.className="contact";
-    div.onclick=function(){currentChat=c; renderMessages();};
+    div.onclick=function(){ currentChat=c; renderMessages(); };
     list.appendChild(div);
   });
 }
 
-function sendMessage() {
-  var msg = document.getElementById("messageInput").value.trim();
-  if(!msg||!currentChat) return;
-  var users = getUsers();
+function sendMessage(){
+  if(!currentChat) return;
+  var msg=document.getElementById("messageInput").value.trim();
+  if(!msg) return;
+  var users=getUsers();
   if(!users[currentUser].messages[currentChat]) users[currentUser].messages[currentChat]=[];
   if(!users[currentChat].messages[currentUser]) users[currentChat].messages[currentUser]=[];
   users[currentUser].messages[currentChat].push(currentUser+": "+msg);
@@ -150,12 +153,12 @@ function sendMessage() {
   renderMessages();
 }
 
-function renderMessages() {
-  if(!currentChat) return;
-  var users = getUsers();
-  var chatBox = document.getElementById("chatBox");
+function renderMessages(){
+  var chatBox=document.getElementById("chatBox");
   chatBox.innerHTML="";
-  var msgs = users[currentUser].messages[currentChat] || [];
+  if(!currentChat) return;
+  var users=getUsers();
+  var msgs=users[currentUser].messages[currentChat]||[];
   msgs.forEach(function(m){
     var p=document.createElement("div");
     p.textContent=m;
@@ -164,6 +167,7 @@ function renderMessages() {
   });
   chatBox.scrollTop=chatBox.scrollHeight;
 }
+
 showWelcome();
 </script>
 </body>
