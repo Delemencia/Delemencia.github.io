@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Messenger Delemencia 1.5</title>
+<title>BETA JUST WAIT PEASANTS</title>
 <style>
 *{font-family:'Segoe UI',Tahoma,sans-serif;margin:0;padding:0;box-sizing:border-box}
 body{height:100vh;background:#3a7fb1;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:0.5s}
@@ -17,21 +17,22 @@ body{height:100vh;background:#3a7fb1;display:flex;align-items:center;justify-con
 .section-label{padding:5px 10px;background:#f0f0f0;font-size:11px;font-weight:bold;color:#555;border-bottom:1px solid #ddd}
 .contact-item{padding:10px;border-bottom:1px solid #eee;cursor:pointer;display:flex;align-items:center;gap:10px}
 .contact-item:hover{background:#e5f3ff}
+.contact-item.offline{opacity:0.6}
 #chat-pane{flex:1;display:flex;flex-direction:column;background:white}
 #chat-head{padding:10px 15px;border-bottom:1px solid #ccc;font-size:16px;color:#004a7c;background:#fafafa;display:flex;align-items:center;justify-content:space-between}
-#messages-box{flex:1;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background:url('https://www.transparenttextures.com/patterns/white-diamond.png')}
-.msg-bubble{padding:8px 12px;font-size:13px;border:1px solid #ccc;max-width:70%;word-wrap:break-word;box-shadow:1px 1px 0 rgba(0,0,0,0.05)}
+#messages-box{flex:1;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.msg-bubble{padding:8px 12px;font-size:13px;border:1px solid #ccc;max-width:70%;word-wrap:break-word}
 .me{align-self:flex-end;background:#eff7ff;border-color:#bbd6ec}
 .them{align-self:flex-start;background:#fff;border-color:#ddd}
 #input-strip{padding:10px;border-top:1px solid #ccc;display:flex;gap:5px;background:#f0f0f0}
 input[type="text"],input[type="password"]{padding:6px;border:1px solid #8e8f8f;outline:none}
-button{padding:5px 12px;background:linear-gradient(to bottom, #f2f2f2, #cfcfcf);border:1px solid #707070;cursor:pointer;font-size:12px;color:#333}
+button{padding:5px 12px;background:linear-gradient(to bottom, #f2f2f2, #cfcfcf);border:1px solid #707070;cursor:pointer;font-size:12px}
 button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-color:#3c7fb1}
 .modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
 .modal-content{background:white;border:1px solid #666;width:400px;padding:20px;box-shadow:0 0 30px rgba(0,0,0,0.5)}
 #call-screen{display:none;position:absolute;inset:0;background:#222;z-index:300;flex-direction:column;align-items:center;justify-content:center;color:white}
 .pfp-large{width:120px;height:120px;border-radius:50%;border:3px solid #4caf50;margin-bottom:20px;object-fit:cover}
-#settings-box{display:none;position:absolute;inset:40px;background:white;border:1px solid #666;box-shadow:0 0 30px rgba(0,0,0,0.5);z-index:100;padding:20px}
+#settings-box{display:none;position:absolute;inset:40px;background:white;border:1px solid #666;box-shadow:0 0 30px rgba(0,0,0,0.5);z-index:100;padding:20px;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -60,9 +61,7 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
     <div class="win-window" style="margin:auto;margin-top:20px">
         <div class="win-titlebar">
             <span>Delemencia .</span>
-            <div>
-                <button onclick="openSet()" style="height:18px;line-height:8px">Settings</button>
-            </div>
+            <div><button onclick="openSet()" style="height:18px;line-height:8px">Settings</button></div>
         </div>
         <div class="win-body">
             <div id="sidebar">
@@ -76,8 +75,8 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
                     </div>
                 </div>
                 <div style="padding:8px;display:flex;gap:3px">
-                    <input id="search-user" placeholder="Look up profile..." style="flex:1;font-size:12px">
-                    <button onclick="lookUp()">Look Up</button>
+                    <input id="search-user" placeholder="Search profiles..." style="flex:1;font-size:12px">
+                    <button onclick="lookUp()">Search</button>
                 </div>
                 <div id="contacts-area"></div>
             </div>
@@ -100,46 +99,36 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
                     <h3 style="margin-bottom:15px">User Profile</h3>
                     <div style="display:flex;gap:15px;align-items:center">
                         <img id="view-pfp" src="" class="pfp-large" style="width:80px;height:80px">
-                        <div>
-                            <h2 id="view-name"></h2>
-                            <p id="view-status" style="font-size:12px;color:#666"></p>
-                        </div>
+                        <div><h2 id="view-name"></h2><p id="view-status" style="font-size:12px"></p></div>
                     </div>
                     <br>
-                    <button id="msg-btn" style="width:100%;padding:10px;margin-bottom:5px">Message User</button>
+                    <button id="msg-btn" style="width:100%;padding:10px;margin-bottom:5px">Message</button>
+                    <button id="block-btn" style="width:100%;padding:10px;margin-bottom:10px;background:#ffcdd2;color:#b71c1c">Block Person</button>
                     <button onclick="closeModal()" style="width:100%;padding:8px">Close</button>
                 </div>
             </div>
 
             <div id="call-screen">
-                <img id="call-pfp" src="" class="pfp-large">
-                <h2 id="call-name">Calling...</h2>
-                <p id="call-timer">00:00</p>
-                <br><br>
-                <button onclick="endCall()" style="background:#f44336;color:white;padding:10px 30px;border:none;font-size:16px">End Call</button>
+                <img id="call-pfp" src="" class="pfp-large"><h2 id="call-name">Calling...</h2><p id="call-timer">00:00</p><br>
+                <button onclick="endCall()" style="background:#f44336;color:white;padding:10px 30px;border:none">End Call</button>
             </div>
 
             <div id="settings-box">
                 <h2 style="margin-bottom:20px">Settings</h2>
                 <div style="display:flex;gap:30px">
                     <div style="flex:1">
-                        <h4>Account</h4><br>
+                        <h4>Profile</h4><br>
                         <img id="pfp-pre" class="pfp-small" style="width:80px;height:80px;display:block;margin-bottom:10px" src=""><br>
                         <input type="file" id="pfp-file" accept="image/*" onchange="preImg()"><br><br>
                         <button onclick="savePfp()">Update Photo</button>
                     </div>
                     <div style="flex:1">
-                        <h4>Themes</h4><br>
-                        <button onclick="theme('#3a7fb1')">Sky Blue</button>
-                        <button onclick="theme('#2c3e50')">Midnight</button>
-                        <button onclick="theme('#2d5a27')">Forest</button>
-                        <button onclick="theme('#6a1b9a')">Purple</button>
-                        <button onclick="theme('#b71c1c')">Crimson</button>
-                        <button onclick="theme('#333')">Dark Grey</button>
-                        <hr style="margin:15px 0">
-                        <button onclick="clearHistory()" style="font-size:11px">Clear All Chat Histories</button><br><br>
-                        <button onclick="logout()" style="background:#f44336;color:white;border-color:#b71c1c">Logout</button>
-                        <button onclick="delAcc()" style="font-size:10px;margin-top:10px;opacity:0.6">Delete Account</button>
+                        <h4>Manage</h4><br>
+                        <button onclick="theme('#3a7fb1')">Blue</button><button onclick="theme('#2d5a27')">Forest</button><button onclick="theme('#333')">Dark</button><button onclick="theme('#b71c1c')">Crimson</button>
+                        <hr style="margin:10px 0">
+                        <div id="blocked-list" style="font-size:11px;max-height:100px;overflow:auto"></div>
+                        <hr style="margin:10px 0">
+                        <button onclick="logout()" style="background:#f44336;color:white">Logout</button>
                     </div>
                 </div>
                 <button onclick="closeSet()" style="position:absolute;bottom:20px;right:20px">Close</button>
@@ -161,7 +150,7 @@ function toggleAuth(reg){
 function register(){
     let u = document.getElementById('ru').value.trim(), p = document.getElementById('rp').value, d = db();
     if(!u || !p || d[u]) return alert("Username unavailable");
-    d[u] = { pass: p, status: "Online", pfp: "", friends: [], inbox: {} };
+    d[u] = { pass: p, status: "Online", pfp: "", blocked: [], inbox: {} };
     save(d); session(u);
 }
 
@@ -177,38 +166,51 @@ function session(u){
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
     let d = db();
+    if(!d[me].blocked) d[me].blocked = [];
     if(d[me].pfp) document.getElementById('my-pfp').src = d[me].pfp;
-    refresh();
+    save(d); refresh();
 }
 
 function lookUp(){
     let t = document.getElementById('search-user').value.trim(), d = db();
-    if(!t || !d[t]) return alert("User not found");
-    document.getElementById('view-name').textContent = t;
-    document.getElementById('view-status').textContent = d[t].status;
-    document.getElementById('view-pfp').src = d[t].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-    document.getElementById('msg-btn').onclick = () => { startChat(t); closeModal(); };
+    let found = Object.keys(d).find(key => key.toLowerCase() === t.toLowerCase());
+    if(!found) return alert("User not found");
+    document.getElementById('view-name').textContent = found;
+    document.getElementById('view-status').textContent = d[found].status;
+    document.getElementById('view-pfp').src = d[found].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    document.getElementById('msg-btn').onclick = () => { startChat(found); closeModal(); };
+    document.getElementById('block-btn').onclick = () => { blockUser(found); closeModal(); };
     document.getElementById('profile-modal').style.display = 'flex';
+}
+
+function blockUser(u){
+    let d = db();
+    if(!d[me].blocked.includes(u)) d[me].blocked.push(u);
+    save(d); refresh(); alert(u + " blocked.");
+}
+
+function unblock(u){
+    let d = db(); d[me].blocked = d[me].blocked.filter(x => x !== u);
+    save(d); refresh(); renderBlocked();
 }
 
 function startChat(u){
     chatWith = u;
-    let d = db();
-    if(!d[me].friends.includes(u)) { d[me].friends.push(u); save(d); }
     document.getElementById('chat-target-name').textContent = u;
     document.getElementById('chat-actions').style.display = 'block';
-    renderMsgs(); refresh();
+    renderMsgs();
 }
 
 function doSend(){
     let txt = document.getElementById('msg-in').value.trim(), d = db();
     if(!chatWith || !txt) return;
+    if(d[chatWith].blocked.includes(me)) return alert("You are blocked by this user.");
     if(!d[me].inbox[chatWith]) d[me].inbox[chatWith] = [];
     if(!d[chatWith].inbox[me]) d[chatWith].inbox[me] = [];
-    d[me].inbox[chatWith].push({ s: me, t: txt });
-    d[chatWith].inbox[me].push({ s: me, t: txt });
-    save(d); document.getElementById('msg-in').value = "";
-    renderMsgs();
+    let m = { s: me, t: txt };
+    d[me].inbox[chatWith].push(m);
+    d[chatWith].inbox[me].push(m);
+    save(d); document.getElementById('msg-in').value = ""; renderMsgs();
 }
 
 function renderMsgs(){
@@ -226,52 +228,42 @@ function renderMsgs(){
 
 function refresh(){
     let d = db(), area = document.getElementById('contacts-area');
-    area.innerHTML = `<div class="section-label">RECENT CONVERSATIONS</div>`;
-    d[me].friends.forEach(u => {
-        let pic = d[u].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    area.innerHTML = `<div class="section-label">PEOPLE</div>`;
+    Object.keys(d).forEach(u => {
+        if(u === me || d[me].blocked.includes(u)) return;
         let div = document.createElement('div');
-        div.className = "contact-item";
+        div.className = "contact-item" + (d[u].status === "Offline" ? " offline" : "");
         div.onclick = () => startChat(u);
-        div.innerHTML = `<img src="${pic}" class="pfp-small" style="border-radius:50%"> <div><b>${u}</b><br><span style="font-size:10px;color:green">${d[u].status}</span></div>`;
+        div.innerHTML = `<img src="${d[u].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" class="pfp-small" style="border-radius:50%"> <div><b>${u}</b><br><span style="font-size:10px;color:green">${d[u].status}</span></div>`;
         area.appendChild(div);
+    });
+}
+
+function renderBlocked(){
+    let d = db(), list = document.getElementById('blocked-list');
+    list.innerHTML = "<b>Blocked Users:</b><br>";
+    d[me].blocked.forEach(u => {
+        list.innerHTML += `${u} <a href="#" onclick="unblock('${u}')">Unblock</a><br>`;
     });
 }
 
 function startCall(){
     if(!chatWith) return;
-    let d = db();
-    document.getElementById('call-pfp').src = d[chatWith].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-    document.getElementById('call-name').textContent = "Calling " + chatWith + "...";
+    document.getElementById('call-pfp').src = db()[chatWith].pfp || '';
+    document.getElementById('call-name').textContent = "Calling " + chatWith;
     document.getElementById('call-screen').style.display = 'flex';
-    let sec = 0;
-    callTimer = setInterval(() => {
-        sec++;
-        let m = Math.floor(sec/60).toString().padStart(2,'0');
-        let s = (sec%60).toString().padStart(2,'0');
-        document.getElementById('call-timer').textContent = m + ":" + s;
-    }, 1000);
+    let s = 0; callTimer = setInterval(() => { s++; let m = Math.floor(s/60).toString().padStart(2,'0'), r = (s%60).toString().padStart(2,'0'); document.getElementById('call-timer').textContent = m+":"+r; }, 1000);
 }
 
-function endCall(){
-    clearInterval(callTimer);
-    document.getElementById('call-screen').style.display = 'none';
-    document.getElementById('call-timer').textContent = "00:00";
-}
-
-function clearHistory(){ if(confirm("Clear all chats?")){ let d = db(); d[me].inbox = {}; d[me].friends = []; save(d); refresh(); startChat(null); } }
-function preImg(){
-    let reader = new FileReader();
-    reader.onload = e => document.getElementById('pfp-pre').src = e.target.result;
-    reader.readAsDataURL(document.getElementById('pfp-file').files[0]);
-}
-function savePfp(){ let d = db(); d[me].pfp = document.getElementById('pfp-pre').src; save(d); document.getElementById('my-pfp').src = d[me].pfp; alert("Saved"); }
-function upStatus(){ let d = db(); d[me].status = document.getElementById('my-status').value; save(d); refresh(); }
-function theme(c){ document.body.style.background = c; }
-function openSet(){ document.getElementById('settings-box').style.display = 'block'; }
+function endCall(){ clearInterval(callTimer); document.getElementById('call-screen').style.display = 'none'; }
+function openSet(){ renderBlocked(); document.getElementById('settings-box').style.display = 'block'; }
 function closeSet(){ document.getElementById('settings-box').style.display = 'none'; }
 function closeModal(){ document.getElementById('profile-modal').style.display = 'none'; }
+function theme(c){ document.body.style.background = c; }
+function upStatus(){ let d = db(); d[me].status = document.getElementById('my-status').value; save(d); refresh(); }
 function logout(){ localStorage.removeItem('del_me'); location.reload(); }
-function delAcc(){ if(confirm("Delete?")){ let d = db(); delete d[me]; save(d); logout(); } }
+function preImg(){ let reader = new FileReader(); reader.onload = e => document.getElementById('pfp-pre').src = e.target.result; reader.readAsDataURL(document.getElementById('pfp-file').files[0]); }
+function savePfp(){ let d = db(); d[me].pfp = document.getElementById('pfp-pre').src; save(d); document.getElementById('my-pfp').src = d[me].pfp; alert("Saved"); }
 
 if(localStorage.getItem('del_me')) session(localStorage.getItem('del_me'));
 else document.getElementById('auth-screen').style.display = 'flex';
