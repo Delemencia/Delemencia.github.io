@@ -2,277 +2,302 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Delemencia</title>
+<title>Delemencia | Messenger</title>
 <style>
-*{font-family:Segoe UI,Tahoma;margin:0;padding:0;box-sizing:border-box}
-body{
-height:100vh;
-background:linear-gradient(135deg,#b9f6ca,#4caf50);
-transition:.3s
+*{font-family:'Segoe UI',Tahoma,sans-serif;margin:0;padding:0;box-sizing:border-box}
+body{height:100vh;background:#3a7fb1;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.screen{display:none;width:100%;height:100%}
+.win-window{
+width:900px;height:600px;
+background:#f0f0f0;
+border:1px solid #004873;
+box-shadow:0 0 15px rgba(0,0,0,0.5);
+display:flex;flex-direction:column
 }
-.screen{display:none;position:absolute;width:100%;height:100%}
-.vista{
-display:flex;align-items:center;justify-content:center;
-background:radial-gradient(circle at top,#eaffea,#4caf50)
+.win-titlebar{
+background:linear-gradient(to bottom, #74aade 0%, #4f92d1 50%, #2264a2 50%, #1e5a96 100%);
+height:32px;padding:0 10px;
+display:flex;align-items:center;justify-content:space-between;
+color:white;font-size:13px;font-weight:bold;text-shadow:1px 1px 2px #000
 }
-.glass{
-width:420px;padding:30px;border-radius:12px;
-background:rgba(255,255,255,.65);
-backdrop-filter:blur(6px);
-box-shadow:0 0 30px rgba(0,0,0,.35);
-text-align:center
+.win-body{flex:1;display:flex;overflow:hidden;position:relative}
+#sidebar{width:260px;background:#fff;border-right:1px solid #ccc;display:flex;flex-direction:column}
+.user-profile{padding:15px;background:#e9f2f9;border-bottom:1px solid #ccc}
+#contacts-list{flex:1;overflow-y:auto}
+.contact-item{padding:8px 15px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;flex-direction:column}
+.contact-item:hover{background:#e5f3ff}
+.contact-item .status{font-size:11px;color:#666}
+.pending-badge{font-size:10px;background:#ff9800;color:white;padding:2px 4px;margin-left:5px}
+#chat-area{flex:1;display:flex;flex-direction:column;background:white}
+#chat-header{padding:15px;border-bottom:1px solid #ccc;font-size:18px;font-weight:normal;color:#004a7c}
+#messages-frame{flex:1;padding:20px;overflow-y:auto;background:#fff}
+.msg-row{margin-bottom:10px;clear:both}
+.msg-bubble{padding:8px 12px;max-width:80%;font-size:13px;border:1px solid #ddd}
+.msg-me{float:right;background:#eff7ff;border-color:#bbd6ec}
+.msg-them{float:left;background:#f1f1f1}
+#input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:5px}
+input[type="text"],input[type="password"]{padding:5px;border:1px solid #8e8f8f}
+button{
+padding:4px 12px;background:linear-gradient(to bottom, #f2f2f2, #ebebeb 50%, #dddddd 50%, #cfcfcf);
+border:1px solid #707070;cursor:pointer;font-size:12px
 }
-.glass h1{font-size:34px;color:#1b5e20;margin-bottom:20px}
-.glass button{
-width:100%;padding:12px;margin:8px 0;border:none;
-background:linear-gradient(#66bb6a,#2e7d32);
-color:#fff;font-weight:bold;border-radius:6px;cursor:pointer
+button:hover{border-color:#3c7fb1;background:linear-gradient(to bottom, #eaf6fd, #d9f0fc 50%, #bee6fd 50%, #a7d9f5)}
+#settings-overlay{
+display:none;position:absolute;top:50px;left:50px;right:50px;bottom:50px;
+background:white;border:1px solid #999;box-shadow:0 0 20px rgba(0,0,0,0.4);padding:20px;z-index:100
 }
-.auth{
-background:rgba(255,255,255,.9);
-width:380px;margin:auto;margin-top:90px;
-padding:30px;border-radius:8px;
-box-shadow:0 0 15px rgba(0,0,0,.3);
-text-align:center
-}
-.auth input,.auth button{width:100%;padding:10px;margin-bottom:10px}
-.auth button{background:#2e7d32;color:#fff;border:none;font-weight:bold}
-#container{display:flex;height:100%}
-#sidebar{
-width:260px;
-background:rgba(240,255,240,.8);
-border-right:1px solid #9ccc65;
-padding:10px
-}
-#contacts{overflow-y:auto}
-.contact{
-padding:6px;border-bottom:1px solid #aed581;
-cursor:pointer
-}
-.contact:hover{background:#c8e6c9}
-#chat{flex:1;display:flex;flex-direction:column}
-#header{
-padding:10px;
-background:rgba(220,255,220,.85);
-border-bottom:1px solid #9ccc65;
-display:flex;justify-content:space-between
-}
-#messages{
-flex:1;padding:10px;
-background:rgba(235,255,235,.9);
-overflow-y:auto
-}
-.msg{
-margin-bottom:6px;padding:6px 10px;
-border-radius:6px;background:#c8e6c9;
-max-width:70%
-}
-.self{
-background:#2e7d32;color:white;margin-left:auto
-}
-#send{
-display:flex;padding:10px;
-border-top:1px solid #9ccc65
-}
-#send input{flex:1;padding:8px}
-#send button{
-padding:8px 14px;
-background:#2e7d32;color:#fff;border:none
-}
-#settings{
-display:none;position:absolute;
-top:50%;left:50%;
-transform:translate(-50%,-50%);
-background:rgba(240,255,240,.95);
-padding:25px;border-radius:10px;
-width:540px;
-box-shadow:0 0 25px rgba(0,0,0,.35)
-}
-.setting{margin-bottom:18px}
-.setting button{
-margin:4px;padding:6px 12px;
-border:none;border-radius:4px;
-background:#2e7d32;color:white
-}
-.delete{background:#a00}
+.github-tool{margin-top:15px;padding:10px;border:1px dashed #ccc;background:#fafafa}
 </style>
 </head>
 <body>
 
-<div id="welcome" class="screen vista">
-<div class="glass">
-<h1>Delemencia</h1>
-<button onclick="show('login')">Sign in</button>
-<button onclick="show('register')">Create account</button>
+<div id="login-screen" class="screen" style="display:flex;align-items:center;justify-content:center">
+<div class="win-window" style="width:350px;height:auto">
+<div class="win-titlebar"><span>Sign In</span></div>
+<div style="padding:20px">
+<label>Username</label><br><input id="lu" style="width:100%;margin-bottom:10px"><br>
+<label>Password</label><br><input id="lp" type="password" style="width:100%;margin-bottom:20px"><br>
+<button onclick="login()" style="width:100%;padding:8px">Sign In</button>
+<p style="font-size:11px;margin-top:10px;text-align:center">No account? <a href="#" onclick="toggleAuth()">Register</a></p>
 </div>
-</div>
-
-<div id="register" class="screen">
-<div class="auth">
-<h2>Create account</h2>
-<input id="ru" placeholder="Username">
-<input id="rp" type="password" placeholder="Password">
-<button onclick="register()">Create</button>
 </div>
 </div>
 
-<div id="login" class="screen">
-<div class="auth">
-<h2>Sign in</h2>
-<input id="lu" placeholder="Username">
-<input id="lp" type="password" placeholder="Password">
-<button onclick="login()">Sign in</button>
+<div id="register-screen" class="screen">
+<div class="win-window" style="width:350px;height:auto;margin:auto;margin-top:100px">
+<div class="win-titlebar"><span>Create Account</span></div>
+<div style="padding:20px">
+<input id="ru" placeholder="Username" style="width:100%;margin-bottom:10px">
+<input id="rp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
+<button onclick="register()" style="width:100%;padding:8px">Join Delemencia</button>
+<p style="font-size:11px;margin-top:10px;text-align:center"><a href="#" onclick="toggleAuth()">Back to login</a></p>
+</div>
 </div>
 </div>
 
-<div id="main" class="screen">
-<div id="container">
+<div id="main-screen" class="screen">
+<div class="win-window" style="width:95%;height:90%;margin:auto">
+<div class="win-titlebar">
+<span>Delemencia Messenger 2013</span>
+<div>
+<button onclick="openSettings()" style="height:20px;line-height:10px">Settings</button>
+<button onclick="logout()" style="height:20px;line-height:10px">Logout</button>
+</div>
+</div>
+<div class="win-body">
 <div id="sidebar">
-<input id="addUser" placeholder="Add username">
-<button onclick="addContact()">Add</button>
-<h4>Contacts</h4>
-<div id="contacts"></div>
+<div class="user-profile">
+<b id="my-name">User</b><br>
+<span id="my-status-text" style="font-size:11px">Online</span>
+</div>
+<div style="padding:10px;border-bottom:1px solid #ccc">
+<input id="target-user" placeholder="Find user..." style="width:120px">
+<button onclick="sendRequest()">Add</button>
+</div>
+<div id="contacts-list"></div>
+</div>
+<div id="chat-area">
+<div id="chat-header">Select a contact to start chatting</div>
+<div id="messages-frame"></div>
+<div id="input-area">
+<input id="msg-input" type="text" style="flex:1" placeholder="Type a message...">
+<button onclick="sendMessage()">Send</button>
+</div>
 </div>
 
-<div id="chat">
-<div id="header">
-<span id="chatName">Select chat</span>
-<button onclick="openSettings()">⚙</button>
-</div>
-<div id="messages"></div>
-<div id="send">
-<input id="msg">
-<button onclick="send()">Send</button>
-</div>
-</div>
-</div>
-</div>
-
-<div id="settings">
-<h2>Settings</h2>
-
-<div class="setting">
-<h4>Theme</h4>
-<button onclick="theme('aero')">Aero Green</button>
-<button onclick="theme('blue')">Classic Blue</button>
-<button onclick="theme('dark')">Dark</button>
-<button onclick="theme('nebula')">Nebula</button>
-<button onclick="theme('crimson')">Crimson</button>
-</div>
-
-<div class="setting">
-<h4>Status</h4>
-<select id="status" onchange="setStatus()">
-<option>Online</option>
-<option>Away</option>
-<option>Busy</option>
-<option>Invisible</option>
+<div id="settings-overlay">
+<h2 style="margin-bottom:15px">Messenger Settings</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<h4>Personalization</h4>
+<hr><br>
+<button onclick="setTheme('win7')">Aero Sky</button>
+<button onclick="setTheme('classic')">Classic Grey</button>
+<button onclick="setTheme('dark')">Midnight</button>
+<button onclick="setTheme('xp')">Luna Blue</button>
+<br><br>
+<label>Status:</label>
+<select id="status-pick" onchange="updateStatus()">
+<option>Online</option><option>Away</option><option>Busy</option><option>Invisible</option>
 </select>
 </div>
-
-<div class="setting">
-<h4>Ignore user</h4>
-<input id="ignoreUser" placeholder="Username">
-<button onclick="ignore()">Ignore</button>
+<div>
+<h4>GitHub Integration</h4>
+<hr>
+<div class="github-tool">
+<input id="gh-repo" placeholder="username/repo" style="width:100%;margin-bottom:5px">
+<button onclick="alert('Connected to GitHub')">Link Repository</button>
+<button onclick="alert('Syncing...')">Sync Issues</button>
+<div style="font-size:11px;margin-top:5px;color:#666">Push notifications for commits & PRs</div>
 </div>
-
-<div class="setting">
-<button onclick="logout()">Logout</button>
-<button class="delete" onclick="del()">Delete account</button>
-<button onclick="closeSettings()">Back</button>
+<br>
+<button class="delete" onclick="deleteAccount()" style="color:red">Delete Account</button>
+</div>
+</div>
+<br>
+<button onclick="closeSettings()" style="float:right">Close</button>
+</div>
+</div>
 </div>
 </div>
 
 <script>
-let me=null,chat=null
-const db=()=>JSON.parse(localStorage.db||"{}")
-const save=d=>localStorage.db=JSON.stringify(d)
+let me = null;
+let activeChat = null;
 
-function show(x){
-document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
-document.getElementById(x).style.display="block"
+const db = () => JSON.parse(localStorage.getItem('delemencia_db') || "{}");
+const save = (data) => localStorage.setItem('delemencia_db', JSON.stringify(data));
+
+function toggleAuth(){
+document.getElementById('login-screen').style.display = (document.getElementById('login-screen').style.display=='none') ? 'flex' : 'none';
+document.getElementById('register-screen').style.display = (document.getElementById('register-screen').style.display=='flex') ? 'none' : 'flex';
 }
 
 function register(){
-let u=ru.value.trim(),p=rp.value,d=db()
-if(!u||!p||d[u])return alert("Invalid")
-if(u==="Delemencia"&&d["Delemencia"])return alert("Name taken")
-d[u]={pass:p,admin:u==="Delemencia",contacts:[],msgs:{},ignored:[],status:"Online"}
-save(d);localStorage.me=u;me=u;load()
+let u = document.getElementById('ru').value.trim();
+let p = document.getElementById('rp').value;
+let d = db();
+if(!u || !p || d[u]) return alert("Username unavailable");
+d[u] = { pass: p, status: "Online", contacts: [], requests: [], msgs: {} };
+save(d);
+loginSession(u);
 }
 
 function login(){
-let d=db()
-if(!d[lu.value]||d[lu.value].pass!==lp.value)return alert("Wrong")
-me=lu.value;localStorage.me=me;load()
+let u = document.getElementById('lu').value;
+let p = document.getElementById('lp').value;
+let d = db();
+if(d[u] && d[u].pass === p){
+loginSession(u);
+} else {
+alert("Invalid credentials");
+}
 }
 
-function load(){show("main");renderContacts()}
+function loginSession(u){
+me = u;
+localStorage.setItem('delemencia_me', u);
+document.getElementById('my-name').textContent = u;
+showScreen('main-screen');
+renderContacts();
+}
 
-function addContact(){
-let u=addUser.value.trim(),d=db()
-if(!u||!d[u]||u===me||d[me].contacts.includes(u))return alert("Cannot add")
-d[me].contacts.push(u)
-save(d);addUser.value="";renderContacts()
+function showScreen(id){
+document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+document.getElementById(id).style.display = (id === 'main-screen') ? 'block' : 'flex';
+}
+
+function sendRequest(){
+let target = document.getElementById('target-user').value.trim();
+let d = db();
+if(!target || !d[target] || target === me) return alert("User not found");
+if(!d[target].requests.includes(me) && !d[me].contacts.includes(target)){
+d[target].requests.push(me);
+save(d);
+alert("Request sent!");
+}
+}
+
+function acceptFriend(u){
+let d = db();
+d[me].contacts.push(u);
+d[u].contacts.push(me);
+d[me].requests = d[me].requests.filter(name => name !== u);
+save(d);
+renderContacts();
 }
 
 function renderContacts(){
-let d=db(),c=contacts;c.innerHTML=""
-d[me].contacts.forEach(u=>{
-if(d[me].ignored.includes(u))return
-let div=document.createElement("div")
-div.className="contact"
-div.innerHTML=(u==="Delemencia"?"👑 ":"")+u+" ("+d[u].status+")"
-div.onclick=()=>{chat=u;chatName.textContent=div.textContent;renderMsgs()}
-c.appendChild(div)
-})
+let d = db();
+let list = document.getElementById('contacts-list');
+list.innerHTML = "";
+
+d[me].requests.forEach(u => {
+let div = document.createElement('div');
+div.className = "contact-item";
+div.style.background = "#fff9c4";
+div.innerHTML = `<b>${u}</b><button onclick="acceptFriend('${u}')">Accept Request</button>`;
+list.appendChild(div);
+});
+
+d[me].contacts.forEach(u => {
+let div = document.createElement('div');
+div.className = "contact-item";
+div.innerHTML = `<b>${u}</b><span class="status">${d[u].status}</span>`;
+div.onclick = () => openChat(u);
+list.appendChild(div);
+});
 }
 
-function send(){
-if(!chat||!msg.value)return
-let d=db()
-d[me].msgs[chat]??=[]
-d[chat].msgs[me]??=[]
-let m={f:me,t:msg.value}
-d[me].msgs[chat].push(m)
-d[chat].msgs[me].push(m)
-msg.value=""
-save(d);renderMsgs()
+function openChat(u){
+activeChat = u;
+document.getElementById('chat-header').textContent = "Chatting with " + u;
+renderMessages();
 }
 
-function renderMsgs(){
-let d=db(),m=messages;m.innerHTML=""
-if(!chat)return
-(d[me].msgs[chat]||[]).forEach(x=>{
-let div=document.createElement("div")
-div.className="msg"+(x.f===me?" self":"")
-div.textContent=x.f+": "+x.t
-m.appendChild(div)
-})
-m.scrollTop=m.scrollHeight
+function sendMessage(){
+let val = document.getElementById('msg-input').value.trim();
+if(!activeChat || !val) return;
+let d = db();
+if(!d[me].msgs[activeChat]) d[me].msgs[activeChat] = [];
+if(!d[activeChat].msgs[me]) d[activeChat].msgs[me] = [];
+
+let m = { sender: me, text: val, time: new Date().toLocaleTimeString() };
+d[me].msgs[activeChat].push(m);
+d[activeChat].msgs[me].push(m);
+
+save(d);
+document.getElementById('msg-input').value = "";
+renderMessages();
 }
 
-function theme(t){
-if(t==="aero")document.body.style.background="linear-gradient(135deg,#b9f6ca,#4caf50)"
-if(t==="blue")document.body.style.background="linear-gradient(135deg,#bbdefb,#1976d2)"
-if(t==="dark")document.body.style.background="#111"
-if(t==="nebula")document.body.style.background="linear-gradient(135deg,#2a003f,#000)"
-if(t==="crimson")document.body.style.background="linear-gradient(135deg,#6a0000,#200)"
+function renderMessages(){
+let d = db();
+let frame = document.getElementById('messages-frame');
+frame.innerHTML = "";
+if(!activeChat) return;
+let history = d[me].msgs[activeChat] || [];
+history.forEach(m => {
+let row = document.createElement('div');
+row.className = "msg-row";
+let bubble = document.createElement('div');
+bubble.className = "msg-bubble " + (m.sender === me ? "msg-me" : "msg-them");
+bubble.textContent = m.text;
+row.appendChild(bubble);
+frame.appendChild(row);
+});
+frame.scrollTop = frame.scrollHeight;
 }
 
-function openSettings(){settings.style.display="block"}
-function closeSettings(){settings.style.display="none"}
-function ignore(){
-let d=db(),u=ignoreUser.value.trim()
-if(d[u]&&!d[me].ignored.includes(u))d[me].ignored.push(u)
-save(d);renderContacts()
+function updateStatus(){
+let s = document.getElementById('status-pick').value;
+let d = db();
+d[me].status = s;
+document.getElementById('my-status-text').textContent = s;
+save(d);
+renderContacts();
 }
-function setStatus(){let d=db();d[me].status=status.value;save(d);renderContacts()}
-function logout(){localStorage.removeItem("me");location.reload()}
-function del(){let d=db();delete d[me];save(d);logout()}
 
-if(localStorage.me){me=localStorage.me;load()}else show("welcome")
+function setTheme(t){
+let b = document.body;
+if(t === 'win7') b.style.background = "#3a7fb1";
+if(t === 'classic') b.style.background = "#d4d0c8";
+if(t === 'dark') b.style.background = "#1a1a1a";
+if(t === 'xp') b.style.background = "#245edb";
+}
+
+function openSettings(){ document.getElementById('settings-overlay').style.display = 'block'; }
+function closeSettings(){ document.getElementById('settings-overlay').style.display = 'none'; }
+function logout(){ localStorage.removeItem('delemencia_me'); location.reload(); }
+function deleteAccount(){ if(confirm("Permanently delete?")){ let d = db(); delete d[me]; save(d); logout(); } }
+
+if(localStorage.getItem('delemencia_me')){
+loginSession(localStorage.getItem('delemencia_me'));
+} else {
+showScreen('login-screen');
+}
+setInterval(renderMessages, 3000);
+setInterval(renderContacts, 5000);
 </script>
-
 </body>
 </html>
