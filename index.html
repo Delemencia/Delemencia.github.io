@@ -2,266 +2,209 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PreWorked Delemencia :D</title>
+<title>Delemencia - Oh, Okay.</title>
 <link rel="icon" href="favicon.ico">
 <style>
-* { box-sizing:border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; }
-body { height:100vh; display:flex; background:#e6f1fb; color:#000; }
-.screen { display:none; position:absolute; width:100%; height:100%; top:0; left:0; }
-.auth-box { width:380px; margin:auto; background:#fff; border-radius:6px; box-shadow:0 0 10px rgba(0,0,0,0.3); padding:30px; text-align:center; }
-.auth-box h1 { color:#0078d7; margin-bottom:20px; }
-.auth-box input { width:100%; padding:10px; margin-bottom:12px; border:1px solid #ccc; border-radius:4px; font-size:14px; }
-.auth-box button { width:100%; padding:10px; margin-bottom:8px; border:none; border-radius:4px; background:#0078d7; color:white; font-weight:bold; cursor:pointer; }
-.auth-box .link { display:block; margin-top:8px; font-size:13px; color:#0078d7; cursor:pointer; text-decoration:underline; }
-#container { display:flex; height:100vh; width:100%; }
-#sidebar { width:250px; background:#f0f6fc; border-right:1px solid #c4d9ed; display:flex; flex-direction:column; padding:10px; }
-#searchBox { display:flex; margin-bottom:10px; }
-#searchBox input { flex:1; padding:6px; border-radius:4px 0 0 4px; border:1px solid #ccc; }
-#searchBox button { padding:6px 12px; border:none; background:#0078d7; color:white; border-radius:0 4px 4px 0; cursor:pointer; }
-#contacts { flex:1; overflow-y:auto; }
-.contact { padding:6px; cursor:pointer; border-bottom:1px solid #c4d9ed; }
-.contact:hover { background:#d0e7fb; }
-#chatPane { flex:1; display:flex; flex-direction:column; background:#ffffff; }
-#chatHeader { padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between; align-items:center; background:#f0f6fc; }
-#chatHeader span { font-weight:bold; color:#0078d7; }
-#messages { flex:1; padding:10px; overflow-y:auto; background:#e5eff8; }
-.msg { margin-bottom:6px; padding:6px 10px; border-radius:6px; display:inline-block; max-width:70%; word-wrap:break-word; background:#d0e7fb; }
-.msg.self { background:#0078d7; color:white; margin-left:auto; }
-#sendBox { display:flex; border-top:1px solid #ccc; padding:10px; }
-#sendBox input { flex:1; padding:8px; border-radius:4px 0 0 4px; border:1px solid #ccc; }
-#sendBox button { padding:8px 12px; border:none; background:#0078d7; color:white; cursor:pointer; border-radius:0 4px 4px 0; }
-#sendBox button.settings { margin-left:6px; border-radius:4px; background:#555; }
-#settings { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:500px; max-width:90%; background:#f0f6fc; padding:25px; border-radius:6px; box-shadow:0 0 15px rgba(0,0,0,0.4); }
-#settings h2 { text-align:center; color:#0078d7; margin-bottom:20px; }
-.setting-section { margin-bottom:25px; }
-.setting-section h3 { margin-bottom:10px; font-size:16px; font-weight:bold; }
-.setting-section button { margin-right:10px; padding:6px 12px; border:none; background:#0078d7; color:white; border-radius:4px; cursor:pointer; }
-.setting-section button.delete { background:#aa0000; }
-.setting-section button.back { background:#555; }
-.setting-section input[type=file] { display:block; margin-top:8px; }
+*{box-sizing:border-box;font-family:Segoe UI,Tahoma,Verdana;margin:0;padding:0}
+body{height:100vh;display:flex;background:#e6f1fb}
+.screen{display:none;position:absolute;width:100%;height:100%}
+.auth-box{width:380px;margin:auto;background:#fff;border-radius:6px;box-shadow:0 0 10px rgba(0,0,0,.3);padding:30px;text-align:center}
+.auth-box h1{color:#0078d7;margin-bottom:20px}
+.auth-box input,.auth-box button{width:100%;padding:10px;margin-bottom:10px}
+.auth-box button{border:none;border-radius:4px;background:#0078d7;color:#fff;font-weight:bold;cursor:pointer}
+.link{font-size:13px;color:#0078d7;cursor:pointer;text-decoration:underline}
+#container{display:flex;width:100%}
+#sidebar{width:260px;background:#f0f6fc;border-right:1px solid #c4d9ed;display:flex;flex-direction:column;padding:10px}
+#contacts,#online{flex:1;overflow-y:auto}
+.contact{padding:6px;cursor:pointer;border-bottom:1px solid #c4d9ed}
+.contact:hover{background:#d0e7fb}
+#chatPane{flex:1;display:flex;flex-direction:column}
+#chatHeader{padding:10px;border-bottom:1px solid #ccc;display:flex;justify-content:space-between;background:#f0f6fc}
+#messages{flex:1;padding:10px;overflow-y:auto;background:#e5eff8}
+.msg{margin-bottom:6px;padding:6px 10px;border-radius:6px;max-width:70%;background:#d0e7fb}
+.msg.self{background:#0078d7;color:#fff;margin-left:auto}
+#sendBox{display:flex;padding:10px;border-top:1px solid #ccc}
+#sendBox input{flex:1;padding:8px}
+#sendBox button{padding:8px 12px;border:none;background:#0078d7;color:#fff}
+#settings{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:520px;background:#f0f6fc;padding:25px;border-radius:6px}
+.setting-section{margin-bottom:20px}
+.setting-section button{margin:5px;padding:6px 12px;border:none;border-radius:4px;background:#0078d7;color:#fff}
+.delete{background:#a00}
+.back{background:#555}
 </style>
 </head>
 <body>
 
 <div id="welcome" class="screen">
-  <div class="auth-box">
-    <h1>Delemencia</h1>
-    <button onclick="showScreen('login')">Sign in</button>
-    <div class="link" onclick="showScreen('register')">Create an account</div>
-  </div>
+<div class="auth-box">
+<h1>Delemencia</h1>
+<button onclick="show('login')">Sign in</button>
+<div class="link" onclick="show('register')">Create account</div>
+</div>
 </div>
 
 <div id="register" class="screen">
-  <div class="auth-box">
-    <h1>Create account</h1>
-    <input id="regUser" placeholder="Username (3-20 letters/numbers)">
-    <input id="regPass" type="password" placeholder="Password">
-    <button onclick="register()">Create</button>
-    <div class="link" onclick="showScreen('welcome')">Back</div>
-  </div>
+<div class="auth-box">
+<h1>Create account</h1>
+<input id="ru" placeholder="Username">
+<input id="rp" type="password" placeholder="Password">
+<button onclick="register()">Create</button>
+<div class="link" onclick="show('welcome')">Back</div>
+</div>
 </div>
 
 <div id="login" class="screen">
-  <div class="auth-box">
-    <h1>Sign in</h1>
-    <input id="logUser" placeholder="Username">
-    <input id="logPass" type="password" placeholder="Password">
-    <button onclick="login()">Sign in</button>
-    <div class="link" onclick="showScreen('welcome')">Back</div>
-  </div>
+<div class="auth-box">
+<h1>Sign in</h1>
+<input id="lu" placeholder="Username">
+<input id="lp" type="password" placeholder="Password">
+<button onclick="login()">Sign in</button>
+<div class="link" onclick="show('welcome')">Back</div>
+</div>
 </div>
 
-<div id="mainScreen" class="screen">
-  <div id="container">
-    <div id="sidebar">
-      <div id="searchBox">
-        <input id="searchInput" placeholder="Search user">
-        <button onclick="searchUser()">Search</button>
-      </div>
-      <div id="contacts"></div>
-    </div>
-    <div id="chatPane">
-      <div id="chatHeader">
-        <span id="chatUser">Select a contact</span>
-        <button class="settings" onclick="showSettings()">⚙</button>
-      </div>
-      <div id="messages"></div>
-      <div id="sendBox">
-        <input id="msgInput" placeholder="Type a message">
-        <button onclick="send()">Send</button>
-      </div>
-    </div>
-  </div>
+<div id="main" class="screen">
+<div id="container">
+<div id="sidebar">
+<input id="addUser" placeholder="Add username">
+<button onclick="addContact()">Add</button>
+<h4>Contacts</h4>
+<div id="contacts"></div>
+<h4>Online</h4>
+<div id="online"></div>
+</div>
+
+<div id="chatPane">
+<div id="chatHeader">
+<span id="chatName">Select chat</span>
+<div>
+<button onclick="call()">📞</button>
+<button onclick="openSettings()">⚙</button>
+</div>
+</div>
+<div id="messages"></div>
+<div id="sendBox">
+<input id="msg">
+<button onclick="send()">Send</button>
+</div>
+</div>
+</div>
 </div>
 
 <div id="settings">
-  <h2>Settings</h2>
-  <div class="setting-section">
-    <h3>Themes</h3>
-    <button onclick="setTheme('white')">White</button>
-    <button onclick="setTheme('nebula')">Nebula</button>
-    <button onclick="setTheme('dark')">Dark</button>
-    <button onclick="setTheme('crimson')">Crimson Moon</button>
-  </div>
-  <div class="setting-section">
-    <h3>Account</h3>
-    <button onclick="logout()">Logout</button>
-    <button class="delete" onclick="deleteAccount()">Delete Account</button>
-    <input type="file" accept="image/*" onchange="changeProfilePic(event)">
-    <button onclick="viewConversations()">Conversations</button>
-    <button onclick="toggleNotifications()">Notifications</button>
-    <button class="back" onclick="hideSettings()">Back</button>
-  </div>
+<h2>Settings</h2>
+<div class="setting-section">
+<h3>Themes</h3>
+<button onclick="theme('light')">Light</button>
+<button onclick="theme('dark')">Dark</button>
+<button onclick="theme('nebula')">Nebula</button>
+<button onclick="theme('forest')">Forest</button>
+<button onclick="theme('crimson')">Crimson</button>
+</div>
+<div class="setting-section">
+<button onclick="logout()">Logout</button>
+<button class="delete" onclick="del()">Delete account</button>
+<button class="back" onclick="closeSettings()">Back</button>
+</div>
 </div>
 
 <script>
-let currentUser=null;
-let currentChat=null;
-let contactsList=[];
-let notificationsEnabled=false;
+let me=null,chat=null
+const users=()=>JSON.parse(localStorage.users||"{}")
+const save=u=>localStorage.users=JSON.stringify(u)
 
-const getUsers = ()=>JSON.parse(localStorage.getItem("users")||"{}");
-const saveUsers = u => localStorage.setItem("users", JSON.stringify(u));
-
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s => s.style.display='none');
-  document.getElementById(id).style.display='block';
-}
-
-function validUsername(u){ return /^[a-zA-Z0-9]{3,20}$/.test(u); }
+function show(x){document.querySelectorAll(".screen").forEach(s=>s.style.display="none");document.getElementById(x).style.display="block"}
 
 function register(){
-  let u = regUser.value.trim(), p = regPass.value;
-  let users = getUsers();
-  if(!validUsername(u)||!p||users[u]) return alert("Invalid username or password");
-  users[u]={pass:p,msgs:{},profilePic:""};
-  saveUsers(users);
-  currentUser=u; localStorage.currentUser=u;
-  loadMain();
+let u=ru.value.trim(),p=rp.value
+let d=users()
+if(!u||!p||d[u])return alert("Invalid")
+d[u]={pass:p,contacts:[],msgs:{},online:Date.now()}
+save(d);localStorage.me=u;me=u;load()
 }
 
 function login(){
-  let u = logUser.value.trim(), p = logPass.value;
-  let users = getUsers();
-  if(!users[u]||users[u].pass!==p) return alert("Wrong login");
-  currentUser=u; localStorage.currentUser=u;
-  loadMain();
+let d=users()
+if(!d[lu.value]||d[lu.value].pass!==lp.value)return alert("Wrong")
+localStorage.me=lu.value;me=lu.value;load()
 }
 
-function loadMain(){
-  showScreen('mainScreen');
-  renderContacts();
-  renderMsgs();
-}
+function load(){show("main");ping();renderContacts();setInterval(ping,5000);setInterval(renderOnline,3000)}
 
-function searchUser(){
-  let query = document.getElementById("searchInput").value.trim();
-  if(query === currentUser) return alert("Cannot add yourself");
-  let users = getUsers();
-  if(!users[query]) { alert("User not found"); return; }
-  if(!contactsList.includes(query)) contactsList.push(query);
-  renderContacts();
+function ping(){let d=users();if(d[me]){d[me].online=Date.now();save(d)}}
+
+function addContact(){
+let u=addUser.value.trim(),d=users()
+if(!d[u]||u===me)return alert("Invalid user")
+if(!d[me].contacts.includes(u))d[me].contacts.push(u)
+save(d);renderContacts()
 }
 
 function renderContacts(){
-  let contactsDiv = document.getElementById("contacts");
-  contactsDiv.innerHTML="";
-  contactsList.forEach(u=>{
-    let div = document.createElement("div");
-    div.className="contact";
-    div.textContent = u;
-    div.onclick = ()=>{ currentChat=u; document.getElementById("chatUser").textContent=u; renderMsgs(); }
-    contactsDiv.appendChild(div);
-  });
+let d=users(),c=document.getElementById("contacts");c.innerHTML=""
+d[me].contacts.forEach(u=>{
+let div=document.createElement("div")
+div.className="contact";div.textContent=u
+div.onclick=()=>{chat=u;chatName.textContent=u;renderMsgs()}
+c.appendChild(div)
+})
 }
 
 function send(){
-  if(!currentChat || !msgInput.value) return alert("Select a contact or type a message");
-  let users = getUsers();
-  users[currentUser].msgs[currentChat] ||= [];
-  users[currentChat].msgs[currentUser] ||= [];
-  let msg = msgInput.value;
-  users[currentUser].msgs[currentChat].push(currentUser+": "+msg);
-  users[currentChat].msgs[currentUser].push(currentUser+": "+msg);
-  msgInput.value="";
-  saveUsers(users);
-  renderMsgs();
+if(!chat||!msg.value)return
+let d=users()
+d[me].msgs[chat]??=[]
+d[chat].msgs[me]??=[]
+let m={from:me,text:msg.value,time:Date.now()}
+d[me].msgs[chat].push(m)
+d[chat].msgs[me].push(m)
+msg.value=""
+save(d);renderMsgs()
 }
 
 function renderMsgs(){
-  let messagesDiv = document.getElementById("messages");
-  messagesDiv.innerHTML="";
-  if(!currentChat) return;
-  let users = getUsers();
-  let msgs = users[currentUser].msgs[currentChat] || [];
-  msgs.forEach(m=>{
-    let div = document.createElement("div");
-    div.className="msg";
-    if(m.startsWith(currentUser+":")) div.classList.add("self");
-    div.textContent = m;
-    messagesDiv.appendChild(div);
-  });
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  if(notificationsEnabled && msgs.length>0) alert("New messages in "+currentChat);
+let d=users(),m=document.getElementById("messages");m.innerHTML=""
+if(!chat)return
+(d[me].msgs[chat]||[]).forEach(x=>{
+let div=document.createElement("div")
+div.className="msg"+(x.from===me?" self":"")
+div.textContent=x.text
+m.appendChild(div)
+})
+m.scrollTop=m.scrollHeight
 }
 
-function showSettings(){ document.getElementById("settings").style.display='block'; }
-function hideSettings(){ document.getElementById("settings").style.display='none'; }
-
-function deleteAccount(){
-  if(!confirm("Delete your account?")) return;
-  let users=getUsers();
-  delete users[currentUser];
-  saveUsers(users);
-  logout();
+function renderOnline(){
+let d=users(),o=document.getElementById("online");o.innerHTML=""
+Object.keys(d).forEach(u=>{
+if(u!==me&&Date.now()-d[u].online<8000){
+let div=document.createElement("div")
+div.className="contact";div.textContent=u
+o.appendChild(div)
+}
+})
 }
 
-function logout(){
-  localStorage.removeItem("currentUser");
-  location.reload();
+function call(){
+if(!chat)return alert("No user selected")
+alert("Calling "+chat+"...")
 }
 
-function setTheme(t){
-  const body=document.body, sidebar=document.getElementById("sidebar"), chatPane=document.getElementById("chatPane"),
-        messages=document.getElementById("messages"), header=document.getElementById("chatHeader"),
-        sendBox=document.getElementById("sendBox"), contacts=document.getElementById("contacts");
-  if(t==='white'){ body.style.background="#e6f1fb"; sidebar.style.background="#f0f6fc"; chatPane.style.background="#ffffff";
-    messages.style.background="#e5eff8"; header.style.background="#f0f6fc"; sendBox.style.background="#ffffff"; contacts.style.background="#f0f6fc";
-    document.querySelectorAll(".msg").forEach(m=>m.style.background="#d0e7fb"); document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#0078d7"); }
-  if(t==='dark'){ body.style.background="#111"; sidebar.style.background="#1a1a1a"; chatPane.style.background="#222";
-    messages.style.background="#333"; header.style.background="#1a1a1a"; sendBox.style.background="#222"; contacts.style.background="#1a1a1a";
-    document.querySelectorAll(".msg").forEach(m=>m.style.background="#444"); document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#0078d7"); }
-  if(t==='nebula'){ body.style.background="linear-gradient(to bottom right,#12002b,#1a0a3a)"; sidebar.style.background="#1c1c2e"; chatPane.style.background="#2c2c4a";
-    messages.style.background="#1c1c2e"; header.style.background="#1c1c2e"; sendBox.style.background="#2c2c4a"; contacts.style.background="#1c1c2e";
-    document.querySelectorAll(".msg").forEach(m=>m.style.background="#3a3a5c"); document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#00aaff"); }
-  if(t==='crimson'){ body.style.background="linear-gradient(to bottom right,#8b0000,#4b0000)"; sidebar.style.background="#4b0000"; chatPane.style.background="#5c0000";
-    messages.style.background="#4b0000"; header.style.background="#4b0000"; sendBox.style.background="#5c0000"; contacts.style.background="#4b0000";
-    document.querySelectorAll(".msg").forEach(m=>m.style.background="#7a0000"); document.querySelectorAll(".msg.self").forEach(m=>m.style.background="#ff4c4c"); }
+function openSettings(){settings.style.display="block"}
+function closeSettings(){settings.style.display="none"}
+
+function theme(t){
+if(t==="dark")document.body.style.background="#111"
+if(t==="nebula")document.body.style.background="linear-gradient(135deg,#1a0033,#000)"
+if(t==="forest")document.body.style.background="linear-gradient(135deg,#0b3d0b,#021)"
+if(t==="crimson")document.body.style.background="linear-gradient(135deg,#6a0000,#200)"
+if(t==="light")document.body.style.background="#e6f1fb"
 }
 
-function changeProfilePic(e){
-  let file = e.target.files[0];
-  if(!file) return;
-  let reader = new FileReader();
-  reader.onload = ()=>{ 
-    let users = getUsers();
-    users[currentUser].profilePic = reader.result;
-    saveUsers(users);
-  }
-  reader.readAsDataURL(file);
-}
+function logout(){localStorage.removeItem("me");location.reload()}
+function del(){let d=users();delete d[me];save(d);logout()}
 
-function viewConversations(){
-  alert("Your conversations: "+contactsList.join(", "));
-}
-
-function toggleNotifications(){
-  notificationsEnabled = !notificationsEnabled;
-  alert("Notifications "+(notificationsEnabled?"enabled":"disabled"));
-}
-
-if(localStorage.currentUser){ currentUser=localStorage.currentUser; loadMain(); } 
-else showScreen('welcome');
+if(localStorage.me){me=localStorage.me;load()}else show("welcome")
 </script>
 
 </body>
