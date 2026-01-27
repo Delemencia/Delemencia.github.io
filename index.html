@@ -2,53 +2,98 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>wait.. how does thing internet thing work?</title>
+<title>how does the web work</title>
 <style>
 *{font-family:Segoe UI,Tahoma;margin:0;padding:0;box-sizing:border-box}
-body{height:100vh;background:linear-gradient(#cfe4ff,#8fb3e8)}
-.screen{display:none;width:100%;height:100%;position:absolute}
+body{
+height:100vh;
+background:linear-gradient(135deg,#b9f6ca,#4caf50);
+transition:.3s
+}
+.screen{display:none;position:absolute;width:100%;height:100%}
 .vista{
 display:flex;align-items:center;justify-content:center;
-background:radial-gradient(circle at top,#ffffff,#7fa6d8)
+background:radial-gradient(circle at top,#eaffea,#4caf50)
 }
 .glass{
-width:420px;padding:30px;border-radius:10px;
-background:rgba(255,255,255,.7);
-box-shadow:0 0 25px rgba(0,0,0,.3);
+width:420px;padding:30px;border-radius:12px;
+background:rgba(255,255,255,.65);
+backdrop-filter:blur(6px);
+box-shadow:0 0 30px rgba(0,0,0,.35);
 text-align:center
 }
-.glass h1{font-size:32px;color:#003a8c;margin-bottom:20px}
-.glass button{width:100%;padding:12px;margin:8px 0;border:none;
-background:linear-gradient(#4c8bf5,#1f5fd1);
-color:#fff;font-weight:bold;border-radius:6px;cursor:pointer}
-.auth{background:#fff;width:380px;margin:auto;margin-top:80px;
-padding:30px;border-radius:6px;box-shadow:0 0 12px rgba(0,0,0,.3);
-text-align:center}
+.glass h1{font-size:34px;color:#1b5e20;margin-bottom:20px}
+.glass button{
+width:100%;padding:12px;margin:8px 0;border:none;
+background:linear-gradient(#66bb6a,#2e7d32);
+color:#fff;font-weight:bold;border-radius:6px;cursor:pointer
+}
+.auth{
+background:rgba(255,255,255,.9);
+width:380px;margin:auto;margin-top:90px;
+padding:30px;border-radius:8px;
+box-shadow:0 0 15px rgba(0,0,0,.3);
+text-align:center
+}
 .auth input,.auth button{width:100%;padding:10px;margin-bottom:10px}
-.auth button{background:#0078d7;color:#fff;border:none;font-weight:bold}
+.auth button{background:#2e7d32;color:#fff;border:none;font-weight:bold}
 #container{display:flex;height:100%}
-#sidebar{width:260px;background:#f1f6fb;border-right:1px solid #bbb;padding:10px}
-#contacts,.contact-list{overflow-y:auto}
-.contact{padding:6px;border-bottom:1px solid #ccc;cursor:pointer}
-.contact:hover{background:#d9e9ff}
+#sidebar{
+width:260px;
+background:rgba(240,255,240,.8);
+border-right:1px solid #9ccc65;
+padding:10px
+}
+#contacts{overflow-y:auto}
+.contact{
+padding:6px;border-bottom:1px solid #aed581;
+cursor:pointer
+}
+.contact:hover{background:#c8e6c9}
 #chat{flex:1;display:flex;flex-direction:column}
-#header{padding:10px;background:#e3efff;border-bottom:1px solid #aaa;
-display:flex;justify-content:space-between}
-#messages{flex:1;padding:10px;background:#eef4ff;overflow-y:auto}
-.msg{margin-bottom:6px;padding:6px 10px;border-radius:6px;
-background:#d7e7ff;max-width:70%}
-.self{background:#0078d7;color:white;margin-left:auto}
-#send{display:flex;padding:10px;border-top:1px solid #aaa}
+#header{
+padding:10px;
+background:rgba(220,255,220,.85);
+border-bottom:1px solid #9ccc65;
+display:flex;justify-content:space-between
+}
+#messages{
+flex:1;padding:10px;
+background:rgba(235,255,235,.9);
+overflow-y:auto
+}
+.msg{
+margin-bottom:6px;padding:6px 10px;
+border-radius:6px;background:#c8e6c9;
+max-width:70%
+}
+.self{
+background:#2e7d32;color:white;margin-left:auto
+}
+#send{
+display:flex;padding:10px;
+border-top:1px solid #9ccc65
+}
 #send input{flex:1;padding:8px}
-#send button{padding:8px 14px;background:#0078d7;color:#fff;border:none}
+#send button{
+padding:8px 14px;
+background:#2e7d32;color:#fff;border:none
+}
 #settings{
-display:none;position:absolute;top:50%;left:50%;
+display:none;position:absolute;
+top:50%;left:50%;
 transform:translate(-50%,-50%);
-background:#f1f6fb;padding:25px;border-radius:8px;width:520px
+background:rgba(240,255,240,.95);
+padding:25px;border-radius:10px;
+width:540px;
+box-shadow:0 0 25px rgba(0,0,0,.35)
 }
 .setting{margin-bottom:18px}
-.setting button{margin:4px;padding:6px 12px;border:none;
-background:#0078d7;color:white}
+.setting button{
+margin:4px;padding:6px 12px;
+border:none;border-radius:4px;
+background:#2e7d32;color:white
+}
 .delete{background:#a00}
 </style>
 </head>
@@ -83,7 +128,7 @@ background:#0078d7;color:white}
 <div id="main" class="screen">
 <div id="container">
 <div id="sidebar">
-<input id="addUser" placeholder="Add user">
+<input id="addUser" placeholder="Add username">
 <button onclick="addContact()">Add</button>
 <h4>Contacts</h4>
 <div id="contacts"></div>
@@ -107,6 +152,15 @@ background:#0078d7;color:white}
 <h2>Settings</h2>
 
 <div class="setting">
+<h4>Theme</h4>
+<button onclick="theme('aero')">Aero Green</button>
+<button onclick="theme('blue')">Classic Blue</button>
+<button onclick="theme('dark')">Dark</button>
+<button onclick="theme('nebula')">Nebula</button>
+<button onclick="theme('crimson')">Crimson</button>
+</div>
+
+<div class="setting">
 <h4>Status</h4>
 <select id="status" onchange="setStatus()">
 <option>Online</option>
@@ -114,11 +168,6 @@ background:#0078d7;color:white}
 <option>Busy</option>
 <option>Invisible</option>
 </select>
-</div>
-
-<div class="setting">
-<h4>Profile picture</h4>
-<input type="file" accept="image/*" onchange="pic(event)">
 </div>
 
 <div class="setting">
@@ -145,19 +194,16 @@ document.getElementById(x).style.display="block"
 }
 
 function register(){
-let u=ru.value.trim(),p=rp.value
-let d=db()
+let u=ru.value.trim(),p=rp.value,d=db()
 if(!u||!p||d[u])return alert("Invalid")
 if(u==="Delemencia"&&d["Delemencia"])return alert("Name taken")
-d[u]={pass:p,admin:u==="Delemencia",contacts:[],msgs:{},
-ignored:[],status:"Online",pic:"",warns:0,banned:false}
+d[u]={pass:p,admin:u==="Delemencia",contacts:[],msgs:{},ignored:[],status:"Online"}
 save(d);localStorage.me=u;me=u;load()
 }
 
 function login(){
 let d=db()
 if(!d[lu.value]||d[lu.value].pass!==lp.value)return alert("Wrong")
-if(d[lu.value].banned)return alert("You are banned")
 me=lu.value;localStorage.me=me;load()
 }
 
@@ -165,14 +211,13 @@ function load(){show("main");renderContacts()}
 
 function addContact(){
 let u=addUser.value.trim(),d=db()
-if(!d[u]||u===me||d[me].ignored.includes(u))return
-if(!d[me].contacts.includes(u))d[me].contacts.push(u)
-save(d);renderContacts()
+if(!u||!d[u]||u===me||d[me].contacts.includes(u))return alert("Cannot add")
+d[me].contacts.push(u)
+save(d);addUser.value="";renderContacts()
 }
 
 function renderContacts(){
-let d=db(),c=document.getElementById("contacts")
-c.innerHTML=""
+let d=db(),c=contacts;c.innerHTML=""
 d[me].contacts.forEach(u=>{
 if(d[me].ignored.includes(u))return
 let div=document.createElement("div")
@@ -186,7 +231,6 @@ c.appendChild(div)
 function send(){
 if(!chat||!msg.value)return
 let d=db()
-if(d[chat].ignored.includes(me))return
 d[me].msgs[chat]??=[]
 d[chat].msgs[me]??=[]
 let m={f:me,t:msg.value}
@@ -197,8 +241,7 @@ save(d);renderMsgs()
 }
 
 function renderMsgs(){
-let d=db(),m=document.getElementById("messages")
-m.innerHTML=""
+let d=db(),m=messages;m.innerHTML=""
 if(!chat)return
 (d[me].msgs[chat]||[]).forEach(x=>{
 let div=document.createElement("div")
@@ -209,27 +252,22 @@ m.appendChild(div)
 m.scrollTop=m.scrollHeight
 }
 
+function theme(t){
+if(t==="aero")document.body.style.background="linear-gradient(135deg,#b9f6ca,#4caf50)"
+if(t==="blue")document.body.style.background="linear-gradient(135deg,#bbdefb,#1976d2)"
+if(t==="dark")document.body.style.background="#111"
+if(t==="nebula")document.body.style.background="linear-gradient(135deg,#2a003f,#000)"
+if(t==="crimson")document.body.style.background="linear-gradient(135deg,#6a0000,#200)"
+}
+
 function openSettings(){settings.style.display="block"}
 function closeSettings(){settings.style.display="none"}
-
 function ignore(){
-let u=ignoreUser.value.trim(),d=db()
+let d=db(),u=ignoreUser.value.trim()
 if(d[u]&&!d[me].ignored.includes(u))d[me].ignored.push(u)
 save(d);renderContacts()
 }
-
-function setStatus(){
-let d=db()
-d[me].status=status.value
-save(d);renderContacts()
-}
-
-function pic(e){
-let r=new FileReader()
-r.onload=()=>{let d=db();d[me].pic=r.result;save(d)}
-r.readAsDataURL(e.target.files[0])
-}
-
+function setStatus(){let d=db();d[me].status=status.value;save(d);renderContacts()}
 function logout(){localStorage.removeItem("me");location.reload()}
 function del(){let d=db();delete d[me];save(d);logout()}
 
