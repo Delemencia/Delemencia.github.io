@@ -2,14 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>how does the web work</title>
+<title>let the games begin</title>
 <style>
-*{font-family:Segoe UI,Tahoma;margin:0;padding:0;box-sizing:border-box}
-body{
-height:100vh;
-background:linear-gradient(135deg,#b9f6ca,#4caf50);
-transition:.3s
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Tahoma}
+body{height:100vh;transition:.3s}
 .screen{display:none;position:absolute;width:100%;height:100%}
 .vista{
 display:flex;align-items:center;justify-content:center;
@@ -26,23 +22,22 @@ text-align:center
 .glass button{
 width:100%;padding:12px;margin:8px 0;border:none;
 background:linear-gradient(#66bb6a,#2e7d32);
-color:#fff;font-weight:bold;border-radius:6px;cursor:pointer
+color:white;font-weight:bold;border-radius:6px;cursor:pointer
 }
 .auth{
-background:rgba(255,255,255,.9);
+background:rgba(255,255,255,.95);
 width:380px;margin:auto;margin-top:90px;
 padding:30px;border-radius:8px;
 box-shadow:0 0 15px rgba(0,0,0,.3);
 text-align:center
 }
 .auth input,.auth button{width:100%;padding:10px;margin-bottom:10px}
-.auth button{background:#2e7d32;color:#fff;border:none;font-weight:bold}
+.auth button{background:#2e7d32;color:white;border:none;font-weight:bold}
 #container{display:flex;height:100%}
 #sidebar{
-width:260px;
-background:rgba(240,255,240,.8);
-border-right:1px solid #9ccc65;
-padding:10px
+width:260px;padding:10px;
+background:rgba(240,255,240,.85);
+border-right:1px solid #9ccc65
 }
 #contacts{overflow-y:auto}
 .contact{
@@ -53,13 +48,13 @@ cursor:pointer
 #chat{flex:1;display:flex;flex-direction:column}
 #header{
 padding:10px;
-background:rgba(220,255,220,.85);
+background:rgba(220,255,220,.9);
 border-bottom:1px solid #9ccc65;
 display:flex;justify-content:space-between
 }
 #messages{
 flex:1;padding:10px;
-background:rgba(235,255,235,.9);
+background:rgba(235,255,235,.95);
 overflow-y:auto
 }
 .msg{
@@ -67,9 +62,7 @@ margin-bottom:6px;padding:6px 10px;
 border-radius:6px;background:#c8e6c9;
 max-width:70%
 }
-.self{
-background:#2e7d32;color:white;margin-left:auto
-}
+.self{background:#2e7d32;color:white;margin-left:auto}
 #send{
 display:flex;padding:10px;
 border-top:1px solid #9ccc65
@@ -77,7 +70,7 @@ border-top:1px solid #9ccc65
 #send input{flex:1;padding:8px}
 #send button{
 padding:8px 14px;
-background:#2e7d32;color:#fff;border:none
+background:#2e7d32;color:white;border:none
 }
 #settings{
 display:none;position:absolute;
@@ -85,16 +78,22 @@ top:50%;left:50%;
 transform:translate(-50%,-50%);
 background:rgba(240,255,240,.95);
 padding:25px;border-radius:10px;
-width:540px;
+width:560px;
 box-shadow:0 0 25px rgba(0,0,0,.35)
 }
-.setting{margin-bottom:18px}
+.setting{margin-bottom:16px}
 .setting button{
 margin:4px;padding:6px 12px;
 border:none;border-radius:4px;
 background:#2e7d32;color:white
 }
 .delete{background:#a00}
+.notify{
+position:fixed;bottom:20px;right:20px;
+background:rgba(0,0,0,.75);color:white;
+padding:10px 14px;border-radius:6px;
+z-index:999
+}
 </style>
 </head>
 <body>
@@ -149,15 +148,20 @@ background:#2e7d32;color:white
 </div>
 
 <div id="settings">
-<h2>Settings</h2>
+<div style="text-align:right">
+<button onclick="minimize()">➖</button>
+<button onclick="closeSettings()">❌</button>
+</div>
 
 <div class="setting">
 <h4>Theme</h4>
 <button onclick="theme('aero')">Aero Green</button>
-<button onclick="theme('blue')">Classic Blue</button>
+<button onclick="theme('blue')">Aero Blue</button>
+<button onclick="theme('glass')">Glass</button>
 <button onclick="theme('dark')">Dark</button>
-<button onclick="theme('nebula')">Nebula</button>
 <button onclick="theme('crimson')">Crimson</button>
+<button onclick="theme('amber')">Amber</button>
+<button onclick="theme('midnight')">Midnight</button>
 </div>
 
 <div class="setting">
@@ -177,16 +181,28 @@ background:#2e7d32;color:white
 </div>
 
 <div class="setting">
+<button onclick="callUser()">📞 Call selected</button>
+<button onclick="banUser()">🔨 Ban user</button>
+</div>
+
+<div class="setting">
 <button onclick="logout()">Logout</button>
 <button class="delete" onclick="del()">Delete account</button>
-<button onclick="closeSettings()">Back</button>
 </div>
 </div>
 
 <script>
-let me=null,chat=null
+let me=null,chat=null,min=false
 const db=()=>JSON.parse(localStorage.db||"{}")
 const save=d=>localStorage.db=JSON.stringify(d)
+
+function notify(t){
+let n=document.createElement("div")
+n.className="notify"
+n.textContent=t
+document.body.appendChild(n)
+setTimeout(()=>n.remove(),2500)
+}
 
 function show(x){
 document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
@@ -195,25 +211,29 @@ document.getElementById(x).style.display="block"
 
 function register(){
 let u=ru.value.trim(),p=rp.value,d=db()
-if(!u||!p||d[u])return alert("Invalid")
-if(u==="Delemencia"&&d["Delemencia"])return alert("Name taken")
-d[u]={pass:p,admin:u==="Delemencia",contacts:[],msgs:{},ignored:[],status:"Online"}
+if(!u||!p)return notify("Invalid")
+if(u==="Delemencia"&&d["Delemencia"])return notify("Name taken")
+if(d[u])return notify("Username exists")
+d[u]={pass:p,admin:u==="Delemencia",contacts:[],msgs:{},ignored:[],status:"Online",banned:false}
 save(d);localStorage.me=u;me=u;load()
 }
 
 function login(){
-let d=db()
-if(!d[lu.value]||d[lu.value].pass!==lp.value)return alert("Wrong")
-me=lu.value;localStorage.me=me;load()
+let d=db(),u=lu.value
+if(!d[u]||d[u].pass!==lp.value)return notify("Wrong login")
+if(d[u].banned)return notify("You are banned")
+me=u;localStorage.me=u;load()
 }
 
 function load(){show("main");renderContacts()}
 
 function addContact(){
 let u=addUser.value.trim(),d=db()
-if(!u||!d[u]||u===me||d[me].contacts.includes(u))return alert("Cannot add")
+if(!u||!d[u])return notify("User does not exist")
+if(u===me)return notify("Cannot add yourself")
+if(d[me].contacts.includes(u))return notify("Already added")
 d[me].contacts.push(u)
-save(d);addUser.value="";renderContacts()
+save(d);addUser.value="";renderContacts();notify("Added "+u)
 }
 
 function renderContacts(){
@@ -231,6 +251,7 @@ c.appendChild(div)
 function send(){
 if(!chat||!msg.value)return
 let d=db()
+if(d[chat].ignored.includes(me))return notify("You are ignored")
 d[me].msgs[chat]??=[]
 d[chat].msgs[me]??=[]
 let m={f:me,t:msg.value}
@@ -255,19 +276,42 @@ m.scrollTop=m.scrollHeight
 function theme(t){
 if(t==="aero")document.body.style.background="linear-gradient(135deg,#b9f6ca,#4caf50)"
 if(t==="blue")document.body.style.background="linear-gradient(135deg,#bbdefb,#1976d2)"
-if(t==="dark")document.body.style.background="#111"
-if(t==="nebula")document.body.style.background="linear-gradient(135deg,#2a003f,#000)"
+if(t==="glass")document.body.style.background="linear-gradient(135deg,#e0f7fa,#80deea)"
+if(t==="dark")document.body.style.background="#222"
 if(t==="crimson")document.body.style.background="linear-gradient(135deg,#6a0000,#200)"
+if(t==="amber")document.body.style.background="linear-gradient(135deg,#ffe082,#ff9800)"
+if(t==="midnight")document.body.style.background="#0b0b0b"
+}
+
+function setStatus(){
+let d=db()
+d[me].status=status.value
+save(d);renderContacts()
+}
+
+function ignore(){
+let d=db(),u=ignoreUser.value.trim()
+if(!d[u])return notify("User not found")
+if(!d[me].ignored.includes(u))d[me].ignored.push(u)
+save(d);renderContacts();notify("Ignored "+u)
+}
+
+function callUser(){
+if(!chat)return notify("No user selected")
+notify("Calling "+chat+"...")
+}
+
+function banUser(){
+let d=db()
+if(!d[me].admin)return notify("No permission")
+if(!chat||chat==="Delemencia")return
+d[chat].banned=true
+save(d);notify(chat+" banned")
 }
 
 function openSettings(){settings.style.display="block"}
 function closeSettings(){settings.style.display="none"}
-function ignore(){
-let d=db(),u=ignoreUser.value.trim()
-if(d[u]&&!d[me].ignored.includes(u))d[me].ignored.push(u)
-save(d);renderContacts()
-}
-function setStatus(){let d=db();d[me].status=status.value;save(d);renderContacts()}
+function minimize(){settings.style.display="none";notify("Settings minimized")}
 function logout(){localStorage.removeItem("me");location.reload()}
 function del(){let d=db();delete d[me];save(d);logout()}
 
