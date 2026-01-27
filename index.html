@@ -2,109 +2,93 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>oh, okay. SURE</title>
-
+<title>Cool profile Bandors!</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <style>
-*{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:0;box-sizing:border-box}
-body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:0.5s}
-.screen{display:none;width:100%;height:100%}
-.win-window{width:960px;height:660px;background:#fff;border:1px solid #000;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:flex;flex-direction:column;position:relative}
-.win-titlebar{background:#fff;height:32px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;color:#000;font-size:12px;border-bottom:1px solid #ccc}
+*{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
+body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.win-window{width:980px;height:680px;background:#fff;border:1px solid #707070;box-shadow:0 5px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column}
+.win-titlebar{background:#fff;height:30px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;border-bottom:1px solid #e2e2e2}
 .win-body{flex:1;display:flex;overflow:hidden}
-#sidebar{width:280px;background:#f2f2f2;border-right:1px solid #ccc;display:flex;flex-direction:column}
-.user-info{padding:15px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px}
-.pfp-small{width:40px;height:40px;border:1px solid #ccc;background:#eee;object-fit:cover;cursor:pointer}
+#sidebar{width:260px;background:#f0f0f0;border-right:1px solid #ccc;display:flex;flex-direction:column}
+.user-profile-header{padding:15px;background:#fff;border-bottom:1px solid #ccc;display:flex;align-items:center;gap:10px}
+.pfp-main{width:45px;height:45px;border:1px solid #ccc;object-fit:cover}
 #contacts-area{flex:1;overflow-y:auto}
-.section-label{padding:10px;background:#f2f2f2;font-size:11px;font-weight:600;color:#666;border-bottom:1px solid #ddd;display:flex;justify-content:space-between}
-.contact-item{padding:12px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid transparent}
-.contact-item:hover{background:#e5e5e5}
+.section-label{padding:8px 12px;font-size:11px;font-weight:bold;color:#666;text-transform:uppercase}
+.person-item{padding:10px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px}
+.person-item:hover{background:#e5e5e5}
 #chat-pane{flex:1;display:flex;flex-direction:column;background:#fff}
-#chat-head{padding:10px 15px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
-
-
-#call-overlay{display:none;padding:10px;background:#0078d7;color:#fff;display:none;align-items:center;gap:15px;border-bottom:1px solid #005a9e}
-.call-pfp{width:32px;height:32px;border-radius:50%;border:2px solid #fff}
-
-#messages-box{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-.msg-bubble{padding:8px 12px;font-size:14px;max-width:70%;border:1px solid #e1e1e1}
-.me-row{justify-content:flex-end;display:flex}.them-row{justify-content:flex-start;display:flex}
-.me{background:#0078d7;color:#fff;border:none}.them{background:#f1f1f1;color:#000}
-
-#input-strip{padding:15px;border-top:1px solid #eee;display:flex;gap:10px}
-input{padding:8px;border:1px solid #ccc;outline:none}
-button{padding:5px 15px;background:#ccc;border:1px solid #999;cursor:pointer;font-size:12px}
-button:hover{background:#bbb}
-
-
-.theme-btn{width:32px;height:32px;border:1px solid #fff;display:inline-block;margin:2px;cursor:pointer;outline:1px solid #ccc}
-
-.modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:center;justify-content:center}
-.modal-content{background:#fff;border:1px solid #000;width:380px;padding:20px}
-#welcome-text{position:fixed;bottom:10px;color:#fff;font-size:12px;width:100%;text-align:center;pointer-events:none}
+#call-display{height:220px;background:linear-gradient(to bottom, #003e5c, #005a84);display:none;padding:20px;justify-content:center;align-items:center;gap:20px;border-bottom:1px solid #000}
+.call-avatar-box{text-align:center;color:#fff;font-size:12px}
+.call-avatar{width:80px;height:80px;border:2px solid #fff;margin-bottom:8px;object-fit:cover}
+#messages-box{flex:1;padding:15px;overflow-y:auto;background:#fff;display:flex;flex-direction:column;gap:5px}
+.msg-line{font-size:13px;margin-bottom:2px}
+.msg-sender{font-weight:bold;color:#005a84;margin-right:5px}
+#input-area{padding:10px;border-top:1px solid #ccc;display:flex;gap:5px;background:#fff}
+input[type="text"], input[type="password"]{padding:5px;border:1px solid #ccc;outline:none;font-size:13px}
+button{padding:4px 12px;background:#eee;border:1px solid #adb2b5;cursor:pointer;font-size:12px}
+button:hover{background:#ddd;border-color:#888}
+.modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.2);z-index:100;align-items:center;justify-content:center}
+.modal-win{background:#fff;border:1px solid #000;width:350px;padding:20px;box-shadow:0 0 10px rgba(0,0,0,0.5)}
+#welcome-footer{position:fixed;bottom:10px;width:100%;text-align:center;color:#fff;font-size:12px;pointer-events:none}
 </style>
 </head>
 <body>
 
-<div id="welcome-text">welcome!</div>
+<div id="welcome-footer">welcome!</div>
 
-<div id="auth-screen" class="screen" style="display:flex;align-items:center;justify-content:center">
+<div id="auth-screen" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center">
     <div class="win-window" style="width:320px;height:auto">
-        <div class="win-titlebar"><span>Delemencia</span></div>
-        <div style="padding:30px" id="login-form">
-            <h2 style="font-weight:300;margin-bottom:20px">Sign in</h2>
-            <input id="lu" placeholder="Username" style="width:100%;margin-bottom:10px">
-            <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
-            <button onclick="login()" style="width:100%;background:#0078d7;color:#fff;border:none;padding:10px">Sign In</button>
-            <p style="font-size:11px;margin-top:15px">New? <a href="#" onclick="toggleAuth(true)">Create account</a></p>
+        <div class="win-titlebar"><span>Delemencia - Sign In</span></div>
+        <div style="padding:25px" id="login-form">
+            <input id="lu" placeholder="Username" style="width:100%;margin-bottom:8px">
+            <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:15px">
+            <button onclick="login()" style="width:100%">Sign In</button>
+            <div style="margin-top:15px;font-size:11px">No account? <a href="#" onclick="toggleAuth(true)">Create one</a></div>
         </div>
-        <div style="padding:30px;display:none" id="reg-form">
-            <h2 style="font-weight:300;margin-bottom:20px">Join</h2>
-            <input id="ru" placeholder="Username" style="width:100%;margin-bottom:10px">
-            <input id="rp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
-            <button onclick="register()" style="width:100%;background:#0078d7;color:#fff;border:none;padding:10px">Create</button>
-            <p style="font-size:11px;margin-top:15px"><a href="#" onclick="toggleAuth(false)">Back</a></p>
+        <div style="padding:25px;display:none" id="reg-form">
+            <input id="ru" placeholder="New Username" style="width:100%;margin-bottom:8px">
+            <input id="rp" type="password" placeholder="New Password" style="width:100%;margin-bottom:15px">
+            <button onclick="register()" style="width:100%">Register</button>
+            <div style="margin-top:15px;font-size:11px"><a href="#" onclick="toggleAuth(false)">Back</a></div>
         </div>
     </div>
 </div>
 
-<div id="app-screen" class="screen">
-    <div class="win-window" style="margin:auto;margin-top:20px">
+<div id="app-screen" style="display:none;width:100%;height:100%">
+    <div class="win-window" style="margin:auto;margin-top:30px">
         <div class="win-titlebar">
             <span>Delemencia</span>
-            <button onclick="openSet()" style="border:none;background:none">Settings</button>
+            <div><button onclick="openSet()">Settings</button></div>
         </div>
-        
-        <div id="call-overlay">
-            <div style="display:flex;align-items:center;gap:10px" id="active-call-users">
-                </div>
-            <span id="call-status">In call...</span>
-            <button onclick="endCall()" style="background:#e81123;color:#fff;border:none;margin-left:auto">End</button>
-        </div>
-
         <div class="win-body">
             <div id="sidebar">
-                <div class="user-info">
-                    <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-small">
+                <div class="user-profile-header">
+                    <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-main">
                     <div>
                         <b id="display-name" style="font-size:14px">User</b><br>
-                        <span id="my-status-text" style="font-size:11px;color:#666">Online</span>
+                        <span style="font-size:11px;color:green">Online</span>
                     </div>
+                </div>
+                <div style="padding:5px 10px;background:#e2e2e2;border-bottom:1px solid #ccc">
+                    <input id="search-box" placeholder="Search people..." style="width:100%;font-size:11px" onkeydown="if(event.key==='Enter')lookUp()">
                 </div>
                 <div id="contacts-area"></div>
             </div>
-            
             <div id="chat-pane">
-                <div id="chat-head">
-                    <b id="chat-target-name">Select a friend</b>
-                    <button id="call-btn" onclick="startCall()" style="display:none;background:#0078d7;color:#fff;border:none">Voice Call</button>
+                <div id="call-display">
+                    <div id="call-avatars" style="display:flex;gap:20px"></div>
+                    <button onclick="endCall()" style="position:absolute;top:10px;right:10px;background:#cc0000;color:#fff;border:none">Hang up</button>
+                </div>
+                <div style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center">
+                    <b id="chat-target">Select People</b>
+                    <button id="call-btn" onclick="startCall()" style="display:none">Call</button>
                 </div>
                 <div id="messages-box"></div>
-                <div id="input-strip">
+                <div id="input-area">
                     <input id="msg-in" type="text" style="flex:1" placeholder="Type a message..." onkeydown="if(event.key==='Enter')doSend()">
-                    <button onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
+                    <button onclick="doSend()">Send</button>
                 </div>
             </div>
         </div>
@@ -112,41 +96,33 @@ button:hover{background:#bbb}
 </div>
 
 <div id="profile-modal" class="modal">
-    <div class="modal-content">
-        <div style="display:flex;gap:15px;margin-bottom:20px">
-            <img id="view-pfp" class="pfp-small" style="width:60px;height:60px">
-            <div><h3 id="view-name"></h3><p id="view-status" style="font-size:12px;color:#666"></p></div>
-        </div>
+    <div class="modal-win">
+        <h3 id="view-name">User Profile</h3><br>
+        <img id="view-pfp" style="width:100px;height:100px;border:1px solid #ccc;margin-bottom:15px;object-fit:cover"><br>
         <button id="msg-btn" style="width:100%;margin-bottom:5px">Message</button>
-        <button id="block-btn" style="width:100%;background:#e81123;color:#fff;border:none">Block User</button>
-        <button onclick="closeModal()" style="width:100%;margin-top:10px;background:none;border:1px solid #ccc">Close</button>
+        <button id="block-btn" style="width:100%;background:#fee;color:#c00">Block</button>
+        <button onclick="closeModal()" style="width:100%;margin-top:10px">Close</button>
     </div>
 </div>
 
 <div id="settings-box" class="modal">
-    <div class="modal-content" style="width:500px">
-        <h2 style="font-weight:300;margin-bottom:20px">Settings</h2>
-        <div style="display:flex;gap:20px">
-            <div style="flex:1">
-                <p style="font-size:12px;margin-bottom:5px">Profile Photo</p>
-                <input type="file" id="pfp-file" accept="image/*" onchange="updatePfp()" style="font-size:10px">
-            </div>
-            <div style="flex:1">
-                <p style="font-size:12px;margin-bottom:5px">Accent Color</p>
-                <div class="theme-btn" style="background:#0078d7" onclick="theme('#0078d7')"></div>
-                <div class="theme-btn" style="background:#2d7d32" onclick="theme('#2d7d32')"></div>
-                <div class="theme-btn" style="background:#e81123" onclick="theme('#e81123')"></div>
-                <div class="theme-btn" style="background:#000000" onclick="theme('#000000')"></div>
-                <div class="theme-btn" style="background:#68217a" onclick="theme('#68217a')"></div>
-                <button onclick="logout()" style="width:100%;margin-top:20px;background:#e81123;color:#fff;border:none">Logout</button>
-            </div>
+    <div class="modal-win" style="width:400px">
+        <h3>Settings</h3><br>
+        <p style="font-size:12px">Profile Picture</p>
+        <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()" style="margin-bottom:15px"><br>
+        <p style="font-size:12px">Theme Color</p>
+        <div style="display:flex;gap:5px;margin-bottom:20px">
+            <div style="width:25px;height:25px;background:#0078d7;cursor:pointer" onclick="theme('#0078d7')"></div>
+            <div style="width:25px;height:25px;background:#444;cursor:pointer" onclick="theme('#444')"></div>
+            <div style="width:25px;height:25px;background:#004d40;cursor:pointer" onclick="theme('#004d40')"></div>
+            <div style="width:25px;height:25px;background:#6a1b9a;cursor:pointer" onclick="theme('#6a1b9a')"></div>
         </div>
-        <button onclick="closeSet()" style="margin-top:20px;float:right">Done</button>
+        <button onclick="logout()" style="background:#cc0000;color:#fff;border:none">Logout</button>
+        <button onclick="closeModal()" style="float:right">Done</button>
     </div>
 </div>
 
 <script>
-
 const firebaseConfig = {
   apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8",
   authDomain: "delemencia.firebaseapp.com",
@@ -156,135 +132,128 @@ const firebaseConfig = {
   messagingSenderId: "192535641895",
   appId: "1:192535641895:web:6a3d97d488ef6481d9f382"
 };
-
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
-let me = localStorage.getItem('del_me'), chatWith = null, isGroup = false;
-let pc = null; 
+let me = localStorage.getItem('del_me'), chatWith = null, isGrp = false;
 
-
-function toggleAuth(reg){
-    document.getElementById('login-form').style.display = reg ? 'none' : 'block';
-    document.getElementById('reg-form').style.display = reg ? 'block' : 'none';
+function toggleAuth(r){
+    document.getElementById('login-form').style.display = r ? 'none' : 'block';
+    document.getElementById('reg-form').style.display = r ? 'block' : 'none';
+}
+function login(){
+    let u = document.getElementById('lu').value, p = document.getElementById('lp').value;
+    rdb.ref('users/'+u).once('value', s=>{
+        if(s.val() && s.val().pass === p) session(u); else alert("Error");
+    });
 }
 function register(){
     let u = document.getElementById('ru').value.trim(), p = document.getElementById('rp').value;
     if(!u || !p) return;
-    rdb.ref('users/'+u).set({pass:p, status:"Online", pfp:"", blocks: {}}).then(()=>session(u));
-}
-function login(){
-    let u = document.getElementById('lu').value, p = document.getElementById('lp').value;
-    rdb.ref('users/'+u).once('value', s => {
-        if(s.val() && s.val().pass === p) session(u);
-        else alert("Fail");
-    });
+    rdb.ref('users/'+u).set({pass:p, status:"Online", pfp:"", blocks:{}}).then(()=>session(u));
 }
 function session(u){
     me = u; localStorage.setItem('del_me', u);
     document.getElementById('display-name').textContent = u;
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
-    document.getElementById('welcome-text').style.display = 'none';
-    rdb.ref('users/'+me+'/pfp').on('value', s => { if(s.val()) document.getElementById('my-pfp').src = s.val(); });
+    document.getElementById('welcome-footer').style.display = 'none';
+    rdb.ref('users/'+me+'/pfp').on('value', s=>{ if(s.val()) document.getElementById('my-pfp').src = s.val(); });
     loadPeople();
     listenCalls();
 }
-
-
 function loadPeople(){
-    rdb.ref('users').on('value', snapshot => {
-        let area = document.getElementById('contacts-area');
-        area.innerHTML = `<div class="section-label">FRIENDS <button onclick="makeGroup()" style="font-size:9px">+ GROUP</button></div>`;
-        snapshot.forEach(child => {
-            let u = child.key; if(u === me) return;
-            rdb.ref(`users/${u}/blocks/${me}`).once('value', b => {
-                if(b.exists()) return; // Don't show if they blocked me
-                let d = child.val();
+    rdb.ref('users').on('value', s=>{
+        let a = document.getElementById('contacts-area');
+        a.innerHTML = `<div class="section-label">People <button onclick="makeGrp()" style="font-size:9px;float:right">+ Group</button></div>`;
+        s.forEach(c => {
+            let u = c.key; if(u === me) return;
+            rdb.ref(`users/${u}/blocks/${me}`).once('value', b=>{
+                if(b.exists()) return;
+                let d = c.val();
                 let div = document.createElement('div');
-                div.className = "contact-item";
-                div.onclick = () => showProfile(u, d);
-                div.innerHTML = `<img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" class="pfp-small" style="border-radius:50%"> <b>${u}</b>`;
-                area.appendChild(div);
+                div.className = "person-item";
+                div.onclick = () => showProf(u, d);
+                div.innerHTML = `<img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:30px;height:30px;border:1px solid #ccc"> <b>${u}</b>`;
+                a.appendChild(div);
             });
         });
-        rdb.ref('groups').on('value', gs => {
-            gs.forEach(g => {
+        rdb.ref('groups').on('value', gs=>{
+            gs.forEach(g=>{
                 let div = document.createElement('div');
-                div.className = "contact-item";
+                div.className = "person-item";
                 div.onclick = () => startChat(g.key, true);
-                div.innerHTML = `<div class="pfp-small" style="background:#555;color:#fff;display:flex;align-items:center;justify-content:center">G</div> <b>${g.key}</b>`;
-                area.appendChild(div);
+                div.innerHTML = `<b>[Group] ${g.key}</b>`;
+                a.appendChild(div);
             });
         });
     });
 }
-
-function showProfile(u, d){
+function showProf(u, d){
     document.getElementById('view-name').textContent = u;
     document.getElementById('view-pfp').src = d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     document.getElementById('msg-btn').onclick = () => { startChat(u, false); closeModal(); };
-    
-    rdb.ref(`users/${me}/blocks/${u}`).once('value', b => {
-        let btn = document.getElementById('block-btn');
-        if(b.exists()){
-            btn.textContent = "Unblock User";
-            btn.onclick = () => { rdb.ref(`users/${me}/blocks/${u}`).remove(); closeModal(); };
-        } else {
-            btn.textContent = "Block User";
-            btn.onclick = () => { rdb.ref(`users/${me}/blocks/${u}`).set(true); closeModal(); };
-        }
+    let bb = document.getElementById('block-btn');
+    rdb.ref(`users/${me}/blocks/${u}`).once('value', b=>{
+        bb.textContent = b.exists() ? "Unblock" : "Block";
+        bb.onclick = () => { if(b.exists()) rdb.ref(`users/${me}/blocks/${u}`).remove(); else rdb.ref(`users/${me}/blocks/${u}`).set(true); closeModal(); };
     });
-    document.getElementById('profile-modal').style.display = 'flex';
+    document.getElementById('profile-modal').style.display='flex';
 }
-
-
-function startChat(u, group){
-    chatWith = u; isGroup = group;
-    document.getElementById('chat-target-name').textContent = u;
-    document.getElementById('call-btn').style.display = group ? 'none' : 'block';
+function startChat(u, g){
+    chatWith = u; isGrp = g;
+    document.getElementById('chat-target').textContent = u;
+    document.getElementById('call-btn').style.display = g ? 'none' : 'block';
     listenMsgs();
 }
 function doSend(){
     let t = document.getElementById('msg-in').value.trim();
     if(!t || !chatWith) return;
-    let path = isGroup ? 'groups/'+chatWith : 'chats/'+[me,chatWith].sort().join("_");
-    rdb.ref(path).push({s:me, t:t, ts:Date.now()});
+    let p = isGrp ? 'groups/'+chatWith : 'chats/'+[me,chatWith].sort().join("_");
+    rdb.ref(p).push({s:me, t:t, ts:Date.now()});
     document.getElementById('msg-in').value = "";
 }
 function listenMsgs(){
-    let path = isGroup ? 'groups/'+chatWith : 'chats/'+[me,chatWith].sort().join("_");
-    rdb.ref(path).off();
-    rdb.ref(path).on('value', s => {
-        let box = document.getElementById('messages-box'); box.innerHTML = "";
-        s.forEach(c => {
+    let p = isGrp ? 'groups/'+chatWith : 'chats/'+[me,chatWith].sort().join("_");
+    rdb.ref(p).off();
+    rdb.ref(p).on('value', s=>{
+        let b = document.getElementById('messages-box'); b.innerHTML = "";
+        s.forEach(c=>{
             let m = c.val();
-            let div = document.createElement('div');
-            div.className = "msg-row " + (m.s === me ? "me-row" : "them-row");
-            div.innerHTML = `<div class="msg-bubble ${m.s === me ? 'me' : 'them'}">${m.t}</div>`;
-            box.appendChild(div);
+            let d = document.createElement('div');
+            d.className = "msg-line";
+            d.innerHTML = `<span class="msg-sender">${m.s}:</span><span>${m.t}</span>`;
+            b.appendChild(d);
         });
-        box.scrollTop = box.scrollHeight;
+        b.scrollTop = b.scrollHeight;
     });
 }
-function makeGroup(){
-    let n = prompt("Group Name?"), d = prompt("Members (comma separated, max 5)");
-    if(!n || !d) return;
-    let members = d.split(',').slice(0,5);
-    rdb.ref('groups/'+n).push({s:'Sys', t:'Group Created with: ' + members.join(', ')});
+function makeGrp(){
+    let n = prompt("Group Name?"), m = prompt("Enter up to 5 users (comma separated)");
+    if(!n || !m) return;
+    let list = m.split(',').slice(0, 5);
+    rdb.ref('groups/'+n).push({s:'System', t:'Group created with ' + list.join(', ')});
 }
-
-
 function startCall(){
-    document.getElementById('call-overlay').style.display = 'flex';
-    rdb.ref('calls/'+chatWith).set({from:me, type:'offer'});
-    updateCallUI(chatWith);
+    document.getElementById('call-display').style.display='flex';
+    rdb.ref('calls/'+chatWith).set({from:me, active:true});
+    renderCall([me, chatWith]);
+}
+function renderCall(users){
+    let box = document.getElementById('call-avatars'); box.innerHTML = "";
+    users.forEach(u=>{
+        let div = document.createElement('div');
+        div.className = "call-avatar-box";
+        div.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" id="call-pfp-${u}" class="call-avatar"><br>${u}`;
+        box.appendChild(div);
+        rdb.ref('users/'+u+'/pfp').once('value', s=>{ if(s.val()) document.getElementById('call-pfp-'+u).src = s.val(); });
+    });
 }
 function listenCalls(){
-    rdb.ref('calls/'+me).on('value', s => {
-        if(s.val() && s.val().type === 'offer'){
-            if(confirm("Call from " + s.val().from + "?")){
-                document.getElementById('call-overlay').style.display = 'flex';
-                updateCallUI(s.val().from);
+    rdb.ref('calls/'+me).on('value', s=>{
+        if(s.val() && s.val().active){
+            if(confirm("Call from "+s.val().from+"?")){
+                document.getElementById('call-display').style.display='flex';
+                renderCall([me, s.val().from]);
             } else endCall();
         }
     });
@@ -292,29 +261,18 @@ function listenCalls(){
 function endCall(){
     rdb.ref('calls/'+me).remove();
     if(chatWith) rdb.ref('calls/'+chatWith).remove();
-    document.getElementById('call-overlay').style.display = 'none';
+    document.getElementById('call-display').style.display='none';
 }
-function updateCallUI(target){
-    let area = document.getElementById('active-call-users');
-    area.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="call-pfp">`;
-    rdb.ref('users/'+target+'/pfp').once('value', s => { if(s.val()) area.firstChild.src = s.val(); });
-}
-
-
-function theme(c){ document.body.style.background = c; document.querySelectorAll('button').forEach(b => { if(b.style.background != 'none') b.style.backgroundColor = c; }); }
-function updatePfp(){
+function upPfp(){
     let f = document.getElementById('pfp-file').files[0];
-    let r = new FileReader();
-    r.onload = e => rdb.ref('users/'+me+'/pfp').set(e.target.result);
-    r.readAsDataURL(f);
+    let r = new FileReader(); r.onload = e => rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f);
 }
-function openSet(){ document.getElementById('settings-box').style.display = 'flex'; }
-function closeSet(){ document.getElementById('settings-box').style.display = 'none'; }
-function closeModal(){ document.getElementById('profile-modal').style.display = 'none'; }
+function theme(c){ document.body.style.background = c; }
+function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function logout(){ localStorage.clear(); location.reload(); }
+function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
 
 if(me) session(me);
-else document.getElementById('auth-screen').style.display = 'flex';
 </script>
 </body>
 </html>
