@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Wow. We're back in business!</title>
+<title>watch spongebob</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
-body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden}
+body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s}
 .win-window{width:1000px;height:720px;background:#fff;border:1px solid #555;box-shadow:0 10px 30px rgba(0,0,0,0.4);display:flex;flex-direction:column}
 .win-titlebar{background:#fff;height:32px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;border-bottom:1px solid #ddd}
 .win-body{flex:1;display:flex;overflow:hidden}
@@ -39,6 +39,7 @@ button:hover{background:#e1e1e1}
 .settings-content{flex:1;padding:40px;overflow-y:auto}
 .tab-section{display:none}
 .tab-section.active{display:block}
+.theme-square{width:40px;height:40px;display:inline-block;margin-right:10px;cursor:pointer;border:1px solid #777}
 #welcome-footer{position:fixed;bottom:10px;width:100%;text-align:center;color:#fff;font-size:12px;opacity:0.8}
 </style>
 </head>
@@ -101,24 +102,32 @@ button:hover{background:#e1e1e1}
     <div class="settings-win">
         <div class="settings-nav">
             <div id="n-prof" class="nav-item active" onclick="setTab('prof')">Profile</div>
+            <div id="n-theme" class="nav-item" onclick="setTab('theme')">Themes</div>
             <div id="n-chat" class="nav-item" onclick="setTab('chat')">Chats</div>
             <div id="n-acc" class="nav-item" onclick="setTab('acc')">Account</div>
-            <div style="margin-top:150px;padding:25px;color:#c00;cursor:pointer" onclick="logout()">Logout</div>
+            <div style="margin-top:100px;padding:25px;color:#c00;cursor:pointer" onclick="logout()">Logout</div>
         </div>
         <div class="settings-content">
             <div id="t-prof" class="tab-section active">
-                <h2>Profile Settings</h2><br>
+                <h2>Profile</h2><br>
                 <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()"><br><br>
-                <input id="status-in" style="width:100%" placeholder="Status..."><br><br>
+                <input id="status-in" style="width:100%" placeholder="Update status..."><br><br>
                 <button onclick="saveStat()">Update</button>
             </div>
+            <div id="t-theme" class="tab-section">
+                <h2>Themes</h2><br>
+                <p style="font-size:12px;margin-bottom:10px">Choose Accent Color:</p>
+                <div class="theme-square" style="background:#0078d7" onclick="theme('#0078d7')"></div>
+                <div class="theme-square" style="background:#f3f3f3" onclick="theme('#f3f3f3')"></div>
+                <div class="theme-square" style="background:#444444" onclick="theme('#444444')"></div>
+                <div class="theme-square" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
+            </div>
             <div id="t-chat" class="tab-section">
-                <h2>Chat Management</h2><br>
-                <p style="font-size:13px;color:#666">Warning: This will permanently delete your conversation with the current person.</p><br>
-                <button onclick="clearHistory()" style="background:#c00;color:#fff;border:none">Clear Current Chat History</button>
+                <h2>Chats</h2><br>
+                <button onclick="clearHistory()" style="background:#c00;color:#fff;border:none">Clear Chat History</button>
             </div>
             <div id="t-acc" class="tab-section">
-                <h2>Account Options</h2><br>
+                <h2>Account</h2><br>
                 <input id="new-pw" type="password" placeholder="New Password" style="width:100%"><br><br>
                 <button onclick="changePass()">Save Password</button>
             </div>
@@ -127,6 +136,7 @@ button:hover{background:#e1e1e1}
     </div>
 </div>
 <script>
+// BACKEND RESTORED
 const firebaseConfig = {
   apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8",
   authDomain: "delemencia.firebaseapp.com",
@@ -139,14 +149,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
 let me = localStorage.getItem('del_me'), chatWith = null;
+
 function toggleAuth(r){ document.getElementById('login-form').style.display=r?'none':'block'; document.getElementById('reg-form').style.display=r?'block':'none'; }
 function login(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
-    rdb.ref('users/'+u).once('value', s=>{ if(s.val() && s.val().pass===p) session(u); else alert("Failed"); });
+    rdb.ref('users/'+u).once('value', s=>{ if(s.val() && s.val().pass===p) session(u); else alert("Login Failed"); });
 }
 function register(){
     let u=document.getElementById('ru').value.trim(), p=document.getElementById('rp').value;
-    if(!u || u.length > 30){ alert("Username must be 1-30 chars"); return; }
+    if(!u || u.length > 30){ alert("Username too long!"); return; }
     rdb.ref('users/'+u).set({pass:p, pfp:"", status:""}).then(()=>session(u));
 }
 function session(u){
@@ -158,6 +169,7 @@ function session(u){
     loadPeople();
 }
 function setTab(t){ document.querySelectorAll('.tab-section, .nav-item').forEach(el=>el.classList.remove('active')); document.getElementById('t-'+t).classList.add('active'); document.getElementById('n-'+t).classList.add('active'); }
+function theme(c){ document.body.style.background = c; }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
         let a=document.getElementById('contacts-area'); a.innerHTML=`<div class="section-label">People</div>`;
@@ -190,11 +202,8 @@ function listenMsgs(){
         b.scrollTop=b.scrollHeight;
     });
 }
-function clearHistory(){
-    if(!chatWith) return;
-    if(confirm("Clear chat with "+chatWith+"?")) rdb.ref('chats/'+[me,chatWith].sort().join("_")).remove();
-}
-function changePass(){ let np=document.getElementById('new-pw').value; if(np) rdb.ref('users/'+me+'/pass').set(np).then(()=>alert("Done")); }
+function clearHistory(){ if(chatWith && confirm("Clear history?")) rdb.ref('chats/'+[me,chatWith].sort().join("_")).remove(); }
+function changePass(){ let np=document.getElementById('new-pw').value; if(np) rdb.ref('users/'+me+'/pass').set(np).then(()=>alert("Saved")); }
 function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); }
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
