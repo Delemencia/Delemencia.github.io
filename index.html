@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HI DUDES</title>
+<title>do a little spin do a little dance</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -22,7 +22,7 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 #call-header{height:180px;background:linear-gradient(to bottom, #00aff0, #0078d7);display:none;padding:20px;position:relative;border-bottom:2px solid #005a9e;flex-direction:column;align-items:center;justify-content:center}
 .call-avatars-row{display:flex;gap:25px}
 .call-box{text-align:center;color:#fff;font-size:12px}
-.call-pfp{width:85px;height:85px;border:2px solid #fff;margin-bottom:8px;object-fit:cover;box-shadow: 0 4px 10px rgba(0,0,0,0.2)}
+.call-pfp{width:85px;height:85px;border:2px solid #fff;margin-bottom:8px;object-fit:cover}
 #messages-box{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
 .msg-line{font-size:13px;line-height:1.5}
 .msg-sender{font-weight:bold;color:#0078d7;margin-right:8px}
@@ -40,11 +40,10 @@ button:hover{background:#e1e1e1}
 .tab-section{display:none}
 .tab-section.active{display:block}
 .theme-square{width:40px;height:40px;display:inline-block;margin-right:10px;cursor:pointer;border:1px solid #777}
-#welcome-footer{position:fixed;bottom:10px;width:100%;text-align:center;color:#fff;font-size:12px;opacity:0.8}
 </style>
 </head>
 <body>
-<div id="welcome-footer">welcome!</div>
+
 <div id="auth-screen" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center">
     <div class="win-window" style="width:340px;height:auto">
         <div class="win-titlebar"><span>Delemencia</span></div>
@@ -64,6 +63,7 @@ button:hover{background:#e1e1e1}
         </div>
     </div>
 </div>
+
 <div id="app-screen" style="display:none;width:100%;height:100%">
     <div class="win-window" style="margin:auto;margin-top:40px">
         <div class="win-titlebar">
@@ -74,14 +74,14 @@ button:hover{background:#e1e1e1}
             <div id="sidebar">
                 <div class="user-header">
                     <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-main">
-                    <div><b id="display-name">User</b><br><span id="my-status-text" style="font-size:11px;color:#777">Online</span></div>
+                    <div><b id="display-name">User</b><br><span id="my-status-text" style="font-size:11px;color:#777;font-style:italic">No status set</span></div>
                 </div>
                 <div id="contacts-area"></div>
             </div>
             <div id="chat-pane">
                 <div id="call-header">
                     <div class="call-avatars-row" id="call-box-list"></div>
-                    <button onclick="endCall()" style="margin-top:15px;background:#e81123;color:#fff;border:none;padding:5px 15px">End</button>
+                    <button onclick="endCall()" style="margin-top:15px;background:#e81123;color:#fff;border:none;padding:5px 15px">End Call</button>
                 </div>
                 <div style="padding:15px 25px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center">
                     <b id="chat-target">Messenger</b>
@@ -98,6 +98,7 @@ button:hover{background:#e1e1e1}
         </div>
     </div>
 </div>
+
 <div id="settings-box" class="modal">
     <div class="settings-win">
         <div class="settings-nav">
@@ -109,18 +110,18 @@ button:hover{background:#e1e1e1}
         </div>
         <div class="settings-content">
             <div id="t-prof" class="tab-section active">
-                <h2>Profile</h2><br>
+                <h2>Profile Settings</h2><br>
+                <p style="font-size:12px">Profile Picture</p>
                 <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()"><br><br>
-                <input id="status-in" style="width:100%" placeholder="Update status..."><br><br>
-                <button onclick="saveStat()">Update</button>
+                <p style="font-size:12px">Personal Status Message</p>
+                <input id="status-in" style="width:100%" placeholder="What's on your mind?"><br><br>
+                <button onclick="saveStat()" style="background:#0078d7;color:#fff;border:none">Update Status</button>
             </div>
             <div id="t-theme" class="tab-section">
                 <h2>Themes</h2><br>
-                <p style="font-size:12px;margin-bottom:10px">Choose Accent Color:</p>
                 <div class="theme-square" style="background:#0078d7" onclick="theme('#0078d7')"></div>
                 <div class="theme-square" style="background:#f3f3f3" onclick="theme('#f3f3f3')"></div>
-                <div class="theme-square" style="background:#444444" onclick="theme('#444444')"></div>
-                <div class="theme-square" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
+                <div class="theme-square" style="background:#333" onclick="theme('#333')"></div>
             </div>
             <div id="t-chat" class="tab-section">
                 <h2>Chats</h2><br>
@@ -129,14 +130,14 @@ button:hover{background:#e1e1e1}
             <div id="t-acc" class="tab-section">
                 <h2>Account</h2><br>
                 <input id="new-pw" type="password" placeholder="New Password" style="width:100%"><br><br>
-                <button onclick="changePass()">Save Password</button>
+                <button onclick="changePass()">Change Password</button>
             </div>
-            <button onclick="closeModal()" style="position:absolute;bottom:30px;right:30px">Done</button>
+            <button onclick="closeModal()" style="position:absolute;bottom:30px;right:30px">Close</button>
         </div>
     </div>
 </div>
+
 <script>
-// BACKEND RESTORED
 const firebaseConfig = {
   apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8",
   authDomain: "delemencia.firebaseapp.com",
@@ -153,11 +154,11 @@ let me = localStorage.getItem('del_me'), chatWith = null;
 function toggleAuth(r){ document.getElementById('login-form').style.display=r?'none':'block'; document.getElementById('reg-form').style.display=r?'block':'none'; }
 function login(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
-    rdb.ref('users/'+u).once('value', s=>{ if(s.val() && s.val().pass===p) session(u); else alert("Login Failed"); });
+    rdb.ref('users/'+u).once('value', s=>{ if(s.val() && s.val().pass===p) session(u); else alert("Invalid credentials"); });
 }
 function register(){
     let u=document.getElementById('ru').value.trim(), p=document.getElementById('rp').value;
-    if(!u || u.length > 30){ alert("Username too long!"); return; }
+    if(!u || u.length > 30){ alert("Username must be 1-30 characters"); return; }
     rdb.ref('users/'+u).set({pass:p, pfp:"", status:""}).then(()=>session(u));
 }
 function session(u){
@@ -165,18 +166,26 @@ function session(u){
     document.getElementById('display-name').textContent=u;
     document.getElementById('auth-screen').style.display='none';
     document.getElementById('app-screen').style.display='block';
-    rdb.ref('users/'+me).on('value', s=>{ if(s.val().pfp) document.getElementById('my-pfp').src=s.val().pfp; });
+    rdb.ref('users/'+me).on('value', s=>{ 
+        let d = s.val();
+        if(d.pfp) document.getElementById('my-pfp').src=d.pfp; 
+        document.getElementById('my-status-text').textContent = d.status || "No status set";
+    });
     loadPeople();
 }
+function saveStat(){
+    let val = document.getElementById('status-in').value;
+    rdb.ref('users/'+me+'/status').set(val).then(()=>alert("Status updated!"));
+}
 function setTab(t){ document.querySelectorAll('.tab-section, .nav-item').forEach(el=>el.classList.remove('active')); document.getElementById('t-'+t).classList.add('active'); document.getElementById('n-'+t).classList.add('active'); }
-function theme(c){ document.body.style.background = c; }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
         let a=document.getElementById('contacts-area'); a.innerHTML=`<div class="section-label">People</div>`;
         s.forEach(c=>{ if(c.key===me) return;
+            let d = c.val();
             let div=document.createElement('div'); div.className="person-item";
             div.onclick=()=>{ chatWith=c.key; document.getElementById('chat-target').textContent=c.key; document.getElementById('call-btn').style.display='block'; listenMsgs(); };
-            div.innerHTML=`<img src="${c.val().pfp||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:36px;height:36px"> <b>${c.key}</b>`;
+            div.innerHTML=`<img src="${d.pfp||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:36px;height:36px"> <div><b>${c.key}</b><br><span style="font-size:10px;color:#888">${d.status||''}</span></div>`;
             a.appendChild(div);
         });
     });
@@ -202,9 +211,9 @@ function listenMsgs(){
         b.scrollTop=b.scrollHeight;
     });
 }
+function theme(c){ document.body.style.background = c; }
 function clearHistory(){ if(chatWith && confirm("Clear history?")) rdb.ref('chats/'+[me,chatWith].sort().join("_")).remove(); }
 function changePass(){ let np=document.getElementById('new-pw').value; if(np) rdb.ref('users/'+me+'/pass').set(np).then(()=>alert("Saved")); }
-function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); }
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
 function logout(){ localStorage.clear(); location.reload(); }
