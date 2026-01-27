@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>1.4 release DELEMENCIA</title>
+<title>beta delemencia!!</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
 body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s}
-#messages-box, #contacts-area, .tab-content, #recent-list {overflow-y: scroll}
+#messages-box, #contacts-area, .tab-content, #recent-list, #selected-list {overflow-y: scroll}
 ::-webkit-scrollbar {width: 17px; background: #f0f0f0; border-left: 1px solid #dcdcdc}
 ::-webkit-scrollbar-thumb {background: #cdcdcd; border: 1px solid #ababab; box-shadow: inset 1px 1px 0 #eee}
 ::-webkit-scrollbar-button:single-button {background-color: #f0f0f0; display: block; height: 17px; width: 17px; background-size: 10px; background-repeat: no-repeat; background-position: center; border: 1px solid #dcdcdc}
@@ -73,6 +73,8 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                 </div>
                 <div id="contacts-area">
                     <div class="section-label" onclick="showHome()">HOME</div>
+                    <div class="section-label">SELECTED USERS</div>
+                    <div id="selected-list"></div>
                     <div class="section-label">RECENT</div>
                     <div id="recent-list"></div>
                     <div class="section-label">CONTACTS</div>
@@ -138,7 +140,7 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 const firebaseConfig = {apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8", authDomain: "delemencia.firebaseapp.com", databaseURL: "https://delemencia-default-rtdb.firebaseio.com", projectId: "delemencia", storageBucket: "delemencia.firebasestorage.app", messagingSenderId: "192535641895", appId: "1:192535641895:web:6a3d97d488ef6481d9f382"};
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
-let me = localStorage.getItem('del_me'), chatWith = null, recent = [], lastMsgCount = 0;
+let me = localStorage.getItem('del_me'), chatWith = null, recent = [], selected = [], lastMsgCount = 0;
 const notify = new Audio('https://waitingforatrain.neocities.org/notif.mp3');
 function login(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
@@ -170,8 +172,8 @@ function session(u){
 }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
-        let pList=document.getElementById('people-list'), rList=document.getElementById('recent-list');
-        pList.innerHTML=""; rList.innerHTML="";
+        let pList=document.getElementById('people-list'), rList=document.getElementById('recent-list'), sList=document.getElementById('selected-list');
+        pList.innerHTML=""; rList.innerHTML=""; sList.innerHTML="";
         s.forEach(c=>{
             if(c.key===me) return;
             let v = c.val();
@@ -179,7 +181,9 @@ function loadPeople(){
             div.onclick=()=>{ chatWith=c.key; document.getElementById('chat-target-label').textContent=c.key; if(!recent.includes(c.key)) recent.unshift(c.key); goBack(); listenMsgs(); loadPeople(); };
             let vCol = (v.vis === 'Away' ? 'red' : 'green');
             div.innerHTML=`<div style="position:relative"><img src="${v.pfp||''}" style="width:30px;height:30px;background:#ddd;object-fit:cover"><div style="position:absolute;bottom:0;right:0;width:8px;height:8px;background:${vCol};border:1px solid #fff"></div></div> <b>${c.key}</b>`;
-            if(recent.includes(c.key)) rList.appendChild(div); else pList.appendChild(div);
+            if(selected.includes(c.key)) sList.appendChild(div);
+            else if(recent.includes(c.key)) rList.appendChild(div); 
+            else pList.appendChild(div);
         });
     });
 }
@@ -187,6 +191,12 @@ function showHome(){ document.getElementById('chat-pane').style.display='none'; 
 function goBack(){ document.getElementById('home-pane').style.display='none'; document.getElementById('chat-pane').style.display='flex'; }
 function doSend(){
     let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
+    if(t.trim()==='!select'){
+        if(!selected.includes(chatWith)) selected.push(chatWith);
+        document.getElementById('msg-in').value="";
+        loadPeople();
+        return;
+    }
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
     document.getElementById('msg-in').value="";
 }
