@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>sellin meth? I'm joking.</title>
+<title>GIVE ME ALL UR MONEY, oh hi mom</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -12,47 +12,38 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 
 ::-webkit-scrollbar {width: 17px; background: #f0f0f0; border-left: 1px solid #dcdcdc}
 ::-webkit-scrollbar-thumb {background: #cdcdcd; border: 1px solid #ababab; box-shadow: inset 1px 1px 0 #eee}
-::-webkit-scrollbar-thumb:hover {background: #a6a6a6}
 ::-webkit-scrollbar-button:single-button {background-color: #f0f0f0; display: block; height: 17px; width: 17px; background-size: 10px; background-repeat: no-repeat; background-position: center; border: 1px solid #dcdcdc}
 ::-webkit-scrollbar-button:single-button:vertical:decrement {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEX///8AAABERERVVVV3d3fMzMwzAAAAAXRSTlMAQObYZgAAADlJREFUeF5jYmBgYGJgYmBkYGZkZGVmZmVmYGJgYmBiYmJiYmJiYmJiYmJiYmJiYGJgYmBiYGJgYmAAAOYAA/FrS00AAAAASUVORK5CYII=')}
 ::-webkit-scrollbar-button:single-button:vertical:increment {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEX///8AAABERERVVVV3d3fMzMwzAAAAAXRSTlMAQObYZgAAADlJREFUeF5jYmBiYmJiYmJiYmJiYmJiYmJiYmJiYGJiYmBiYGZkZGVmZmVmYGJgYmBkYGZgYmBkAAAGmAA79XmMAAAAAElFTkSuQmCC')}
 
 .win-window{width:1050px;height:750px;background:#fff;border:1px solid #555;box-shadow:0 10px 30px rgba(0,0,0,0.4);display:flex;flex-direction:column}
 .win-titlebar{background:#f0f0f0;height:35px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;border-bottom:1px solid #ccc}
-
 .win-body{flex:1;display:flex;overflow:hidden}
-#sidebar{width:300px;background:#f3f3f3;border-right:1px solid #ccc;display:flex;flex-direction:column}
 
-.user-header{padding:15px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px}
-.pfp-main{width:48px;height:48px;border:1px solid #ccc;object-fit:cover}
+#sidebar{width:300px;background:#f3f3f3;border-right:1px solid #ccc;display:flex;flex-direction:column}
+.home-btn-nav{padding:10px 15px;cursor:pointer;background:#fff;border-bottom:1px solid #ddd;font-weight:bold;color:#0078d7;display:flex;align-items:center;gap:10px}
+.home-btn-nav:hover{background:#e0eef9}
 
 #contacts-area{flex:1;overflow-y:auto}
-.section-label{padding:10px 15px;font-size:11px;font-weight:bold;color:#666;text-transform:uppercase;background:#e9e9e9;border-bottom: 1px solid #ddd}
+.section-label{padding:10px 15px;font-size:11px;font-weight:bold;color:#666;text-transform:uppercase;background:#e9e9e9;border-bottom:1px solid #ddd}
 .person-item{padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid #eee;background:#fff}
 .person-item:hover{background:#e0eef9}
 
-#chat-pane{flex:1;display:flex;flex-direction:column;background:#fff}
-#call-header{height:180px;background:linear-gradient(to bottom, #00aff0, #0078d7);display:none;padding:20px;border-bottom:2px solid #005a9e;flex-direction:column;align-items:center;justify-content:center}
-.call-box{text-align:center;color:#fff;font-size:12px}
-.call-pfp{width:85px;height:85px;border:2px solid #fff;margin-bottom:8px;object-fit:cover}
+#chat-pane, #home-pane{flex:1;display:flex;flex-direction:column;background:#fff}
+#home-pane{align-items:center;justify-content:center;text-align:center;display:none}
 
 #messages-box{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
 .msg-line{font-size:13px}
 .msg-sender{font-weight:bold;color:#0078d7;margin-right:8px}
 
 #input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px;background:#fff;align-items:center}
-input[type="text"], input[type="password"]{padding:8px;border:1px solid #ccc;outline:none;font-size:13px}
 button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;font-size:12px}
 
 .modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:center;justify-content:center}
-.settings-win{background:#fff;border:1px solid #333;width:750px;height:550px;display:flex}
+.settings-win{background:#fff;border:1px solid #333;width:750px;height:550px;display:flex;position:relative}
 .settings-nav{width:220px;background:#f9f9f9;border-right:1px solid #ccc;padding-top:10px}
 .nav-item{padding:15px 25px;font-size:14px;cursor:pointer;color:#444;border-bottom:1px solid #eee}
 .nav-item.active{background:#fff;color:#0078d7;font-weight:bold;border-left:4px solid #0078d7}
-.settings-content{flex:1;padding:40px;overflow-y:auto}
-.tab-section{display:none}
-.tab-section.active{display:block}
-.theme-square{width:40px;height:40px;display:inline-block;margin-right:10px;margin-top:10px;cursor:pointer;border:1px solid #777}
 </style>
 </head>
 <body>
@@ -62,15 +53,15 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
         <div class="win-titlebar"><span>Delemencia</span></div>
         <div style="padding:30px" id="login-form">
             <h2 style="font-weight:300;margin-bottom:20px">Sign in</h2>
-            <input id="lu" placeholder="Username" style="width:100%;margin-bottom:10px">
-            <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
+            <input id="lu" placeholder="Username" style="width:100%;margin-bottom:10px;padding:8px">
+            <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px;padding:8px">
             <button onclick="login()" style="width:100%;background:#0078d7;color:#fff;border:none">Sign In</button>
             <p style="margin-top:20px;font-size:11px">New? <a href="#" onclick="toggleAuth(true)">Register</a></p>
         </div>
         <div style="padding:30px;display:none" id="reg-form">
             <h2 style="font-weight:300;margin-bottom:20px">Join</h2>
-            <input id="ru" placeholder="Username (Max 30)" maxlength="30" style="width:100%;margin-bottom:10px">
-            <input id="rp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
+            <input id="ru" placeholder="Username (Max 30)" maxlength="30" style="width:100%;margin-bottom:10px;padding:8px">
+            <input id="rp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px;padding:8px">
             <button onclick="register()" style="width:100%;background:#0078d7;color:#fff;border:none">Create Account</button>
             <p style="margin-top:20px;font-size:11px"><a href="#" onclick="toggleAuth(false)">Back</a></p>
         </div>
@@ -86,8 +77,11 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
         <div class="win-body">
             <div id="sidebar">
                 <div class="user-header">
-                    <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-main">
+                    <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" style="width:48px;height:48px;object-fit:cover">
                     <div><b id="display-name">User</b><br><span id="my-status-text" style="font-size:11px;color:#777">Online</span></div>
+                </div>
+                <div class="home-btn-nav" onclick="showHome()">
+                    <span style="font-size:18px">🏠</span> Home
                 </div>
                 <div id="contacts-area">
                     <div class="section-label">Recent</div>
@@ -96,25 +90,27 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                     <div id="people-list"></div>
                 </div>
             </div>
+
             <div id="chat-pane">
-                <div id="call-header">
-                    <div style="display:flex;gap:30px" id="call-box-list"></div>
-                    <button onclick="endCall()" style="margin-top:15px;background:#e81123;color:#fff;border:none;padding:5px 20px">End</button>
-                </div>
                 <div style="padding:15px 25px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;background:#fafafa">
                     <div>
                         <span id="chat-target-label" style="font-size:16px;font-weight:bold">Select a contact</span>
                         <div id="target-status" style="font-size:11px;color:#888"></div>
                     </div>
-                    <button id="call-btn" onclick="startCall()" style="display:none;background:#00aff0;color:#fff;border:none;padding:5px 15px">Call</button>
                 </div>
                 <div id="messages-box"></div>
                 <div id="input-area">
                     <input type="file" id="img-send" accept="image/*" style="display:none" onchange="sendImg()">
-                    <button onclick="document.getElementById('img-send').click()" style="padding:5px 10px;font-weight:bold">📎</button>
-                    <input id="msg-in" type="text" style="flex:1" placeholder="Type a message..." onkeydown="if(event.key==='Enter')doSend()">
+                    <button onclick="document.getElementById('img-send').click()">📎</button>
+                    <input id="msg-in" type="text" style="flex:1;padding:8px;border:1px solid #ccc" placeholder="Type a message..." onkeydown="if(event.key==='Enter')doSend()">
                     <button onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
                 </div>
+            </div>
+
+            <div id="home-pane">
+                <h1 style="font-weight:300;font-size:32px">Welcome home, <span id="home-user-name">User</span></h1>
+                <p style="color:#777;margin:15px 0">It's good to see you again.</p>
+                <button onclick="goBackToMessages()" style="background:#0078d7;color:#fff;border:none;padding:10px 25px">Back to Messages</button>
             </div>
         </div>
     </div>
@@ -126,35 +122,30 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
             <div id="n-prof" class="nav-item active" onclick="setTab('prof')">Profile</div>
             <div id="n-theme" class="nav-item" onclick="setTab('theme')">Themes</div>
             <div id="n-chat" class="nav-item" onclick="setTab('chat')">Chats</div>
-            <div id="n-acc" class="nav-item" onclick="setTab('acc')">Account</div>
-            <div style="margin-top:80px;padding:25px;color:#c00;cursor:pointer" onclick="logout()">Logout</div>
+            <div style="margin-top:100px;padding:25px;border-top:1px solid #eee">
+                <button onclick="closeModal()" style="width:100%;margin-bottom:10px;background:#0078d7;color:#fff;border:none">Back to Chat</button>
+                <div style="color:#c00;cursor:pointer;text-align:center" onclick="logout()">Logout</div>
+            </div>
         </div>
-        <div class="settings-content">
+        <div class="settings-content" style="padding:40px">
             <div id="t-prof" class="tab-section active">
                 <h2>Profile</h2><br>
                 <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()"><br><br>
-                <input id="status-in" style="width:100%" placeholder="Update status..."><br><br>
+                <input id="status-in" style="width:100%;padding:8px" placeholder="Update status..."><br><br>
                 <button onclick="saveStat()" style="background:#0078d7;color:#fff;border:none">Save</button>
             </div>
             <div id="t-theme" class="tab-section">
                 <h2>Themes</h2><br>
-                <div class="theme-square" style="background:#0078d7" onclick="theme('#0078d7')"></div>
-                <div class="theme-square" style="background:#f3f3f3" onclick="theme('#f3f3f3')"></div>
-                <div class="theme-square" style="background:#333333" onclick="theme('#333333')"></div>
-                <div class="theme-square" style="background:#7b1fa2" onclick="theme('#7b1fa2')"></div>
-                <div class="theme-square" style="background:#2d7d32" onclick="theme('#2d7d32')"></div>
-                <div class="theme-square" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px">
+                    <div style="width:40px;height:40px;background:#0078d7;cursor:pointer;border:1px solid #333" onclick="theme('#0078d7')"></div>
+                    <div style="width:40px;height:40px;background:#333;cursor:pointer;border:1px solid #333" onclick="theme('#333')"></div>
+                    <div style="width:40px;height:40px;background:#2d7d32;cursor:pointer;border:1px solid #333" onclick="theme('#2d7d32')"></div>
+                </div>
             </div>
             <div id="t-chat" class="tab-section">
-                <h2>Chat Management</h2><br>
-                <button onclick="clearHistory()" style="background:#c00;color:#fff;border:none">Clear History</button>
+                <h2>Chats</h2><br>
+                <button onclick="clearHistory()" style="background:#c00;color:#fff;border:none">Clear Current History</button>
             </div>
-            <div id="t-acc" class="tab-section">
-                <h2>Account</h2><br>
-                <input id="new-pw" type="password" placeholder="New Password" style="width:100%"><br><br>
-                <button onclick="changePass()">Change Password</button>
-            </div>
-            <button onclick="closeModal()" style="position:absolute;bottom:30px;right:30px">Done</button>
         </div>
     </div>
 </div>
@@ -176,24 +167,24 @@ let me = localStorage.getItem('del_me'), chatWith = null, recent = [];
 function toggleAuth(r){ document.getElementById('login-form').style.display=r?'none':'block'; document.getElementById('reg-form').style.display=r?'block':'none'; }
 function login(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
-    rdb.ref('users/'+u).once('value', s=>{ if(s.val() && s.val().pass===p) session(u); else alert("Wrong login"); });
+    rdb.ref('users/'+u).once('value', s=>{ if(s.val() && s.val().pass===p) session(u); else alert("Error"); });
 }
 function register(){
     let u=document.getElementById('ru').value.trim(), p=document.getElementById('rp').value;
-    if(!u || u.length > 30) return alert("1-30 chars only");
+    if(!u || u.length > 30) return alert("Too long");
     rdb.ref('users/'+u).set({pass:p, pfp:"", status:""}).then(()=>session(u));
 }
 function session(u){
     me=u; localStorage.setItem('del_me', u);
     document.getElementById('display-name').textContent=u;
+    document.getElementById('home-user-name').textContent=u;
     document.getElementById('auth-screen').style.display='none';
     document.getElementById('app-screen').style.display='block';
-    rdb.ref('users/'+me).on('value', s=>{ 
-        if(s.val().pfp) document.getElementById('my-pfp').src=s.val().pfp; 
-        document.getElementById('my-status-text').textContent = s.val().status || "Online";
-    });
+    rdb.ref('users/'+me).on('value', s=>{ if(s.val().pfp) document.getElementById('my-pfp').src=s.val().pfp; });
     loadPeople();
 }
+function showHome(){ document.getElementById('chat-pane').style.display='none'; document.getElementById('home-pane').style.display='flex'; }
+function goBackToMessages(){ document.getElementById('home-pane').style.display='none'; document.getElementById('chat-pane').style.display='flex'; }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
         let pList=document.getElementById('people-list'); pList.innerHTML="";
@@ -202,17 +193,15 @@ function loadPeople(){
             if(c.key===me) return;
             let div=document.createElement('div'); div.className="person-item";
             div.onclick=()=>{ startChat(c.key, c.val()); };
-            div.innerHTML=`<img src="${c.val().pfp||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:36px;height:36px"> <div><b>${c.key}</b><br><span style="font-size:10px;color:#888">${c.val().status||''}</span></div>`;
+            div.innerHTML=`<img src="${c.val().pfp||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:36px;height:36px"> <b>${c.key}</b>`;
             if(recent.includes(c.key)) rList.appendChild(div); else pList.appendChild(div);
         });
     });
 }
 function startChat(u, data){
-    chatWith=u;
-    if(!recent.includes(u)) { recent.unshift(u); if(recent.length>5) recent.pop(); loadPeople(); }
+    chatWith=u; if(!recent.includes(u)) { recent.unshift(u); if(recent.length>5) recent.pop(); loadPeople(); }
+    goBackToMessages();
     document.getElementById('chat-target-label').textContent = u;
-    document.getElementById('target-status').textContent = data.status || "Online";
-    document.getElementById('call-btn').style.display='block';
     listenMsgs();
 }
 function doSend(){
@@ -222,15 +211,13 @@ function doSend(){
 }
 function sendImg(){
     let f=document.getElementById('img-send').files[0]; if(!f||!chatWith) return;
-    let r=new FileReader(); r.onload=e=>{ rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:e.target.result, type:'img'}); }; r.readAsDataURL(f);
+    let r=new FileReader(); r.onload=e=>rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:e.target.result, type:'img'}); r.readAsDataURL(f);
 }
 function listenMsgs(){
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).on('value', s=>{
         let b=document.getElementById('messages-box'); b.innerHTML="";
-        s.forEach(c=>{ let m=c.val();
-            let d=document.createElement('div'); d.className="msg-line";
-            let content = m.type==='img' ? `<img src="${m.t}" style="max-width:250px;display:block;margin-top:5px;border:1px solid #ccc">` : `<span>${m.t}</span>`;
-            d.innerHTML=`<span class="msg-sender">${m.s}:</span>${content}`;
+        s.forEach(c=>{ let m=c.val(); let d=document.createElement('div'); d.className="msg-line";
+            d.innerHTML=`<span class="msg-sender">${m.s}:</span>` + (m.type==='img'?`<img src="${m.t}" style="max-width:200px;display:block">`:m.t);
             b.appendChild(d);
         });
         b.scrollTop=b.scrollHeight;
@@ -238,15 +225,12 @@ function listenMsgs(){
 }
 function setTab(t){ document.querySelectorAll('.tab-section, .nav-item').forEach(el=>el.classList.remove('active')); document.getElementById('t-'+t).classList.add('active'); document.getElementById('n-'+t).classList.add('active'); }
 function theme(c){ document.body.style.background = c; }
-function clearHistory(){ if(chatWith && confirm("Clear history?")) rdb.ref('chats/'+[me,chatWith].sort().join("_")).remove(); }
-function changePass(){ let np=document.getElementById('new-pw').value; if(np) rdb.ref('users/'+me+'/pass').set(np).then(()=>alert("Saved")); }
+function clearHistory(){ if(chatWith && confirm("Clear?")) rdb.ref('chats/'+[me,chatWith].sort().join("_")).remove(); }
 function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); }
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
 function logout(){ localStorage.clear(); location.reload(); }
 function upPfp(){ let f=document.getElementById('pfp-file').files[0]; let r=new FileReader(); r.onload=e=>rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f); }
-function startCall(){ document.getElementById('call-header').style.display='flex'; document.getElementById('call-box-list').innerHTML=`<div class="call-box"><img src="${document.getElementById('my-pfp').src}" class="call-pfp"><br>${me}</div><div class="call-box"><img id="tc-pfp" class="call-pfp"><br>${chatWith}</div>`; rdb.ref('users/'+chatWith+'/pfp').once('value', s=>{if(s.val())document.getElementById('tc-pfp').src=s.val();}); }
-function endCall(){ document.getElementById('call-header').style.display='none'; }
 if(me) session(me);
 </script>
 </body>
