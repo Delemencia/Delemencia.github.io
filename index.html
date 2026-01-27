@@ -16,9 +16,9 @@ body{height:100vh;background:#3a7fb1;display:flex;align-items:center;justify-con
 .win-body{flex:1;display:flex;overflow:hidden;position:relative}
 #sidebar{width:280px;background:#fff;border-right:1px solid #aaa;display:flex;flex-direction:column}
 .user-info{padding:12px;background:#e9f2f9;border-bottom:1px solid #ccc;display:flex;align-items:center;gap:10px}
-.pfp-small{width:42px;height:42px;border:1px solid #999;background:#eee;object-fit:cover;border-radius:2px}
+.pfp-small{width:42px;height:42px;border:1px solid #999;background:#eee;object-fit:cover;border-radius:2px;cursor:pointer}
 #contacts-area{flex:1;overflow-y:auto}
-.section-label{padding:5px 10px;background:#f0f0f0;font-size:11px;font-weight:bold;color:#555;border-bottom:1px solid #ddd;border-top:1px solid #ddd}
+.section-label{padding:5px 10px;background:#f0f0f0;font-size:11px;font-weight:bold;color:#555;border-bottom:1px solid #ddd;border-top:1px solid #ddd;display:flex;justify-content:space-between;align-items:center}
 .contact-item{padding:10px;border-bottom:1px solid #eee;cursor:pointer;display:flex;align-items:center;gap:10px}
 .contact-item:hover{background:#e5f3ff}
 #chat-pane{flex:1;display:flex;flex-direction:column;background:white}
@@ -37,6 +37,8 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
 .modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
 .modal-content{background:white;border:1px solid #666;width:400px;padding:20px;box-shadow:0 0 30px rgba(0,0,0,0.5)}
 #settings-box{display:none;position:absolute;inset:40px;background:white;border:1px solid #666;box-shadow:0 0 30px rgba(0,0,0,0.5);z-index:100;padding:20px;overflow-y:auto}
+.theme-btn{width:30px;height:30px;border:1px solid #000;display:inline-block;margin:2px;cursor:pointer;border-radius:4px}
+#call-screen{display:none;background:#000;color:white;position:absolute;inset:0;z-index:300;flex-direction:column;align-items:center;justify-content:center;gap:20px}
 </style>
 </head>
 <body>
@@ -70,9 +72,9 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
         <div class="win-body">
             <div id="sidebar">
                 <div class="user-info">
-                    <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-small">
+                    <img id="my-pfp" onclick="openSet()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-small">
                     <div>
-                        <b id="display-name">User</b><br>
+                        <b id="display-name" onclick="lookUpSelf()" style="cursor:pointer">User</b><br>
                         <select id="my-status" onchange="upStatus()" style="font-size:10px;border:none;background:transparent;color:#444">
                             <option>Online</option><option>Away</option><option>Busy</option><option>Invisible</option>
                         </select>
@@ -87,6 +89,9 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
             <div id="chat-pane">
                 <div id="chat-head">
                     <span id="chat-target-name">Select a conversation</span>
+                    <div id="call-controls" style="display:none">
+                        <button onclick="startCall()" style="background:#4caf50;color:white">Call</button>
+                    </div>
                 </div>
                 <div id="messages-box"></div>
                 <div id="input-strip">
@@ -97,15 +102,23 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
 
             <div id="profile-modal" class="modal">
                 <div class="modal-content">
-                    <h3 style="margin-bottom:15px">User Profile</h3>
+                    <h3 style="margin-bottom:15px">Profile</h3>
                     <div style="display:flex;gap:15px;align-items:center">
                         <img id="view-pfp" src="" class="pfp-small" style="width:80px;height:80px">
                         <div><h2 id="view-name"></h2><p id="view-status" style="font-size:12px"></p></div>
                     </div>
                     <br>
                     <button id="msg-btn" style="width:100%;padding:10px;margin-bottom:5px">Message</button>
-                    <button id="block-btn" style="width:100%;padding:10px;margin-bottom:10px;background:#ffcdd2;color:#b71c1c">Block</button>
                     <button onclick="closeModal()" style="width:100%;padding:8px">Close</button>
+                </div>
+            </div>
+
+            <div id="group-modal" class="modal">
+                <div class="modal-content">
+                    <h3>Create Group</h3><br>
+                    <input id="group-name" placeholder="Group Name" style="width:100%;margin-bottom:10px">
+                    <button onclick="makeGroup()" style="width:100%">Create</button>
+                    <button onclick="document.getElementById('group-modal').style.display='none'" style="width:100%;margin-top:5px">Cancel</button>
                 </div>
             </div>
 
@@ -113,26 +126,37 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
                 <h2 style="margin-bottom:20px">Settings</h2>
                 <div style="display:flex;gap:30px">
                     <div style="flex:1">
-                        <h4>Profile</h4><br>
+                        <h4>Profile & Photo</h4><br>
                         <img id="pfp-pre" class="pfp-small" style="width:80px;height:80px;display:block;margin-bottom:10px" src=""><br>
                         <input type="file" id="pfp-file" accept="image/*" onchange="preImg()"><br><br>
-                        <button onclick="savePfp()">Update Photo</button>
+                        <button onclick="savePfp()">Update Profile Photo</button>
                     </div>
                     <div style="flex:1">
-                        <h4>Manage</h4><br>
-                        <button onclick="theme('#3a7fb1')">Blue</button><button onclick="theme('#2d5a27')">Forest</button><button onclick="theme('#333')">Dark</button>
+                        <h4>Themes</h4><br>
+                        <div class="theme-btn" style="background:#3a7fb1" onclick="theme('#3a7fb1')"></div>
+                        <div class="theme-btn" style="background:#2d5a27" onclick="theme('#2d5a27')"></div>
+                        <div class="theme-btn" style="background:#333" onclick="theme('#333')"></div>
+                        <div class="theme-btn" style="background:#800080" onclick="theme('#800080')"></div>
+                        <div class="theme-btn" style="background:#ff69b4" onclick="theme('#ff69b4')"></div>
+                        <div class="theme-btn" style="background:#000" onclick="theme('#000')"></div>
                         <hr style="margin:10px 0">
-                        <button onclick="logout()" style="background:#f44336;color:white">Logout</button>
+                        <button onclick="logout()" style="background:#f44336;color:white;width:100%">Logout</button>
                     </div>
                 </div>
                 <button onclick="closeSet()" style="position:absolute;bottom:20px;right:20px">Close</button>
+            </div>
+
+            <div id="call-screen">
+                <h1 id="call-user">Calling...</h1>
+                <div style="display:flex;gap:20px">
+                    <button onclick="endCall()" style="background:#f44336;color:white;padding:20px;border-radius:50%">Hang Up</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-
 const firebaseConfig = {
   apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8",
   authDomain: "delemencia.firebaseapp.com",
@@ -146,8 +170,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
 
-let me = localStorage.getItem('del_me'), chatWith = null;
-
+let me = localStorage.getItem('del_me'), chatWith = null, isGroup = false;
 
 function toggleAuth(reg){
     document.getElementById('login-form').style.display = reg ? 'none' : 'block';
@@ -175,72 +198,127 @@ function login(){
     });
 }
 
-// --- APP LOGIC ---
 function session(u){
     me = u; localStorage.setItem('del_me', u);
     document.getElementById('display-name').textContent = u;
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
+    rdb.ref('users/' + me + '/pfp').on('value', s => { if(s.val()) document.getElementById('my-pfp').src = s.val(); });
     refreshPeople();
+    listenForCalls();
 }
 
 function refreshPeople(){
     rdb.ref('users').on('value', snapshot => {
         let area = document.getElementById('contacts-area');
-        area.innerHTML = `<div class="section-label">GLOBAL PEOPLE</div>`;
+        area.innerHTML = `<div class="section-label">PEOPLE <button onclick="document.getElementById('group-modal').style.display='flex'">+ Group</button></div>`;
         snapshot.forEach(child => {
-            let u = child.key;
-            if(u === me) return;
+            let u = child.key; if(u === me) return;
             let d = child.val();
             let div = document.createElement('div');
             div.className = "contact-item";
-            div.onclick = () => startChat(u);
-            div.innerHTML = `<b>${u}</b> <span style="font-size:10px; color:green">${d.status}</span>`;
+            div.onclick = () => startChat(u, false);
+            div.innerHTML = `<img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" class="pfp-small"> <b>${u}</b> <span style="font-size:10px; color:green">${d.status}</span>`;
             area.appendChild(div);
+        });
+        rdb.ref('groups').once('value', gs => {
+            gs.forEach(g => {
+                let div = document.createElement('div');
+                div.className = "contact-item";
+                div.onclick = () => startChat(g.key, true);
+                div.innerHTML = `<b>[GRP] ${g.key}</b>`;
+                area.appendChild(div);
+            });
         });
     });
 }
 
-function startChat(u){
-    chatWith = u;
+function lookUp(){
+    let u = document.getElementById('search-user').value.trim();
+    rdb.ref('users/' + u).once('value', s => {
+        if(!s.exists()) return alert("User not found");
+        let d = s.val();
+        document.getElementById('view-name').textContent = u;
+        document.getElementById('view-status').textContent = d.status;
+        document.getElementById('view-pfp').src = d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+        document.getElementById('msg-btn').onclick = () => { startChat(u, false); closeModal(); };
+        document.getElementById('profile-modal').style.display = 'flex';
+    });
+}
+
+function lookUpSelf(){
+    document.getElementById('search-user').value = me;
+    lookUp();
+}
+
+function startChat(u, group){
+    chatWith = u; isGroup = group;
     document.getElementById('chat-target-name').textContent = u;
+    document.getElementById('call-controls').style.display = group ? 'none' : 'block';
     listenForMessages();
 }
 
 function doSend(){
     let txt = document.getElementById('msg-in').value.trim();
     if(!chatWith || !txt) return;
-    let chatID = [me, chatWith].sort().join("_");
-    rdb.ref('chats/' + chatID).push({ s: me, t: txt, ts: Date.now() });
+    let path = isGroup ? 'groups/' + chatWith : 'chats/' + [me, chatWith].sort().join("_");
+    rdb.ref(path).push({ s: me, t: txt, ts: Date.now() });
     document.getElementById('msg-in').value = "";
 }
 
 function listenForMessages(){
-    if(!chatWith) return;
-    let chatID = [me, chatWith].sort().join("_");
-    rdb.ref('chats/' + chatID).on('value', snapshot => {
+    let path = isGroup ? 'groups/' + chatWith : 'chats/' + [me, chatWith].sort().join("_");
+    rdb.ref(path).off();
+    rdb.ref(path).on('value', snapshot => {
         let box = document.getElementById('messages-box');
         box.innerHTML = "";
         snapshot.forEach(child => {
             let m = child.val();
             let row = document.createElement('div');
             row.className = "msg-row " + (m.s === me ? "me-row" : "them-row");
-            row.innerHTML = `<div class="msg-bubble ${m.s === me ? 'me' : 'them'}">${m.t}</div>`;
+            row.innerHTML = `<div class="msg-bubble ${m.s === me ? 'me' : 'them'}"><b>${m.s}:</b> ${m.t}</div>`;
             box.appendChild(row);
         });
         box.scrollTop = box.scrollHeight;
     });
 }
 
+function makeGroup(){
+    let n = document.getElementById('group-name').value.trim();
+    if(n) { rdb.ref('groups/' + n).push({s:'System', t:'Group Created', ts:Date.now()}); refreshPeople(); document.getElementById('group-modal').style.display='none'; }
+}
+
+function startCall(){
+    rdb.ref('calls/' + chatWith).set({ from: me, active: true });
+    document.getElementById('call-user').textContent = "Calling " + chatWith + "...";
+    document.getElementById('call-screen').style.display = 'flex';
+}
+
+function endCall(){
+    rdb.ref('calls/' + me).remove();
+    if(chatWith) rdb.ref('calls/' + chatWith).remove();
+    document.getElementById('call-screen').style.display = 'none';
+}
+
+function listenForCalls(){
+    rdb.ref('calls/' + me).on('value', s => {
+        if(s.exists() && s.val().active){
+            if(confirm("Incoming call from " + s.val().from)){
+                document.getElementById('call-user').textContent = "On call with " + s.val().from;
+                document.getElementById('call-screen').style.display = 'flex';
+            } else endCall();
+        }
+    });
+}
+
+function preImg(){ let f = document.getElementById('pfp-file').files[0]; let r = new FileReader(); r.onload = e => document.getElementById('pfp-pre').src = e.target.result; r.readAsDataURL(f); }
+function savePfp(){ rdb.ref('users/' + me + '/pfp').set(document.getElementById('pfp-pre').src); alert("Updated!"); }
+function theme(c){ document.body.style.background = c; }
 function openSet(){ document.getElementById('settings-box').style.display = 'block'; }
 function closeSet(){ document.getElementById('settings-box').style.display = 'none'; }
 function closeModal(){ document.getElementById('profile-modal').style.display = 'none'; }
-function theme(c){ document.body.style.background = c; }
-function logout(){ 
-    if(me) rdb.ref('users/' + me + '/status').set("Offline");
-    localStorage.removeItem('del_me'); 
-    location.reload(); 
-}
+function logout(){ if(me) rdb.ref('users/' + me + '/status').set("Offline"); localStorage.removeItem('del_me'); location.reload(); }
+function upStatus(){ rdb.ref('users/' + me + '/status').set(document.getElementById('my-status').value); }
 
 if(me) session(me);
 else document.getElementById('auth-screen').style.display = 'flex';
