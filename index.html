@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>pose for us!</title>
+<title>DELEMENCIA</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -23,15 +23,22 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 .msg-line{font-size:13px;line-height:1.4}
 .msg-sender{font-weight:bold;color:#005a84;margin-right:8px}
 #input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px;background:#fff}
-input[type="text"], input[type="password"], textarea{padding:6px;border:1px solid #ccc;outline:none;font-size:13px}
+input[type="text"], input[type="password"]{padding:6px;border:1px solid #ccc;outline:none;font-size:13px}
 button{padding:6px 15px;background:#eee;border:1px solid #adb2b5;cursor:pointer;font-size:12px}
 button:hover{background:#ddd}
+
+/* FIXED SETTINGS WINDOW */
 .modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:100;align-items:center;justify-content:center}
-.settings-win{background:#fff;border:1px solid #000;width:600px;height:400px;display:flex;box-shadow:0 0 20px rgba(0,0,0,0.5);position:relative}
-.settings-nav{width:160px;background:#f2f2f2;border-right:1px solid #ccc;padding:10px 0}
-.nav-item{padding:10px 20px;font-size:13px;cursor:pointer}
+.settings-win{background:#fff;border:1px solid #000;width:700px;height:500px;display:flex;box-shadow:0 0 20px rgba(0,0,0,0.5);position:relative}
+.settings-nav{width:200px;background:#f2f2f2;border-right:1px solid #ccc;display:flex;flex-direction:column}
+.nav-item{padding:15px 25px;font-size:14px;cursor:pointer;color:#333}
 .nav-item:hover{background:#e2e2e2}
-.settings-content{flex:1;padding:25px;overflow-y:auto}
+.nav-item.active{background:#fff;border-right:3px solid #0078d7;font-weight:bold}
+.settings-content{flex:1;padding:30px;overflow-y:auto}
+.tab-section{display:none}
+.tab-section.active{display:block}
+.theme-square{width:40px;height:40px;cursor:pointer;border:1px solid #999}
+
 #welcome-footer{position:fixed;bottom:10px;width:100%;text-align:center;color:#fff;font-size:12px;pointer-events:none}
 </style>
 </head>
@@ -63,7 +70,7 @@ button:hover{background:#ddd}
     <div class="win-window" style="margin:auto;margin-top:40px">
         <div class="win-titlebar">
             <span>Delemencia</span>
-            <div><button onclick="openSet()">Settings</button></div>
+            <button onclick="openSet()">Settings</button>
         </div>
         <div class="win-body">
             <div id="sidebar">
@@ -93,27 +100,46 @@ button:hover{background:#ddd}
 <div id="settings-box" class="modal">
     <div class="settings-win">
         <div class="settings-nav">
-            <div class="nav-item">Profile</div>
-            <div class="nav-item" style="margin-top:230px;color:#c00" onclick="logout()">Logout</div>
+            <div id="nav-prof" class="nav-item active" onclick="switchTab('prof')">Profile</div>
+            <div id="nav-theme" class="nav-item" onclick="switchTab('theme')">Themes</div>
+            <div style="flex:1"></div>
+            <div class="nav-item" style="color:#c00" onclick="logout()">Logout</div>
         </div>
+        
         <div class="settings-content">
-            <h3>Profile Settings</h3><br>
-            <p style="font-size:12px">Profile Picture</p>
-            <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()" style="margin-bottom:20px"><br>
-            
-            <p style="font-size:12px">Personal Status</p>
-            <input id="status-input" placeholder="What's happening?" style="width:100%;margin-bottom:5px">
-            <div style="display:flex;gap:5px">
-                <button onclick="saveStatus()" style="background:#0078d7;color:#fff;border:none">Update Status</button>
-                <button onclick="clearStatus()">Remove Status</button>
+            <div id="tab-prof" class="tab-section active">
+                <h2 style="font-weight:400;margin-bottom:20px">Profile Settings</h2>
+                <p style="font-size:12px;margin-bottom:5px">Profile Picture</p>
+                <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()" style="margin-bottom:25px"><br>
+                
+                <p style="font-size:12px;margin-bottom:5px">Personal Status</p>
+                <input id="status-input" placeholder="What's happening?" style="width:100%;margin-bottom:10px">
+                <div style="display:flex;gap:10px">
+                    <button onclick="saveStatus()" style="background:#0078d7;color:#fff;border:none">Update Status</button>
+                    <button onclick="clearStatus()">Remove Status</button>
+                </div>
             </div>
-            
-            <button onclick="closeModal()" style="position:absolute;bottom:20px;right:20px">Close</button>
+
+            <div id="tab-theme" class="tab-section">
+                <h2 style="font-weight:400;margin-bottom:20px">Themes & Color</h2>
+                <p style="font-size:12px;margin-bottom:15px">Select Background Accent</p>
+                <div style="display:flex;gap:15px;flex-wrap:wrap">
+                    <div class="theme-square" style="background:#0078d7" onclick="theme('#0078d7')"></div>
+                    <div class="theme-square" style="background:#f0f0f0" onclick="theme('#f0f0f0')"></div>
+                    <div class="theme-square" style="background:#444444" onclick="theme('#444444')"></div>
+                    <div class="theme-square" style="background:#2d7d32" onclick="theme('#2d7d32')"></div>
+                    <div class="theme-square" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
+                    <div class="theme-square" style="background:#7b1fa2" onclick="theme('#7b1fa2')"></div>
+                </div>
+            </div>
+
+            <button onclick="closeModal()" style="position:absolute;bottom:25px;right:25px">Close</button>
         </div>
     </div>
 </div>
 
 <script>
+// --- FIREBASE CONFIG (Matching your screenshot) ---
 const firebaseConfig = {
   apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8",
   authDomain: "delemencia.firebaseapp.com",
@@ -123,6 +149,7 @@ const firebaseConfig = {
   messagingSenderId: "192535641895",
   appId: "1:192535641895:web:6a3d97d488ef6481d9f382"
 };
+
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
 let me = localStorage.getItem('del_me'), chatWith = null;
@@ -134,7 +161,7 @@ function toggleAuth(r){
 function login(){
     let u = document.getElementById('lu').value, p = document.getElementById('lp').value;
     rdb.ref('users/'+u).once('value', s=>{
-        if(s.val() && s.val().pass === p) session(u); else alert("Invalid");
+        if(s.val() && s.val().pass === p) session(u); else alert("Login Failed");
     });
 }
 function register(){
@@ -156,6 +183,11 @@ function session(u){
     });
     loadPeople();
 }
+function switchTab(t){
+    document.querySelectorAll('.tab-section, .nav-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('tab-'+t).classList.add('active');
+    document.getElementById('nav-'+t).classList.add('active');
+}
 function saveStatus(){
     let s = document.getElementById('status-input').value.trim();
     rdb.ref('users/'+me+'/status').set(s);
@@ -163,6 +195,7 @@ function saveStatus(){
 function clearStatus(){
     rdb.ref('users/'+me+'/status').set("");
 }
+function theme(c){ document.body.style.background = c; }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
         let a = document.getElementById('contacts-area');
@@ -174,11 +207,8 @@ function loadPeople(){
             div.className = "person-item";
             div.onclick = () => { chatWith = u; document.getElementById('chat-target').textContent = u; listenMsgs(); };
             div.innerHTML = `
-                <img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:32px;height:32px;border:1px solid #ccc">
-                <div>
-                    <b>${u}</b><br>
-                    <span style="font-size:10px;color:#888">${d.status || ''}</span>
-                </div>`;
+                <img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:36px;height:36px;border:1px solid #ccc">
+                <div><b>${u}</b><br><span style="font-size:10px;color:#888">${d.status || ''}</span></div>`;
             a.appendChild(div);
         });
     });
