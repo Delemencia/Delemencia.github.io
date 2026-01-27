@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>haha beta .</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
 *{font-family:'Segoe UI',Tahoma,sans-serif;margin:0;padding:0;box-sizing:border-box}
 body{height:100vh;background:#3a7fb1;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:0.5s}
@@ -128,9 +132,22 @@ button:hover{background:linear-gradient(to bottom, #eaf6fd, #a7d9f5);border-colo
 </div>
 
 <script>
-let me = null, chatWith = null;
-const db = () => JSON.parse(localStorage.getItem('del_db') || "{}");
-const save = (d) => localStorage.setItem('del_db', JSON.stringify(d));
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8",
+  authDomain: "delemencia.firebaseapp.com",
+  databaseURL: "https://delemencia-default-rtdb.firebaseio.com",
+  projectId: "delemencia",
+  storageBucket: "delemencia.firebasestorage.app",
+  messagingSenderId: "192535641895",
+  appId: "1:192535641895:web:6a3d97d488ef6481d9f382"
+};
+
+firebase.initializeApp(firebaseConfig);
+const rdb = firebase.database();
+
+let me = localStorage.getItem('del_me'), chatWith = null;
+
 
 function toggleAuth(reg){
     document.getElementById('login-form').style.display = reg ? 'none' : 'block';
@@ -138,89 +155,80 @@ function toggleAuth(reg){
 }
 
 function register(){
-    let u = document.getElementById('ru').value.trim(), p = document.getElementById('rp').value, d = db();
-    if(!u || !p || d[u]) return alert("Username unavailable");
-    d[u] = { pass: p, status: "Online", pfp: "", blocked: [], inbox: {} };
-    save(d); session(u);
+    let u = document.getElementById('ru').value.trim(), p = document.getElementById('rp').value;
+    if(!u || !p) return alert("Fill all fields");
+    rdb.ref('users/' + u).once('value', s => {
+        if(s.exists()) return alert("User exists");
+        rdb.ref('users/' + u).set({ pass: p, status: "Online", pfp: "" });
+        session(u);
+    });
 }
 
 function login(){
-    let u = document.getElementById('lu').value, p = document.getElementById('lp').value, d = db();
-    if(d[u] && d[u].pass === p) session(u);
-    else alert("Invalid login");
+    let u = document.getElementById('lu').value, p = document.getElementById('lp').value;
+    rdb.ref('users/' + u).once('value', s => {
+        let d = s.val();
+        if(d && d.pass === p) {
+            rdb.ref('users/' + u + '/status').set("Online");
+            session(u);
+        } else alert("Invalid Login");
+    });
 }
 
+// --- APP LOGIC ---
 function session(u){
     me = u; localStorage.setItem('del_me', u);
     document.getElementById('display-name').textContent = u;
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
-    let d = db();
-    if(d[me].pfp) document.getElementById('my-pfp').src = d[me].pfp;
-    refresh();
+    refreshPeople();
 }
 
-function lookUp(){
-    let t = document.getElementById('search-user').value.trim(), d = db();
-    let found = Object.keys(d).find(key => key.toLowerCase() === t.toLowerCase());
-    if(!found) return alert("User not found");
-    document.getElementById('view-name').textContent = found;
-    document.getElementById('view-status').textContent = d[found].status;
-    document.getElementById('view-pfp').src = d[found].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-    document.getElementById('msg-btn').onclick = () => { startChat(found); closeModal(); };
-    document.getElementById('block-btn').onclick = () => { blockUser(found); closeModal(); };
-    document.getElementById('profile-modal').style.display = 'flex';
-}
-
-function blockUser(u){
-    let d = db(); if(!d[me].blocked.includes(u)) d[me].blocked.push(u);
-    save(d); refresh(); alert(u + " blocked.");
+function refreshPeople(){
+    rdb.ref('users').on('value', snapshot => {
+        let area = document.getElementById('contacts-area');
+        area.innerHTML = `<div class="section-label">GLOBAL PEOPLE</div>`;
+        snapshot.forEach(child => {
+            let u = child.key;
+            if(u === me) return;
+            let d = child.val();
+            let div = document.createElement('div');
+            div.className = "contact-item";
+            div.onclick = () => startChat(u);
+            div.innerHTML = `<b>${u}</b> <span style="font-size:10px; color:green">${d.status}</span>`;
+            area.appendChild(div);
+        });
+    });
 }
 
 function startChat(u){
     chatWith = u;
     document.getElementById('chat-target-name').textContent = u;
-    renderMsgs();
+    listenForMessages();
 }
 
 function doSend(){
-    let txt = document.getElementById('msg-in').value.trim(), d = db();
+    let txt = document.getElementById('msg-in').value.trim();
     if(!chatWith || !txt) return;
-    if(!d[me].inbox[chatWith]) d[me].inbox[chatWith] = [];
-    if(!d[chatWith].inbox[me]) d[chatWith].inbox[me] = [];
-    let m = { s: me, t: txt, ts: Date.now() };
-    d[me].inbox[chatWith].push(m);
-    d[chatWith].inbox[me].push(m);
-    save(d); document.getElementById('msg-in').value = ""; renderMsgs();
+    let chatID = [me, chatWith].sort().join("_");
+    rdb.ref('chats/' + chatID).push({ s: me, t: txt, ts: Date.now() });
+    document.getElementById('msg-in').value = "";
 }
 
-function renderMsgs(){
-    let d = db(), box = document.getElementById('messages-box');
-    box.innerHTML = "";
+function listenForMessages(){
     if(!chatWith) return;
-    let msgs = d[me].inbox[chatWith] || [];
-    msgs.forEach(m => {
-        let row = document.createElement('div');
-        row.className = "msg-row " + (m.s === me ? "me-row" : "them-row");
-        let div = document.createElement('div');
-        div.className = "msg-bubble " + (m.s === me ? "me" : "them");
-        div.textContent = m.t;
-        row.appendChild(div);
-        box.appendChild(row);
-    });
-    box.scrollTop = box.scrollHeight;
-}
-
-function refresh(){
-    let d = db(), area = document.getElementById('contacts-area');
-    area.innerHTML = `<div class="section-label">PEOPLE</div>`;
-    Object.keys(d).forEach(u => {
-        if(u === me || (d[me].blocked && d[me].blocked.includes(u))) return;
-        let div = document.createElement('div');
-        div.className = "contact-item";
-        div.onclick = () => startChat(u);
-        div.innerHTML = `<img src="${d[u].pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" class="pfp-small"> <div><b>${u}</b><br><span style="font-size:10px;color:green">${d[u].status}</span></div>`;
-        area.appendChild(div);
+    let chatID = [me, chatWith].sort().join("_");
+    rdb.ref('chats/' + chatID).on('value', snapshot => {
+        let box = document.getElementById('messages-box');
+        box.innerHTML = "";
+        snapshot.forEach(child => {
+            let m = child.val();
+            let row = document.createElement('div');
+            row.className = "msg-row " + (m.s === me ? "me-row" : "them-row");
+            row.innerHTML = `<div class="msg-bubble ${m.s === me ? 'me' : 'them'}">${m.t}</div>`;
+            box.appendChild(row);
+        });
+        box.scrollTop = box.scrollHeight;
     });
 }
 
@@ -228,16 +236,14 @@ function openSet(){ document.getElementById('settings-box').style.display = 'blo
 function closeSet(){ document.getElementById('settings-box').style.display = 'none'; }
 function closeModal(){ document.getElementById('profile-modal').style.display = 'none'; }
 function theme(c){ document.body.style.background = c; }
-function upStatus(){ let d = db(); d[me].status = document.getElementById('my-status').value; save(d); refresh(); }
-function logout(){ localStorage.removeItem('del_me'); location.reload(); }
-function preImg(){ let reader = new FileReader(); reader.onload = e => document.getElementById('pfp-pre').src = e.target.result; reader.readAsDataURL(document.getElementById('pfp-file').files[0]); }
-function savePfp(){ let d = db(); d[me].pfp = document.getElementById('pfp-pre').src; save(d); document.getElementById('my-pfp').src = d[me].pfp; alert("Saved"); }
+function logout(){ 
+    if(me) rdb.ref('users/' + me + '/status').set("Offline");
+    localStorage.removeItem('del_me'); 
+    location.reload(); 
+}
 
-if(localStorage.getItem('del_me')) session(localStorage.getItem('del_me'));
+if(me) session(me);
 else document.getElementById('auth-screen').style.display = 'flex';
-
-setInterval(renderMsgs, 1500);
-setInterval(refresh, 5000);
 </script>
 </body>
 </html>
