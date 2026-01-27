@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>stop the dumb favicon.ico's!!</title>
+<title>hi yall</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -41,13 +41,15 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 
 
 .modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:999;align-items:center;justify-content:center}
-.settings-win{background:#fff;border:1px solid #333;width:750px;height:550px;display:flex}
-.settings-nav{width:200px;background:#f9f9f9;border-right:1px solid #ccc}
-.nav-item{padding:15px;cursor:pointer;border-bottom:1px solid #eee;font-size:14px}
-.nav-item.active{background:#fff;color:#0078d7;font-weight:bold;border-left:4px solid #0078d7}
+.settings-win{background:#fff;border:1px solid #333;width:700px;height:500px;display:flex;position:relative}
+.settings-nav{width:180px;background:#f9f9f9;border-right:1px solid #ccc;display:flex;flex-direction:column}
+.nav-item{padding:15px;cursor:pointer;border-bottom:1px solid #eee;font-size:13px}
+.nav-item.active{background:#fff;color:#0078d7;font-weight:bold}
+
+
+.nav-footer{margin-top:auto;padding:15px;border-top:1px solid #eee}
 .tab-content{flex:1;padding:30px;display:none}
 .tab-content.active{display:block}
-.theme-sq{width:35px;height:35px;display:inline-block;margin:5px;cursor:pointer;border:1px solid #000}
 </style>
 </head>
 <body>
@@ -77,11 +79,9 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                 </div>
                 
                 <div id="contacts-area">
-                    <div class="section-label" onclick="showHome()" style="color:#0078d7">HOME</div>
-                    
+                    <div class="section-label" onclick="showHome()">HOME</div>
                     <div class="section-label">RECENT</div>
                     <div id="recent-list"></div>
-                    
                     <div class="section-label">CONTACTS</div>
                     <div id="people-list"></div>
                 </div>
@@ -101,9 +101,8 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
             </div>
 
             <div id="home-pane">
-                <h1 style="font-weight:300; font-size: 28px;">Welcome home, <span id="home-user"></span></h1>
-                <p style="color:#666; margin-top:10px;">This is your personal dashboard.</p>
-                <button onclick="goBack()" style="margin-top:25px; padding: 10px 20px;">Back to Messages</button>
+                <h1 style="font-weight:300;">Welcome home, <span id="home-user"></span></h1>
+                <button onclick="goBack()" style="margin-top:20px; padding: 8px 15px;">Back to Messages</button>
             </div>
         </div>
 
@@ -112,27 +111,21 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                 <div class="settings-nav">
                     <div class="nav-item active" onclick="setTab('prof', this)">Profile</div>
                     <div class="nav-item" onclick="setTab('them', this)">Themes</div>
-                    <div style="padding:20px; position:absolute; bottom:0; width:200px">
-                        <button onclick="closeModal()" style="width:100%;background:#0078d7;color:#fff;border:none;margin-bottom:10px;padding:8px">Back to Chat</button>
-                        <button onclick="logout()" style="width:100%;color:red;background:none;border:none;cursor:pointer">Logout</button>
+                    <div class="nav-footer">
+                        <button onclick="closeModal()" style="width:100%;background:#0078d7;color:#fff;border:none;margin-bottom:8px;padding:6px">Back</button>
+                        <button onclick="logout()" style="width:100%;color:red;background:none;border:none;cursor:pointer;font-size:12px">Logout</button>
                     </div>
                 </div>
                 <div class="tab-content active" id="tab-prof">
-                    <h2 style="font-weight:normal">Profile Settings</h2><br>
-                    <p style="font-size:12px">Change Profile Picture</p>
-                    <input type="file" id="pfp-file" onchange="upPfp()" style="margin-top:5px"><br><br>
-                    <p style="font-size:12px">Personal Status</p>
-                    <input id="status-in" style="width:100%;padding:8px;margin-top:5px" placeholder="What's on your mind?"><br><br>
-                    <button onclick="saveStat()" style="background:#0078d7;color:#fff;border:none">Update Status</button>
+                    <h2>Profile Settings</h2><br>
+                    <input type="file" id="pfp-file" onchange="upPfp()"><br><br>
+                    <input id="status-in" style="width:100%;padding:8px" placeholder="Status..."><br><br>
+                    <button onclick="saveStat()">Update</button>
                 </div>
                 <div class="tab-content" id="tab-them">
-                    <h2 style="font-weight:normal">Appearance</h2><br>
-                    <p style="font-size:12px;margin-bottom:10px">Select Background Color:</p>
-                    <div class="theme-sq" style="background:#0078d7" onclick="theme('#0078d7')"></div>
-                    <div class="theme-sq" style="background:#333" onclick="theme('#333')"></div>
-                    <div class="theme-sq" style="background:#f3f3f3" onclick="theme('#f3f3f3')"></div>
-                    <div class="theme-sq" style="background:#2d7d32" onclick="theme('#2d7d32')"></div>
-                    <div class="theme-sq" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
+                    <h2>Themes</h2><br>
+                    <button onclick="theme('#0078d7')" style="background:#0078d7;width:30px;height:30px;border:1px solid #000"></button>
+                    <button onclick="theme('#333')" style="background:#333;width:30px;height:30px;border:1px solid #000"></button>
                 </div>
             </div>
         </div>
@@ -161,20 +154,13 @@ function login(){
         else rdb.ref('users/'+u).set({pass:p, pfp:"", status:""}).then(()=>session(u));
     });
 }
-
 function session(u){
     me=u; localStorage.setItem('del_me', u);
-    document.getElementById('display-name').textContent=u;
-    document.getElementById('home-user').textContent=u;
-    document.getElementById('auth-screen').style.display='none';
-    document.getElementById('app-screen').style.display='flex';
-    rdb.ref('users/'+me).on('value', s=>{
-        if(s.val().pfp) document.getElementById('my-pfp').src=s.val().pfp;
-        document.getElementById('my-status-text').textContent = s.val().status || "Online";
-    });
+    document.getElementById('display-name').textContent=u; document.getElementById('home-user').textContent=u;
+    document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='flex';
+    rdb.ref('users/'+me).on('value', s=>{ if(s.val().pfp) document.getElementById('my-pfp').src=s.val().pfp; });
     loadPeople();
 }
-
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
         let pList=document.getElementById('people-list'), rList=document.getElementById('recent-list');
@@ -182,57 +168,34 @@ function loadPeople(){
         s.forEach(c=>{
             if(c.key===me) return;
             let div=document.createElement('div'); div.className="person-item";
-            div.onclick=()=>{ 
-                chatWith=c.key; 
-                document.getElementById('chat-target-label').textContent=c.key; 
-                if(!recent.includes(c.key)) recent.unshift(c.key); 
-                goBack(); 
-                listenMsgs(); 
-                loadPeople(); 
-            };
-            div.innerHTML=`<img src="${c.val().pfp||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:32px;height:32px;background:#ddd;object-fit:cover"> <b>${c.key}</b>`;
+            div.onclick=()=>{ chatWith=c.key; document.getElementById('chat-target-label').textContent=c.key; if(!recent.includes(c.key)) recent.unshift(c.key); goBack(); listenMsgs(); loadPeople(); };
+            div.innerHTML=`<img src="${c.val().pfp||''}" style="width:30px;height:30px;background:#ddd;object-fit:cover"> <b>${c.key}</b>`;
             if(recent.includes(c.key)) rList.appendChild(div); else pList.appendChild(div);
         });
     });
 }
-
 function showHome(){ document.getElementById('chat-pane').style.display='none'; document.getElementById('home-pane').style.display='flex'; }
 function goBack(){ document.getElementById('home-pane').style.display='none'; document.getElementById('chat-pane').style.display='flex'; }
-
 function doSend(){
     let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
     document.getElementById('msg-in').value="";
 }
-
-function sendImg(){
-    let f=document.getElementById('img-send').files[0]; if(!f||!chatWith) return;
-    let r=new FileReader(); r.onload=e=>rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:e.target.result, type:'img'}); r.readAsDataURL(f);
-}
-
 function listenMsgs(){
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).on('value', s=>{
         let b=document.getElementById('messages-box'); b.innerHTML="";
         s.forEach(c=>{ let m=c.val(); let d=document.createElement('div');
-            d.innerHTML=`<span class="msg-sender">${m.s}:</span>` + (m.type==='img'?`<img src="${m.t}" style="max-width:200px;display:block;margin-top:5px">`:m.t);
+            d.innerHTML=`<span class="msg-sender">${m.s}:</span>` + (m.type==='img'?`<img src="${m.t}" style="max-width:200px;display:block">`:m.t);
             b.appendChild(d);
         });
         b.scrollTop=b.scrollHeight;
     });
 }
-
-function setTab(t, el){
-    document.querySelectorAll('.nav-item, .tab-content').forEach(x=>x.classList.remove('active'));
-    el.classList.add('active'); document.getElementById('tab-'+t).classList.add('active');
-}
-
-function theme(c){ document.body.style.background = c; }
-function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value).then(()=>alert("Status updated!")); }
-function upPfp(){ let f=document.getElementById('pfp-file').files[0]; let r=new FileReader(); r.onload=e=>rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f); }
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
+function setTab(t, el){ document.querySelectorAll('.nav-item, .tab-content').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
+function theme(c){ document.body.style.background = c; }
 function logout(){ localStorage.clear(); location.reload(); }
-
 if(me) session(me);
 </script>
 </body>
