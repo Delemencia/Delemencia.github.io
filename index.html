@@ -1,89 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Delemencia - Oh, Okay.</title>
-<link rel="icon" href="favicon.ico">
+<title>wait.. how does thing internet thing work?</title>
 <style>
-*{box-sizing:border-box;font-family:Segoe UI,Tahoma,Verdana;margin:0;padding:0}
-body{height:100vh;display:flex;background:#e6f1fb}
-.screen{display:none;position:absolute;width:100%;height:100%}
-.auth-box{width:380px;margin:auto;background:#fff;border-radius:6px;box-shadow:0 0 10px rgba(0,0,0,.3);padding:30px;text-align:center}
-.auth-box h1{color:#0078d7;margin-bottom:20px}
-.auth-box input,.auth-box button{width:100%;padding:10px;margin-bottom:10px}
-.auth-box button{border:none;border-radius:4px;background:#0078d7;color:#fff;font-weight:bold;cursor:pointer}
-.link{font-size:13px;color:#0078d7;cursor:pointer;text-decoration:underline}
-#container{display:flex;width:100%}
-#sidebar{width:260px;background:#f0f6fc;border-right:1px solid #c4d9ed;display:flex;flex-direction:column;padding:10px}
-#contacts,#online{flex:1;overflow-y:auto}
-.contact{padding:6px;cursor:pointer;border-bottom:1px solid #c4d9ed}
-.contact:hover{background:#d0e7fb}
-#chatPane{flex:1;display:flex;flex-direction:column}
-#chatHeader{padding:10px;border-bottom:1px solid #ccc;display:flex;justify-content:space-between;background:#f0f6fc}
-#messages{flex:1;padding:10px;overflow-y:auto;background:#e5eff8}
-.msg{margin-bottom:6px;padding:6px 10px;border-radius:6px;max-width:70%;background:#d0e7fb}
-.msg.self{background:#0078d7;color:#fff;margin-left:auto}
-#sendBox{display:flex;padding:10px;border-top:1px solid #ccc}
-#sendBox input{flex:1;padding:8px}
-#sendBox button{padding:8px 12px;border:none;background:#0078d7;color:#fff}
-#settings{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:520px;background:#f0f6fc;padding:25px;border-radius:6px}
-.setting-section{margin-bottom:20px}
-.setting-section button{margin:5px;padding:6px 12px;border:none;border-radius:4px;background:#0078d7;color:#fff}
+*{font-family:Segoe UI,Tahoma;margin:0;padding:0;box-sizing:border-box}
+body{height:100vh;background:linear-gradient(#cfe4ff,#8fb3e8)}
+.screen{display:none;width:100%;height:100%;position:absolute}
+.vista{
+display:flex;align-items:center;justify-content:center;
+background:radial-gradient(circle at top,#ffffff,#7fa6d8)
+}
+.glass{
+width:420px;padding:30px;border-radius:10px;
+background:rgba(255,255,255,.7);
+box-shadow:0 0 25px rgba(0,0,0,.3);
+text-align:center
+}
+.glass h1{font-size:32px;color:#003a8c;margin-bottom:20px}
+.glass button{width:100%;padding:12px;margin:8px 0;border:none;
+background:linear-gradient(#4c8bf5,#1f5fd1);
+color:#fff;font-weight:bold;border-radius:6px;cursor:pointer}
+.auth{background:#fff;width:380px;margin:auto;margin-top:80px;
+padding:30px;border-radius:6px;box-shadow:0 0 12px rgba(0,0,0,.3);
+text-align:center}
+.auth input,.auth button{width:100%;padding:10px;margin-bottom:10px}
+.auth button{background:#0078d7;color:#fff;border:none;font-weight:bold}
+#container{display:flex;height:100%}
+#sidebar{width:260px;background:#f1f6fb;border-right:1px solid #bbb;padding:10px}
+#contacts,.contact-list{overflow-y:auto}
+.contact{padding:6px;border-bottom:1px solid #ccc;cursor:pointer}
+.contact:hover{background:#d9e9ff}
+#chat{flex:1;display:flex;flex-direction:column}
+#header{padding:10px;background:#e3efff;border-bottom:1px solid #aaa;
+display:flex;justify-content:space-between}
+#messages{flex:1;padding:10px;background:#eef4ff;overflow-y:auto}
+.msg{margin-bottom:6px;padding:6px 10px;border-radius:6px;
+background:#d7e7ff;max-width:70%}
+.self{background:#0078d7;color:white;margin-left:auto}
+#send{display:flex;padding:10px;border-top:1px solid #aaa}
+#send input{flex:1;padding:8px}
+#send button{padding:8px 14px;background:#0078d7;color:#fff;border:none}
+#settings{
+display:none;position:absolute;top:50%;left:50%;
+transform:translate(-50%,-50%);
+background:#f1f6fb;padding:25px;border-radius:8px;width:520px
+}
+.setting{margin-bottom:18px}
+.setting button{margin:4px;padding:6px 12px;border:none;
+background:#0078d7;color:white}
 .delete{background:#a00}
-.back{background:#555}
 </style>
 </head>
 <body>
 
-<div id="welcome" class="screen">
-<div class="auth-box">
+<div id="welcome" class="screen vista">
+<div class="glass">
 <h1>Delemencia</h1>
 <button onclick="show('login')">Sign in</button>
-<div class="link" onclick="show('register')">Create account</div>
+<button onclick="show('register')">Create account</button>
 </div>
 </div>
 
 <div id="register" class="screen">
-<div class="auth-box">
-<h1>Create account</h1>
+<div class="auth">
+<h2>Create account</h2>
 <input id="ru" placeholder="Username">
 <input id="rp" type="password" placeholder="Password">
 <button onclick="register()">Create</button>
-<div class="link" onclick="show('welcome')">Back</div>
 </div>
 </div>
 
 <div id="login" class="screen">
-<div class="auth-box">
-<h1>Sign in</h1>
+<div class="auth">
+<h2>Sign in</h2>
 <input id="lu" placeholder="Username">
 <input id="lp" type="password" placeholder="Password">
 <button onclick="login()">Sign in</button>
-<div class="link" onclick="show('welcome')">Back</div>
 </div>
 </div>
 
 <div id="main" class="screen">
 <div id="container">
 <div id="sidebar">
-<input id="addUser" placeholder="Add username">
+<input id="addUser" placeholder="Add user">
 <button onclick="addContact()">Add</button>
 <h4>Contacts</h4>
 <div id="contacts"></div>
-<h4>Online</h4>
-<div id="online"></div>
 </div>
 
-<div id="chatPane">
-<div id="chatHeader">
+<div id="chat">
+<div id="header">
 <span id="chatName">Select chat</span>
-<div>
-<button onclick="call()">📞</button>
 <button onclick="openSettings()">⚙</button>
 </div>
-</div>
 <div id="messages"></div>
-<div id="sendBox">
+<div id="send">
 <input id="msg">
 <button onclick="send()">Send</button>
 </div>
@@ -93,69 +105,91 @@ body{height:100vh;display:flex;background:#e6f1fb}
 
 <div id="settings">
 <h2>Settings</h2>
-<div class="setting-section">
-<h3>Themes</h3>
-<button onclick="theme('light')">Light</button>
-<button onclick="theme('dark')">Dark</button>
-<button onclick="theme('nebula')">Nebula</button>
-<button onclick="theme('forest')">Forest</button>
-<button onclick="theme('crimson')">Crimson</button>
+
+<div class="setting">
+<h4>Status</h4>
+<select id="status" onchange="setStatus()">
+<option>Online</option>
+<option>Away</option>
+<option>Busy</option>
+<option>Invisible</option>
+</select>
 </div>
-<div class="setting-section">
+
+<div class="setting">
+<h4>Profile picture</h4>
+<input type="file" accept="image/*" onchange="pic(event)">
+</div>
+
+<div class="setting">
+<h4>Ignore user</h4>
+<input id="ignoreUser" placeholder="Username">
+<button onclick="ignore()">Ignore</button>
+</div>
+
+<div class="setting">
 <button onclick="logout()">Logout</button>
 <button class="delete" onclick="del()">Delete account</button>
-<button class="back" onclick="closeSettings()">Back</button>
+<button onclick="closeSettings()">Back</button>
 </div>
 </div>
 
 <script>
 let me=null,chat=null
-const users=()=>JSON.parse(localStorage.users||"{}")
-const save=u=>localStorage.users=JSON.stringify(u)
+const db=()=>JSON.parse(localStorage.db||"{}")
+const save=d=>localStorage.db=JSON.stringify(d)
 
-function show(x){document.querySelectorAll(".screen").forEach(s=>s.style.display="none");document.getElementById(x).style.display="block"}
+function show(x){
+document.querySelectorAll(".screen").forEach(s=>s.style.display="none")
+document.getElementById(x).style.display="block"
+}
 
 function register(){
 let u=ru.value.trim(),p=rp.value
-let d=users()
+let d=db()
 if(!u||!p||d[u])return alert("Invalid")
-d[u]={pass:p,contacts:[],msgs:{},online:Date.now()}
+if(u==="Delemencia"&&d["Delemencia"])return alert("Name taken")
+d[u]={pass:p,admin:u==="Delemencia",contacts:[],msgs:{},
+ignored:[],status:"Online",pic:"",warns:0,banned:false}
 save(d);localStorage.me=u;me=u;load()
 }
 
 function login(){
-let d=users()
+let d=db()
 if(!d[lu.value]||d[lu.value].pass!==lp.value)return alert("Wrong")
-localStorage.me=lu.value;me=lu.value;load()
+if(d[lu.value].banned)return alert("You are banned")
+me=lu.value;localStorage.me=me;load()
 }
 
-function load(){show("main");ping();renderContacts();setInterval(ping,5000);setInterval(renderOnline,3000)}
-
-function ping(){let d=users();if(d[me]){d[me].online=Date.now();save(d)}}
+function load(){show("main");renderContacts()}
 
 function addContact(){
-let u=addUser.value.trim(),d=users()
-if(!d[u]||u===me)return alert("Invalid user")
+let u=addUser.value.trim(),d=db()
+if(!d[u]||u===me||d[me].ignored.includes(u))return
 if(!d[me].contacts.includes(u))d[me].contacts.push(u)
 save(d);renderContacts()
 }
 
 function renderContacts(){
-let d=users(),c=document.getElementById("contacts");c.innerHTML=""
+let d=db(),c=document.getElementById("contacts")
+c.innerHTML=""
 d[me].contacts.forEach(u=>{
+if(d[me].ignored.includes(u))return
 let div=document.createElement("div")
-div.className="contact";div.textContent=u
-div.onclick=()=>{chat=u;chatName.textContent=u;renderMsgs()}
+div.className="contact"
+div.innerHTML=(u==="Delemencia"?"👑 ":"")+u+" ("+d[u].status+")"
+div.onclick=()=>{chat=u;chatName.textContent=div.textContent;renderMsgs()}
 c.appendChild(div)
 })
 }
 
 function send(){
 if(!chat||!msg.value)return
-let d=users()
+let d=db()
+if(d[chat].ignored.includes(me))return
 d[me].msgs[chat]??=[]
 d[chat].msgs[me]??=[]
-let m={from:me,text:msg.value,time:Date.now()}
+let m={f:me,t:msg.value}
 d[me].msgs[chat].push(m)
 d[chat].msgs[me].push(m)
 msg.value=""
@@ -163,46 +197,41 @@ save(d);renderMsgs()
 }
 
 function renderMsgs(){
-let d=users(),m=document.getElementById("messages");m.innerHTML=""
+let d=db(),m=document.getElementById("messages")
+m.innerHTML=""
 if(!chat)return
 (d[me].msgs[chat]||[]).forEach(x=>{
 let div=document.createElement("div")
-div.className="msg"+(x.from===me?" self":"")
-div.textContent=x.text
+div.className="msg"+(x.f===me?" self":"")
+div.textContent=x.f+": "+x.t
 m.appendChild(div)
 })
 m.scrollTop=m.scrollHeight
 }
 
-function renderOnline(){
-let d=users(),o=document.getElementById("online");o.innerHTML=""
-Object.keys(d).forEach(u=>{
-if(u!==me&&Date.now()-d[u].online<8000){
-let div=document.createElement("div")
-div.className="contact";div.textContent=u
-o.appendChild(div)
-}
-})
-}
-
-function call(){
-if(!chat)return alert("No user selected")
-alert("Calling "+chat+"...")
-}
-
 function openSettings(){settings.style.display="block"}
 function closeSettings(){settings.style.display="none"}
 
-function theme(t){
-if(t==="dark")document.body.style.background="#111"
-if(t==="nebula")document.body.style.background="linear-gradient(135deg,#1a0033,#000)"
-if(t==="forest")document.body.style.background="linear-gradient(135deg,#0b3d0b,#021)"
-if(t==="crimson")document.body.style.background="linear-gradient(135deg,#6a0000,#200)"
-if(t==="light")document.body.style.background="#e6f1fb"
+function ignore(){
+let u=ignoreUser.value.trim(),d=db()
+if(d[u]&&!d[me].ignored.includes(u))d[me].ignored.push(u)
+save(d);renderContacts()
+}
+
+function setStatus(){
+let d=db()
+d[me].status=status.value
+save(d);renderContacts()
+}
+
+function pic(e){
+let r=new FileReader()
+r.onload=()=>{let d=db();d[me].pic=r.result;save(d)}
+r.readAsDataURL(e.target.files[0])
 }
 
 function logout(){localStorage.removeItem("me");location.reload()}
-function del(){let d=users();delete d[me];save(d);logout()}
+function del(){let d=db();delete d[me];save(d);logout()}
 
 if(localStorage.me){me=localStorage.me;load()}else show("welcome")
 </script>
