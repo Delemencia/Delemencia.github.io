@@ -2,12 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>DELEMENCIA (1.3)</title>
+<title>haha hi</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
 body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s}
+#messages-box, #contacts-area, .tab-content, #recent-list {overflow-y: scroll}
 ::-webkit-scrollbar {width: 17px; background: #f0f0f0; border-left: 1px solid #dcdcdc}
 ::-webkit-scrollbar-thumb {background: #cdcdcd; border: 1px solid #ababab; box-shadow: inset 1px 1px 0 #eee}
 ::-webkit-scrollbar-button:single-button {background-color: #f0f0f0; display: block; height: 17px; width: 17px; background-size: 10px; background-repeat: no-repeat; background-position: center; border: 1px solid #dcdcdc}
@@ -24,7 +25,7 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 .person-item:hover{background:#e0eef9}
 #chat-pane, #home-pane{flex:1;display:flex;flex-direction:column;background:#fff}
 #home-pane{align-items:center;justify-content:center;display:none}
-#messages-box{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+#messages-box{flex:1;padding:20px;display:flex;flex-direction:column;gap:8px}
 .msg-sender{font-weight:bold;color:#0078d7;margin-right:8px}
 #input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px}
 button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;font-size:12px}
@@ -34,7 +35,7 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 .nav-item{padding:15px;cursor:pointer;border-bottom:1px solid #eee;font-size:13px}
 .nav-item.active{background:#fff;color:#0078d7;font-weight:bold}
 .nav-footer{margin-top:auto;padding:15px;border-top:1px solid #eee}
-.tab-content{flex:1;padding:30px;display:none;overflow-y:auto}
+.tab-content{flex:1;padding:30px;display:none}
 .tab-content.active{display:block}
 .theme-sq{width:30px;height:30px;display:inline-block;margin:5px;cursor:pointer;border:1px solid #000}
 </style>
