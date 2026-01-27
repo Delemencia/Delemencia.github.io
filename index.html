@@ -2,35 +2,36 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Cool profile Bandors!</title>
+<title>pose for us!</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
 body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.win-window{width:980px;height:680px;background:#fff;border:1px solid #707070;box-shadow:0 5px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column}
-.win-titlebar{background:#fff;height:30px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;border-bottom:1px solid #e2e2e2}
+.win-window{width:1000px;height:700px;background:#fff;border:1px solid #707070;box-shadow:0 5px 15px rgba(0,0,0,0.3);display:flex;flex-direction:column}
+.win-titlebar{background:#fff;height:32px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;border-bottom:1px solid #e2e2e2}
 .win-body{flex:1;display:flex;overflow:hidden}
-#sidebar{width:260px;background:#f0f0f0;border-right:1px solid #ccc;display:flex;flex-direction:column}
-.user-profile-header{padding:15px;background:#fff;border-bottom:1px solid #ccc;display:flex;align-items:center;gap:10px}
-.pfp-main{width:45px;height:45px;border:1px solid #ccc;object-fit:cover}
+#sidebar{width:280px;background:#f0f0f0;border-right:1px solid #ccc;display:flex;flex-direction:column}
+.user-profile-header{padding:15px;background:#fff;border-bottom:1px solid #ccc;display:flex;align-items:center;gap:12px}
+.pfp-main{width:48px;height:48px;border:1px solid #ccc;object-fit:cover}
 #contacts-area{flex:1;overflow-y:auto}
-.section-label{padding:8px 12px;font-size:11px;font-weight:bold;color:#666;text-transform:uppercase}
-.person-item{padding:10px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px}
+.section-label{padding:10px 15px;font-size:11px;font-weight:bold;color:#666;text-transform:uppercase;background:#e2e2e2}
+.person-item{padding:10px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid #e5e5e5}
 .person-item:hover{background:#e5e5e5}
 #chat-pane{flex:1;display:flex;flex-direction:column;background:#fff}
-#call-display{height:220px;background:linear-gradient(to bottom, #003e5c, #005a84);display:none;padding:20px;justify-content:center;align-items:center;gap:20px;border-bottom:1px solid #000}
-.call-avatar-box{text-align:center;color:#fff;font-size:12px}
-.call-avatar{width:80px;height:80px;border:2px solid #fff;margin-bottom:8px;object-fit:cover}
-#messages-box{flex:1;padding:15px;overflow-y:auto;background:#fff;display:flex;flex-direction:column;gap:5px}
-.msg-line{font-size:13px;margin-bottom:2px}
-.msg-sender{font-weight:bold;color:#005a84;margin-right:5px}
-#input-area{padding:10px;border-top:1px solid #ccc;display:flex;gap:5px;background:#fff}
-input[type="text"], input[type="password"]{padding:5px;border:1px solid #ccc;outline:none;font-size:13px}
-button{padding:4px 12px;background:#eee;border:1px solid #adb2b5;cursor:pointer;font-size:12px}
-button:hover{background:#ddd;border-color:#888}
-.modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.2);z-index:100;align-items:center;justify-content:center}
-.modal-win{background:#fff;border:1px solid #000;width:350px;padding:20px;box-shadow:0 0 10px rgba(0,0,0,0.5)}
+#messages-box{flex:1;padding:20px;overflow-y:auto;background:#fff;display:flex;flex-direction:column;gap:6px}
+.msg-line{font-size:13px;line-height:1.4}
+.msg-sender{font-weight:bold;color:#005a84;margin-right:8px}
+#input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px;background:#fff}
+input[type="text"], input[type="password"], textarea{padding:6px;border:1px solid #ccc;outline:none;font-size:13px}
+button{padding:6px 15px;background:#eee;border:1px solid #adb2b5;cursor:pointer;font-size:12px}
+button:hover{background:#ddd}
+.modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:100;align-items:center;justify-content:center}
+.settings-win{background:#fff;border:1px solid #000;width:600px;height:400px;display:flex;box-shadow:0 0 20px rgba(0,0,0,0.5);position:relative}
+.settings-nav{width:160px;background:#f2f2f2;border-right:1px solid #ccc;padding:10px 0}
+.nav-item{padding:10px 20px;font-size:13px;cursor:pointer}
+.nav-item:hover{background:#e2e2e2}
+.settings-content{flex:1;padding:25px;overflow-y:auto}
 #welcome-footer{position:fixed;bottom:10px;width:100%;text-align:center;color:#fff;font-size:12px;pointer-events:none}
 </style>
 </head>
@@ -39,25 +40,27 @@ button:hover{background:#ddd;border-color:#888}
 <div id="welcome-footer">welcome!</div>
 
 <div id="auth-screen" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center">
-    <div class="win-window" style="width:320px;height:auto">
-        <div class="win-titlebar"><span>Delemencia - Sign In</span></div>
-        <div style="padding:25px" id="login-form">
-            <input id="lu" placeholder="Username" style="width:100%;margin-bottom:8px">
-            <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:15px">
-            <button onclick="login()" style="width:100%">Sign In</button>
-            <div style="margin-top:15px;font-size:11px">No account? <a href="#" onclick="toggleAuth(true)">Create one</a></div>
+    <div class="win-window" style="width:340px;height:auto">
+        <div class="win-titlebar"><span>Delemencia</span></div>
+        <div style="padding:30px" id="login-form">
+            <h2 style="font-weight:300;margin-bottom:20px">Sign in</h2>
+            <input id="lu" placeholder="Username" style="width:100%;margin-bottom:10px">
+            <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
+            <button onclick="login()" style="width:100%;background:#0078d7;color:#fff;border:none">Sign In</button>
+            <div style="margin-top:20px;font-size:11px">New? <a href="#" onclick="toggleAuth(true)">Register</a></div>
         </div>
-        <div style="padding:25px;display:none" id="reg-form">
-            <input id="ru" placeholder="New Username" style="width:100%;margin-bottom:8px">
-            <input id="rp" type="password" placeholder="New Password" style="width:100%;margin-bottom:15px">
-            <button onclick="register()" style="width:100%">Register</button>
-            <div style="margin-top:15px;font-size:11px"><a href="#" onclick="toggleAuth(false)">Back</a></div>
+        <div style="padding:30px;display:none" id="reg-form">
+            <h2 style="font-weight:300;margin-bottom:20px">Register</h2>
+            <input id="ru" placeholder="Username" style="width:100%;margin-bottom:10px">
+            <input id="rp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px">
+            <button onclick="register()" style="width:100%;background:#0078d7;color:#fff;border:none">Join</button>
+            <div style="margin-top:20px;font-size:11px"><a href="#" onclick="toggleAuth(false)">Back</a></div>
         </div>
     </div>
 </div>
 
 <div id="app-screen" style="display:none;width:100%;height:100%">
-    <div class="win-window" style="margin:auto;margin-top:30px">
+    <div class="win-window" style="margin:auto;margin-top:40px">
         <div class="win-titlebar">
             <span>Delemencia</span>
             <div><button onclick="openSet()">Settings</button></div>
@@ -68,57 +71,45 @@ button:hover{background:#ddd;border-color:#888}
                     <img id="my-pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="pfp-main">
                     <div>
                         <b id="display-name" style="font-size:14px">User</b><br>
-                        <span style="font-size:11px;color:green">Online</span>
+                        <span id="my-status-display" style="font-size:11px;color:#777;font-style:italic">No status</span>
                     </div>
-                </div>
-                <div style="padding:5px 10px;background:#e2e2e2;border-bottom:1px solid #ccc">
-                    <input id="search-box" placeholder="Search people..." style="width:100%;font-size:11px" onkeydown="if(event.key==='Enter')lookUp()">
                 </div>
                 <div id="contacts-area"></div>
             </div>
             <div id="chat-pane">
-                <div id="call-display">
-                    <div id="call-avatars" style="display:flex;gap:20px"></div>
-                    <button onclick="endCall()" style="position:absolute;top:10px;right:10px;background:#cc0000;color:#fff;border:none">Hang up</button>
-                </div>
-                <div style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center">
-                    <b id="chat-target">Select People</b>
-                    <button id="call-btn" onclick="startCall()" style="display:none">Call</button>
+                <div style="padding:12px 20px;border-bottom:1px solid #eee;background:#fafafa">
+                    <b id="chat-target">Messenger</b>
                 </div>
                 <div id="messages-box"></div>
                 <div id="input-area">
                     <input id="msg-in" type="text" style="flex:1" placeholder="Type a message..." onkeydown="if(event.key==='Enter')doSend()">
-                    <button onclick="doSend()">Send</button>
+                    <button onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="profile-modal" class="modal">
-    <div class="modal-win">
-        <h3 id="view-name">User Profile</h3><br>
-        <img id="view-pfp" style="width:100px;height:100px;border:1px solid #ccc;margin-bottom:15px;object-fit:cover"><br>
-        <button id="msg-btn" style="width:100%;margin-bottom:5px">Message</button>
-        <button id="block-btn" style="width:100%;background:#fee;color:#c00">Block</button>
-        <button onclick="closeModal()" style="width:100%;margin-top:10px">Close</button>
-    </div>
-</div>
-
 <div id="settings-box" class="modal">
-    <div class="modal-win" style="width:400px">
-        <h3>Settings</h3><br>
-        <p style="font-size:12px">Profile Picture</p>
-        <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()" style="margin-bottom:15px"><br>
-        <p style="font-size:12px">Theme Color</p>
-        <div style="display:flex;gap:5px;margin-bottom:20px">
-            <div style="width:25px;height:25px;background:#0078d7;cursor:pointer" onclick="theme('#0078d7')"></div>
-            <div style="width:25px;height:25px;background:#444;cursor:pointer" onclick="theme('#444')"></div>
-            <div style="width:25px;height:25px;background:#004d40;cursor:pointer" onclick="theme('#004d40')"></div>
-            <div style="width:25px;height:25px;background:#6a1b9a;cursor:pointer" onclick="theme('#6a1b9a')"></div>
+    <div class="settings-win">
+        <div class="settings-nav">
+            <div class="nav-item">Profile</div>
+            <div class="nav-item" style="margin-top:230px;color:#c00" onclick="logout()">Logout</div>
         </div>
-        <button onclick="logout()" style="background:#cc0000;color:#fff;border:none">Logout</button>
-        <button onclick="closeModal()" style="float:right">Done</button>
+        <div class="settings-content">
+            <h3>Profile Settings</h3><br>
+            <p style="font-size:12px">Profile Picture</p>
+            <input type="file" id="pfp-file" accept="image/*" onchange="upPfp()" style="margin-bottom:20px"><br>
+            
+            <p style="font-size:12px">Personal Status</p>
+            <input id="status-input" placeholder="What's happening?" style="width:100%;margin-bottom:5px">
+            <div style="display:flex;gap:5px">
+                <button onclick="saveStatus()" style="background:#0078d7;color:#fff;border:none">Update Status</button>
+                <button onclick="clearStatus()">Remove Status</button>
+            </div>
+            
+            <button onclick="closeModal()" style="position:absolute;bottom:20px;right:20px">Close</button>
+        </div>
     </div>
 </div>
 
@@ -134,7 +125,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
-let me = localStorage.getItem('del_me'), chatWith = null, isGrp = false;
+let me = localStorage.getItem('del_me'), chatWith = null;
 
 function toggleAuth(r){
     document.getElementById('login-form').style.display = r ? 'none' : 'block';
@@ -143,13 +134,13 @@ function toggleAuth(r){
 function login(){
     let u = document.getElementById('lu').value, p = document.getElementById('lp').value;
     rdb.ref('users/'+u).once('value', s=>{
-        if(s.val() && s.val().pass === p) session(u); else alert("Error");
+        if(s.val() && s.val().pass === p) session(u); else alert("Invalid");
     });
 }
 function register(){
     let u = document.getElementById('ru').value.trim(), p = document.getElementById('rp').value;
     if(!u || !p) return;
-    rdb.ref('users/'+u).set({pass:p, status:"Online", pfp:"", blocks:{}}).then(()=>session(u));
+    rdb.ref('users/'+u).set({pass:p, pfp:"", status:"", blocks:{}}).then(()=>session(u));
 }
 function session(u){
     me = u; localStorage.setItem('del_me', u);
@@ -157,65 +148,49 @@ function session(u){
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
     document.getElementById('welcome-footer').style.display = 'none';
-    rdb.ref('users/'+me+'/pfp').on('value', s=>{ if(s.val()) document.getElementById('my-pfp').src = s.val(); });
+    rdb.ref('users/'+me).on('value', s=>{
+        let d = s.val();
+        if(d.pfp) document.getElementById('my-pfp').src = d.pfp;
+        document.getElementById('my-status-display').textContent = d.status || "No status";
+        document.getElementById('status-input').value = d.status || "";
+    });
     loadPeople();
-    listenCalls();
+}
+function saveStatus(){
+    let s = document.getElementById('status-input').value.trim();
+    rdb.ref('users/'+me+'/status').set(s);
+}
+function clearStatus(){
+    rdb.ref('users/'+me+'/status').set("");
 }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
         let a = document.getElementById('contacts-area');
-        a.innerHTML = `<div class="section-label">People <button onclick="makeGrp()" style="font-size:9px;float:right">+ Group</button></div>`;
+        a.innerHTML = `<div class="section-label">People</div>`;
         s.forEach(c => {
             let u = c.key; if(u === me) return;
-            rdb.ref(`users/${u}/blocks/${me}`).once('value', b=>{
-                if(b.exists()) return;
-                let d = c.val();
-                let div = document.createElement('div');
-                div.className = "person-item";
-                div.onclick = () => showProf(u, d);
-                div.innerHTML = `<img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:30px;height:30px;border:1px solid #ccc"> <b>${u}</b>`;
-                a.appendChild(div);
-            });
-        });
-        rdb.ref('groups').on('value', gs=>{
-            gs.forEach(g=>{
-                let div = document.createElement('div');
-                div.className = "person-item";
-                div.onclick = () => startChat(g.key, true);
-                div.innerHTML = `<b>[Group] ${g.key}</b>`;
-                a.appendChild(div);
-            });
+            let d = c.val();
+            let div = document.createElement('div');
+            div.className = "person-item";
+            div.onclick = () => { chatWith = u; document.getElementById('chat-target').textContent = u; listenMsgs(); };
+            div.innerHTML = `
+                <img src="${d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}" style="width:32px;height:32px;border:1px solid #ccc">
+                <div>
+                    <b>${u}</b><br>
+                    <span style="font-size:10px;color:#888">${d.status || ''}</span>
+                </div>`;
+            a.appendChild(div);
         });
     });
-}
-function showProf(u, d){
-    document.getElementById('view-name').textContent = u;
-    document.getElementById('view-pfp').src = d.pfp || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-    document.getElementById('msg-btn').onclick = () => { startChat(u, false); closeModal(); };
-    let bb = document.getElementById('block-btn');
-    rdb.ref(`users/${me}/blocks/${u}`).once('value', b=>{
-        bb.textContent = b.exists() ? "Unblock" : "Block";
-        bb.onclick = () => { if(b.exists()) rdb.ref(`users/${me}/blocks/${u}`).remove(); else rdb.ref(`users/${me}/blocks/${u}`).set(true); closeModal(); };
-    });
-    document.getElementById('profile-modal').style.display='flex';
-}
-function startChat(u, g){
-    chatWith = u; isGrp = g;
-    document.getElementById('chat-target').textContent = u;
-    document.getElementById('call-btn').style.display = g ? 'none' : 'block';
-    listenMsgs();
 }
 function doSend(){
     let t = document.getElementById('msg-in').value.trim();
     if(!t || !chatWith) return;
-    let p = isGrp ? 'groups/'+chatWith : 'chats/'+[me,chatWith].sort().join("_");
-    rdb.ref(p).push({s:me, t:t, ts:Date.now()});
+    rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t});
     document.getElementById('msg-in').value = "";
 }
 function listenMsgs(){
-    let p = isGrp ? 'groups/'+chatWith : 'chats/'+[me,chatWith].sort().join("_");
-    rdb.ref(p).off();
-    rdb.ref(p).on('value', s=>{
+    rdb.ref('chats/'+[me,chatWith].sort().join("_")).on('value', s=>{
         let b = document.getElementById('messages-box'); b.innerHTML = "";
         s.forEach(c=>{
             let m = c.val();
@@ -227,51 +202,13 @@ function listenMsgs(){
         b.scrollTop = b.scrollHeight;
     });
 }
-function makeGrp(){
-    let n = prompt("Group Name?"), m = prompt("Enter up to 5 users (comma separated)");
-    if(!n || !m) return;
-    let list = m.split(',').slice(0, 5);
-    rdb.ref('groups/'+n).push({s:'System', t:'Group created with ' + list.join(', ')});
-}
-function startCall(){
-    document.getElementById('call-display').style.display='flex';
-    rdb.ref('calls/'+chatWith).set({from:me, active:true});
-    renderCall([me, chatWith]);
-}
-function renderCall(users){
-    let box = document.getElementById('call-avatars'); box.innerHTML = "";
-    users.forEach(u=>{
-        let div = document.createElement('div');
-        div.className = "call-avatar-box";
-        div.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" id="call-pfp-${u}" class="call-avatar"><br>${u}`;
-        box.appendChild(div);
-        rdb.ref('users/'+u+'/pfp').once('value', s=>{ if(s.val()) document.getElementById('call-pfp-'+u).src = s.val(); });
-    });
-}
-function listenCalls(){
-    rdb.ref('calls/'+me).on('value', s=>{
-        if(s.val() && s.val().active){
-            if(confirm("Call from "+s.val().from+"?")){
-                document.getElementById('call-display').style.display='flex';
-                renderCall([me, s.val().from]);
-            } else endCall();
-        }
-    });
-}
-function endCall(){
-    rdb.ref('calls/'+me).remove();
-    if(chatWith) rdb.ref('calls/'+chatWith).remove();
-    document.getElementById('call-display').style.display='none';
-}
+function openSet(){ document.getElementById('settings-box').style.display='flex'; }
+function closeModal(){ document.getElementById('settings-box').style.display='none'; }
+function logout(){ localStorage.clear(); location.reload(); }
 function upPfp(){
     let f = document.getElementById('pfp-file').files[0];
     let r = new FileReader(); r.onload = e => rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f);
 }
-function theme(c){ document.body.style.background = c; }
-function openSet(){ document.getElementById('settings-box').style.display='flex'; }
-function logout(){ localStorage.clear(); location.reload(); }
-function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
-
 if(me) session(me);
 </script>
 </body>
