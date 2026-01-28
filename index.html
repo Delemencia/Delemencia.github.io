@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>beta delemencia!!</title>
+<title>reworked!!</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -126,6 +126,10 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                     <div class="theme-sq" style="background:#2d7d32" onclick="theme('#2d7d32')"></div>
                     <div class="theme-sq" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
                     <div class="theme-sq" style="background:#7b1fa2" onclick="theme('#7b1fa2')"></div>
+                    <div class="theme-sq" style="background:#ff9800" onclick="theme('#ff9800')"></div>
+                    <div class="theme-sq" style="background:#00bcd4" onclick="theme('#00bcd4')"></div>
+                    <div class="theme-sq" style="background:#e91e63" onclick="theme('#e91e63')"></div>
+                    <div class="theme-sq" style="background:#ffeb3b" onclick="theme('#ffeb3b')"></div>
                 </div>
                 <div class="tab-content" id="tab-visi">
                     <h2>Visibility</h2><br>
@@ -164,6 +168,7 @@ function session(u){
     document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='flex';
     rdb.ref('users/'+me).on('value', s=>{ 
         let d = s.val();
+        if(!d) { logout(); return; } // Kick if deleted (banned)
         if(d.pfp) document.getElementById('my-pfp').src=d.pfp; 
         document.getElementById('my-status-text').textContent = d.status || "Online";
         document.getElementById('my-vis-dot').style.background = (d.vis==='Away' ? 'red' : 'green');
@@ -191,12 +196,27 @@ function showHome(){ document.getElementById('chat-pane').style.display='none'; 
 function goBack(){ document.getElementById('home-pane').style.display='none'; document.getElementById('chat-pane').style.display='flex'; }
 function doSend(){
     let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
+    
+    
     if(t.trim()==='!select'){
         if(!selected.includes(chatWith)) selected.push(chatWith);
         document.getElementById('msg-in').value="";
         loadPeople();
         return;
     }
+    
+    if(t.trim()==='!ban' && me === 'Owner'){
+        if(confirm("Are you sure you want to delete the account of " + chatWith + "?")){
+            rdb.ref('users/'+chatWith).remove();
+            alert("Account deleted.");
+            chatWith = null;
+            document.getElementById('chat-target-label').textContent = "Select a contact";
+            document.getElementById('messages-box').innerHTML = "";
+        }
+        document.getElementById('msg-in').value="";
+        return;
+    }
+
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
     document.getElementById('msg-in').value="";
 }
