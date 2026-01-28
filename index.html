@@ -2,22 +2,20 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>nj task!!</title>
+<title>NODEJS!</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
-body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s}
+body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s;background-size: cover;background-position: center;}
 #messages-box, #contacts-area, .tab-content, #recent-list, #selected-list {overflow-y: scroll}
 ::-webkit-scrollbar {width: 17px; background: #f0f0f0; border-left: 1px solid #dcdcdc}
 ::-webkit-scrollbar-thumb {background: #cdcdcd; border: 1px solid #ababab; box-shadow: inset 1px 1px 0 #eee}
 ::-webkit-scrollbar-button:single-button {background-color: #f0f0f0; display: block; height: 17px; width: 17px; border: 1px solid #dcdcdc}
 .win-window{width:1050px;height:750px;background:#fff;border:1px solid #555;box-shadow:0 10px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;position:relative}
 .win-titlebar {
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 45%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.4) 100%);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: linear-gradient(to bottom, #fff 0%, #ebebeb 100%);
     height: 32px;
     padding: 0 10px;
     display: flex;
@@ -25,16 +23,39 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
     justify-content: space-between;
     font-size: 12px;
     color: #222;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid #ababab;
 }
+.skype-menu-bar {
+    background: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    padding: 2px 10px;
+    gap: 15px;
+    font-size: 12px;
+    color: #333;
+}
+.menu-item { cursor: pointer; padding: 2px 5px; position: relative; }
+.menu-item:hover { background: #0078d7; color: #fff; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    min-width: 100px;
+}
+.menu-item:hover .dropdown-content { display: block; }
+.dropdown-item { padding: 5px 10px; color: #333; }
+.dropdown-item:hover { background: #e0eef9; color: #000; }
 .title-left { display: flex; align-items: center; gap: 8px; }
 .skype-logo {
     width: 18px; height: 18px; background: #00aff0; color: white; border-radius: 50% !important;
     display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
-.win-body{flex:1;display:flex;overflow:hidden}
+.win-body{flex:1;display:flex;overflow:hidden;position:relative}
 #sidebar{width:300px;background:#f3f3f3;border-right:1px solid #ccc;display:flex;flex-direction:column}
 .user-header{padding:15px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px}
 .pfp-wrap{position:relative;width:48px;height:48px}
@@ -58,6 +79,9 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 .tab-content.active{display:block}
 .theme-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
 .theme-sq{width:40px;height:40px;cursor:pointer;border:2px solid #fff;box-shadow: 0 0 0 1px #ccc;}
+#paint-canvas-container { display: none; position: absolute; inset: 0; background: #fff; flex-direction: column; z-index: 10; }
+#paint-tools { padding: 10px; background: #eee; border-bottom: 1px solid #ccc; display: flex; gap: 10px; align-items: center; }
+canvas { cursor: crosshair; flex: 1; touch-action: none; }
 </style>
 </head>
 <body>
@@ -76,13 +100,38 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
         </div>
     </div>
 </div>
+
 <div id="app-screen" style="display:none;width:100%;height:100%">
     <div class="win-window" style="margin:auto;margin-top:40px">
         <div class="win-titlebar">
             <div class="title-left"><div class="skype-logo">D</div><span>Delemencia 1.3 :+)</span></div>
             <button onclick="openSet()" style="border:none;background:none;color:#0078d7;cursor:pointer">Settings</button>
         </div>
+        <div class="skype-menu-bar">
+            <div class="menu-item">Contacts</div>
+            <div class="menu-item">Conversation</div>
+            <div class="menu-item">Call</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Tools
+                <div class="dropdown-content">
+                    <div class="dropdown-item" onclick="openPaint()">Paint</div>
+                </div>
+            </div>
+            <div class="menu-item" onclick="document.getElementById('bg-input').click()">Open</div>
+            <div class="menu-item">Help</div>
+            <input type="file" id="bg-input" style="display:none" accept="image/*" onchange="changeBg(this)">
+        </div>
         <div class="win-body">
+            <div id="paint-canvas-container">
+                <div id="paint-tools">
+                    <button onclick="closePaint()">Back</button>
+                    <input type="color" id="paint-color" value="#000000">
+                    <input type="range" id="paint-size" min="1" max="20" value="5">
+                    <button onclick="clearCanvas()">Clear</button>
+                    <span style="font-size: 12px; margin-left: auto;">Paint Tool</span>
+                </div>
+                <canvas id="paint-canvas"></canvas>
+            </div>
             <div id="sidebar">
                 <div class="user-header">
                     <div class="pfp-wrap">
@@ -140,6 +189,10 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                         <div class="theme-sq" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
                         <div class="theme-sq" style="background:#2e7d32" onclick="theme('#2e7d32')"></div>
                         <div class="theme-sq" style="background:#000" onclick="theme('#000')"></div>
+                        <div class="theme-sq" style="background:#ff8c00" onclick="theme('#ff8c00')"></div>
+                        <div class="theme-sq" style="background:#00bfff" onclick="theme('#00bfff')"></div>
+                        <div class="theme-sq" style="background:#ff1493" onclick="theme('#ff1493')"></div>
+                        <div class="theme-sq" style="background:#8b4513" onclick="theme('#8b4513')"></div>
                     </div>
                 </div>
                 <div class="tab-content" id="tab-visi">
@@ -161,6 +214,52 @@ firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
 let me = localStorage.getItem('del_me'), chatWith = null, recent = [], selected = [], lastMsgCount = 0;
 const notify = new Audio('https://waitingforatrain.neocities.org/notif.mp3');
+
+const canvas = document.getElementById('paint-canvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+
+function initPaint() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+    canvas.addEventListener('mousemove', draw);
+}
+
+function draw(e) {
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineWidth = document.getElementById('paint-size').value;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = document.getElementById('paint-color').value;
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function openPaint() {
+    document.getElementById('paint-canvas-container').style.display = 'flex';
+    initPaint();
+}
+
+function closePaint() {
+    document.getElementById('paint-canvas-container').style.display = 'none';
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function changeBg(input) {
+    if (input.files && input.files[0]) {
+        let r = new FileReader();
+        r.onload = e => document.body.style.backgroundImage = `url(${e.target.result})`;
+        r.readAsDataURL(input.files[0]);
+    }
+}
+
 function login(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
     if(!u) return;
@@ -250,7 +349,7 @@ function listenMsgs(){
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
 function setTab(t, el){ document.querySelectorAll('.nav-item, .tab-content').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
-function theme(c){ document.body.style.background = c; }
+function theme(c){ document.body.style.backgroundImage = 'none'; document.body.style.background = c; }
 function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); }
 function setVis(v){ rdb.ref('users/'+me+'/vis').set(v); }
 function upPfp(){ let f=document.getElementById('pfp-file').files[0]; let r=new FileReader(); r.onload=e=>rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f); }
