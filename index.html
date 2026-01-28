@@ -2,33 +2,58 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>We're back in business</title>
+<title>What is this site? THE BEST!</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/8a29dc.png"> 
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
 body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s}
+
+
 #messages-box, #contacts-area, .tab-content, #recent-list, #selected-list {overflow-y: scroll}
 ::-webkit-scrollbar {width: 17px; background: #f0f0f0; border-left: 1px solid #dcdcdc}
 ::-webkit-scrollbar-thumb {background: #cdcdcd; border: 1px solid #ababab; box-shadow: inset 1px 1px 0 #eee}
-::-webkit-scrollbar-button:single-button {background-color: #f0f0f0; display: block; height: 17px; width: 17px; background-size: 10px; background-repeat: no-repeat; background-position: center; border: 1px solid #dcdcdc}
-::-webkit-scrollbar-button:single-button:vertical:decrement {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEX///8AAABERERVVVV3d3fMzMwzAAAAAXRSTlMAQObYZgAAADlJREFUeF5jYmBgYGJgYmBkYGZkZGVmZmVmYGJgYmBiYmJiYmJiYmJiYmJiYmJiYGJgYmBiYGJgYmAAAOYAA/FrS00AAAAASUVORK5CYII=')}
-::-webkit-scrollbar-button:single-button:vertical:increment {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEX///8AAABERERVVVV3d3fMzMwzAAAAAXRSTlMAQObYZgAAADlJREFUeF5jYmBiYmJiYmJiYmJiYmJiYmJiYmJiYGJiYmBiYGZkZGVmZmVmYGJgYmBkYGZgYmBkAAAGmAA79XmMAAAAAElFTkSuQmCC')}
-.win-window{width:1050px;height:750px;background:#fff;border:1px solid #555;box-shadow:0 10px 30px rgba(0,0,0,0.4);display:flex;flex-direction:column;position:relative}
+::-webkit-scrollbar-button:single-button {background-color: #f0f0f0; display: block; height: 17px; width: 17px; border: 1px solid #dcdcdc}
+
+.win-window{width:1050px;height:750px;background:#fff;border:1px solid #555;box-shadow:0 10px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;position:relative}
+
 
 .win-titlebar {
-    background: rgba(255, 255, 255, 0.4); 
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px); 
-    height:35px;
-    padding:0 10px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:12px;
-    border-bottom:1px solid rgba(0, 0, 0, 0.1);
-    position: relative;
-    z-index: 10;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 100%);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    height: 32px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #333;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8); 
+}
+
+
+.title-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+.title-logo {
+    width: 16px;
+    height: 16px;
+    background: #0078d7;
+    color: white;
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 .win-body{flex:1;display:flex;overflow:hidden}
@@ -40,12 +65,9 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 .section-label:hover{background:#dcdcdc}
 .search-container { padding: 10px; background: #fff; border-bottom: 1px solid #ddd; }
 .search-input { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 12px; outline: none; }
-.search-res-hover { position: relative; display: inline-block; width: 100%; }
-.search-res-hover:hover::after { content: 'Message'; position: absolute; left: 50px; top: 10px; background: #333; color: #fff; padding: 2px 6px; font-size: 10px; z-index: 100; pointer-events: none; }
 .person-item{padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid #eee;background:#fff}
 .person-item:hover{background:#e0eef9}
 #chat-pane, #home-pane{flex:1;display:flex;flex-direction:column;background:#fff}
-#home-pane{align-items:center;justify-content:center;display:none}
 #messages-box{flex:1;padding:20px;display:flex;flex-direction:column;gap:8px}
 .msg-sender{font-weight:bold;color:#0078d7;margin-right:8px}
 #input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px}
@@ -55,16 +77,21 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 .settings-nav{width:180px;background:#f9f9f9;border-right:1px solid #ccc;display:flex;flex-direction:column}
 .nav-item{padding:15px;cursor:pointer;border-bottom:1px solid #eee;font-size:13px}
 .nav-item.active{background:#fff;color:#0078d7;font-weight:bold}
-.nav-footer{margin-top:auto;padding:15px;border-top:1px solid #eee}
 .tab-content{flex:1;padding:30px;display:none}
 .tab-content.active{display:block}
 .theme-sq{width:30px;height:30px;display:inline-block;margin:5px;cursor:pointer;border:1px solid #000}
 </style>
 </head>
 <body>
+
 <div id="auth-screen" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center">
     <div class="win-window" style="width:340px;height:auto">
-        <div class="win-titlebar"><span>Delemencia 1.3 :+)</span></div>
+        <div class="win-titlebar">
+            <div class="title-content">
+                <div class="title-logo">D</div>
+                <span>Delemencia 1.3 :+)</span>
+            </div>
+        </div>
         <div style="padding:30px" id="login-form">
             <input id="lu" placeholder="Username" style="width:100%;margin-bottom:10px;padding:8px">
             <input id="lp" type="password" placeholder="Password" style="width:100%;margin-bottom:20px;padding:8px">
@@ -75,10 +102,14 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
         </div>
     </div>
 </div>
+
 <div id="app-screen" style="display:none;width:100%;height:100%">
     <div class="win-window" style="margin:auto;margin-top:40px">
         <div class="win-titlebar">
-            <span>Delemencia 1.3 :+)</span>
+            <div class="title-content">
+                <div class="title-logo">D</div>
+                <span>Delemencia 1.3 :+)</span>
+            </div>
             <button onclick="openSet()" style="border:none;background:none;color:#0078d7;cursor:pointer">Settings</button>
         </div>
         <div class="win-body">
@@ -116,64 +147,21 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                     <button onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
                 </div>
             </div>
-            <div id="home-pane">
+            <div id="home-pane" style="display:none; align-items:center; justify-content:center; flex:1">
                 <h1 style="font-weight:300;">Welcome home, <span id="home-user"></span></h1>
                 <button onclick="goBack()" style="margin-top:20px; padding: 8px 15px;">Back to Messages</button>
             </div>
         </div>
-        <div id="settings-box" class="modal">
-            <div class="settings-win">
-                <div class="settings-nav">
-                    <div class="nav-item active" onclick="setTab('prof', this)">Profile</div>
-                    <div class="nav-item" onclick="setTab('them', this)">Themes</div>
-                    <div class="nav-item" onclick="setTab('visi', this)">Visibility</div>
-                    <div class="nav-item" onclick="setTab('cred', this)">Credits</div>
-                    <div class="nav-footer">
-                        <button onclick="closeModal()" style="width:100%;background:#0078d7;color:#fff;border:none;margin-bottom:8px;padding:6px">Close</button>
-                        <button onclick="logout()" style="width:100%;color:red;background:none;border:none;cursor:pointer;font-size:12px">Logout</button>
-                    </div>
-                </div>
-                <div class="tab-content active" id="tab-prof">
-                    <h2>Profile Settings</h2><br>
-                    <p style="font-size:12px">Profile Picture</p>
-                    <input type="file" id="pfp-file" onchange="upPfp()" style="margin:10px 0"><br>
-                    <p style="font-size:12px">Status</p>
-                    <input id="status-in" style="width:100%;padding:8px;margin:10px 0" placeholder="Hi!"><br>
-                    <button onclick="saveStat()" style="background:#0078d7;color:#fff;border:none">Update Status</button>
-                    <button onclick="rdb.ref('users/'+me+'/status').set('')" style="margin-left:5px">Remove Status</button>
-                </div>
-                <div class="tab-content" id="tab-them">
-                    <h2>Themes</h2><br>
-                    <div class="theme-sq" style="background:#0078d7" onclick="theme('#0078d7')"></div>
-                    <div class="theme-sq" style="background:#333" onclick="theme('#333')"></div>
-                    <div class="theme-sq" style="background:#f3f3f3" onclick="theme('#f3f3f3')"></div>
-                    <div class="theme-sq" style="background:#2d7d32" onclick="theme('#2d7d32')"></div>
-                    <div class="theme-sq" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
-                    <div class="theme-sq" style="background:#7b1fa2" onclick="theme('#7b1fa2')"></div>
-                    <div class="theme-sq" style="background:#ff9800" onclick="theme('#ff9800')"></div>
-                    <div class="theme-sq" style="background:#00bcd4" onclick="theme('#00bcd4')"></div>
-                    <div class="theme-sq" style="background:#e91e63" onclick="theme('#e91e63')"></div>
-                    <div class="theme-sq" style="background:#ffeb3b" onclick="theme('#ffeb3b')"></div>
-                </div>
-                <div class="tab-content" id="tab-visi">
-                    <h2>Visibility</h2><br>
-                    <button onclick="setVis('Online')" style="display:block;width:100%;text-align:left;padding:10px;margin-bottom:5px"><span style="display:inline-block;width:10px;height:10px;background:green;margin-right:10px"></span> Online</button>
-                    <button onclick="setVis('Away')" style="display:block;width:100%;text-align:left;padding:10px"><span style="display:inline-block;width:10px;height:10px;background:red;margin-right:10px"></span> Away</button>
-                </div>
-                <div class="tab-content" id="tab-cred">
-                    <h2>Credits</h2><br>
-                    <p style="font-size:18px; color: #0078d7;">Made By Delemencia (Owner)</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
+
 <script>
+
 const firebaseConfig = {apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8", authDomain: "delemencia.firebaseapp.com", databaseURL: "https://delemencia-default-rtdb.firebaseio.com", projectId: "delemencia", storageBucket: "delemencia.firebasestorage.app", messagingSenderId: "192535641895", appId: "1:192535641895:web:6a3d97d488ef6481d9f382"};
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
 let me = localStorage.getItem('del_me'), chatWith = null, recent = [], selected = [], lastMsgCount = 0;
-const notify = new Audio('https://waitingforatrain.neocities.org/notif.mp3');
+
 function login(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
     if(!u) return;
@@ -192,113 +180,45 @@ function register(){
 }
 function session(u){
     me=u; localStorage.setItem('del_me', u);
-    document.getElementById('display-name').textContent=u; document.getElementById('home-user').textContent=u;
+    document.getElementById('display-name').textContent=u;
     document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='flex';
     rdb.ref('users/'+me).on('value', s=>{ 
-        let d = s.val();
-        if(!d) { logout(); return; } 
+        let d = s.val(); if(!d) return;
         if(d.pfp) document.getElementById('my-pfp').src=d.pfp; 
         document.getElementById('my-status-text').textContent = d.status || "Online";
-        document.getElementById('my-vis-dot').style.background = (d.vis==='Away' ? 'red' : 'green');
     });
-    loadPeople();
-}
-function findUser(){
-    let target = document.getElementById('user-search').value.trim();
-    if(!target) return;
-    rdb.ref('users/'+target).once('value', s=>{
-        let box = document.getElementById('search-result-box');
-        box.innerHTML = "";
-        if(s.exists()){
-            let v = s.val();
-            let div = document.createElement('div');
-            div.className = "person-item search-res-hover";
-            let vCol = (v.vis === 'Away' ? 'red' : 'green');
-            div.innerHTML = `<div style="position:relative"><img src="${v.pfp||''}" style="width:30px;height:30px;background:#ddd;object-fit:cover"><div style="position:absolute;bottom:0;right:0;width:8px;height:8px;background:${vCol};border:1px solid #fff"></div></div> <b>${s.key}</b>`;
-            div.onclick = () => { startChat(s.key); box.innerHTML=""; document.getElementById('user-search').value=""; };
-            box.appendChild(div);
-        } else {
-            alert("User not found.");
-        }
-    });
-}
-function startChat(user){
-    chatWith=user; 
-    document.getElementById('chat-target-label').textContent=user; 
-    if(!recent.includes(user)) recent.unshift(user); 
-    goBack(); 
-    listenMsgs(); 
     loadPeople();
 }
 function loadPeople(){
     rdb.ref('users').on('value', s=>{
-        let pList=document.getElementById('people-list'), rList=document.getElementById('recent-list'), sList=document.getElementById('selected-list');
-        pList.innerHTML=""; rList.innerHTML=""; sList.innerHTML="";
+        let pList=document.getElementById('people-list'); pList.innerHTML="";
         s.forEach(c=>{
             if(c.key===me) return;
-            let v = c.val();
             let div=document.createElement('div'); div.className="person-item";
-            div.onclick=()=>{ startChat(c.key); };
-            let vCol = (v.vis === 'Away' ? 'red' : 'green');
-            div.innerHTML=`<div style="position:relative"><img src="${v.pfp||''}" style="width:30px;height:30px;background:#ddd;object-fit:cover"><div style="position:absolute;bottom:0;right:0;width:8px;height:8px;background:${vCol};border:1px solid #fff"></div></div> <b>${c.key}</b>`;
-            if(selected.includes(c.key)) sList.appendChild(div);
-            else if(recent.includes(c.key)) rList.appendChild(div); 
-            else pList.appendChild(div);
+            div.innerHTML=`<b>${c.key}</b>`;
+            div.onclick=()=> startChat(c.key);
+            pList.appendChild(div);
         });
     });
 }
-function showHome(){ document.getElementById('chat-pane').style.display='none'; document.getElementById('home-pane').style.display='flex'; }
-function goBack(){ document.getElementById('home-pane').style.display='none'; document.getElementById('chat-pane').style.display='flex'; }
-function doSend(){
-    let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
-    if(t.trim()==='!select'){
-        if(!selected.includes(chatWith)) selected.push(chatWith);
-        document.getElementById('msg-in').value="";
-        loadPeople();
-        return;
-    }
-    if(t.trim()==='!ban' && me === 'Owner'){
-        if(confirm("Are you sure you want to delete the account of " + chatWith + "?")){
-            rdb.ref('users/'+chatWith).remove();
-            alert("Account deleted.");
-            chatWith = null;
-            document.getElementById('chat-target-label').textContent = "Select a contact";
-            document.getElementById('messages-box').innerHTML = "";
-        }
-        document.getElementById('msg-in').value="";
-        return;
-    }
-    rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
-    document.getElementById('msg-in').value="";
-}
-function sendImg(){
-    let f=document.getElementById('img-send').files[0]; if(!f||!chatWith) return;
-    let r=new FileReader(); r.onload=e=>rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:e.target.result, type:'img'}); r.readAsDataURL(f);
-}
-function listenMsgs(){
+function startChat(user){
+    chatWith=user; document.getElementById('chat-target-label').textContent=user;
     const path = 'chats/'+[me,chatWith].sort().join("_");
     rdb.ref(path).on('value', s=>{
         let b=document.getElementById('messages-box'); b.innerHTML="";
-        let count = 0;
         s.forEach(c=>{ 
-            count++;
             let m=c.val(); let d=document.createElement('div');
-            d.innerHTML=`<span class="msg-sender">${m.s}:</span>` + (m.type==='img'?`<img src="${m.t}" style="max-width:200px;display:block">`:m.t);
+            d.innerHTML=`<span class="msg-sender">${m.s}:</span> ${m.t}`;
             b.appendChild(d);
         });
-        if(count > lastMsgCount && lastMsgCount !== 0) notify.play();
-        lastMsgCount = count;
         b.scrollTop=b.scrollHeight;
     });
 }
-function openSet(){ document.getElementById('settings-box').style.display='flex'; }
-function closeModal(){ document.getElementById('settings-box').style.display='none'; }
-function setTab(t, el){ document.querySelectorAll('.nav-item, .tab-content').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
-function theme(c){ document.body.style.background = c; }
-function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); }
-function setVis(v){ rdb.ref('users/'+me+'/vis').set(v); }
-function upPfp(){ let f=document.getElementById('pfp-file').files[0]; let r=new FileReader(); r.onload=e=>rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f); }
-function logout(){ localStorage.clear(); location.reload(); }
+function doSend(){
+    let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
+    rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
+    document.getElementById('msg-in').value="";
+}
 if(me) session(me);
 </script>
 </body>
