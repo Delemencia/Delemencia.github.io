@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>rel icon hehe!</title>
+<title>hop on nodejs bRo</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -65,7 +65,8 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 .search-input { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 12px; outline: none; }
 .person-item{padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid #eee;background:#fff}
 .person-item:hover{background:#e0eef9}
-#chat-pane, #home-pane{flex:1;display:flex;flex-direction:column;background:#fff}
+#chat-pane, #home-pane, #help-pane, #call-pane{flex:1;display:none;flex-direction:column;background:#fff}
+#chat-pane{display:flex}
 #messages-box{flex:1;padding:20px;display:flex;flex-direction:column;gap:8px}
 .msg-sender{font-weight:bold;color:#0078d7;margin-right:8px}
 #input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px}
@@ -108,17 +109,17 @@ canvas { cursor: crosshair; flex: 1; touch-action: none; }
             <button onclick="openSet()" style="border:none;background:none;color:#0078d7;cursor:pointer">Settings</button>
         </div>
         <div class="skype-menu-bar">
-            <div class="menu-item">Contacts</div>
-            <div class="menu-item">Conversation</div>
-            <div class="menu-item">Call</div>
-            <div class="menu-item">View</div>
+            <div class="menu-item" onclick="goLastContact()">Contacts</div>
+            <div class="menu-item" onclick="showHome()">Conversation</div>
+            <div class="menu-item" onclick="openCall()">Call</div>
+            <div class="menu-item" onclick="openProfile()">View</div>
             <div class="menu-item">Tools
                 <div class="dropdown-content">
                     <div class="dropdown-item" onclick="openPaint()">Paint</div>
                 </div>
             </div>
             <div class="menu-item" onclick="document.getElementById('bg-input').click()">Open</div>
-            <div class="menu-item">Help</div>
+            <div class="menu-item" onclick="showHelp()">Help</div>
             <input type="file" id="bg-input" style="display:none" accept="image/*" onchange="changeBg(this)">
         </div>
         <div class="win-body">
@@ -149,6 +150,7 @@ canvas { cursor: crosshair; flex: 1; touch-action: none; }
                     <div class="section-label">CONTACTS</div><div id="people-list"></div>
                 </div>
             </div>
+            
             <div id="chat-pane">
                 <div style="padding:15px;border-bottom:1px solid #eee;background:#fafafa"><b id="chat-target-label">Select a contact</b></div>
                 <div id="messages-box"></div>
@@ -159,11 +161,28 @@ canvas { cursor: crosshair; flex: 1; touch-action: none; }
                     <button onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
                 </div>
             </div>
-            <div id="home-pane" style="display:none;align-items:center;justify-content:center;flex:1">
+
+            <div id="call-pane" style="align-items:center;justify-content:center;text-align:center">
+                <div style="background:#f9f9f9; padding:40px; border:1px solid #ccc; width:400px">
+                    <h2>Voice Call</h2><br>
+                    <input id="call-target" placeholder="Enter Username" style="width:100%; padding:10px; margin-bottom:10px">
+                    <button onclick="initiateCall()" style="background:#2e7d32; color:#fff; width:100%; border:none; padding:10px">Call</button>
+                    <div id="call-status" style="margin-top:20px; font-weight:bold; color:#0078d7"></div>
+                    <button onclick="goBack()" style="margin-top:20px;">Cancel</button>
+                </div>
+            </div>
+
+            <div id="help-pane" style="align-items:center;justify-content:center;text-align:center">
+                <h1 style="font-weight:300">Check out the forums!</h1>
+                <button onclick="goBack()" style="margin-top:20px;">Back</button>
+            </div>
+
+            <div id="home-pane" style="align-items:center;justify-content:center;flex:1">
                 <h1 style="font-weight:300;">Welcome home, <span id="home-user"></span></h1>
                 <button onclick="goBack()" style="margin-top:20px;">Back</button>
             </div>
         </div>
+
         <div id="settings-box" class="modal">
             <div class="settings-win">
                 <div class="settings-nav">
@@ -190,17 +209,12 @@ canvas { cursor: crosshair; flex: 1; touch-action: none; }
                         <div class="theme-sq" style="background:#d32f2f" onclick="theme('#d32f2f')"></div>
                         <div class="theme-sq" style="background:#2e7d32" onclick="theme('#2e7d32')"></div>
                         <div class="theme-sq" style="background:#000" onclick="theme('#000')"></div>
-                        <div class="theme-sq" style="background:#ff8c00" onclick="theme('#ff8c00')"></div>
-                        <div class="theme-sq" style="background:#00bfff" onclick="theme('#00bfff')"></div>
-                        <div class="theme-sq" style="background:#ff1493" onclick="theme('#ff1493')"></div>
-                        <div class="theme-sq" style="background:#8b4513" onclick="theme('#8b4513')"></div>
                     </div>
                 </div>
                 <div class="tab-content" id="tab-priv">
                     <h2>Privacy</h2><br>
-                    <p style="font-size:12px;color:#666;margin-bottom:10px">Change your account password below:</p>
-                    <input id="new-pass" type="password" style="width:100%;padding:8px;margin-bottom:15px" placeholder="New Password"><br>
-                    <button onclick="changePass()" style="background:#0078d7;color:#fff;border:none">Save New Password</button>
+                    <input id="new-pass" type="password" style="width:100%;padding:8px" placeholder="New Password"><br><br>
+                    <button onclick="changePass()" style="background:#0078d7;color:#fff;border:none">Update Password</button>
                 </div>
                 <div class="tab-content" id="tab-visi">
                     <h2>Visibility</h2><br>
@@ -233,7 +247,6 @@ function initPaint() {
     canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
     canvas.addEventListener('mousemove', draw);
 }
-
 function draw(e) {
     if (!drawing) return;
     const rect = canvas.getBoundingClientRect();
@@ -245,20 +258,9 @@ function draw(e) {
     ctx.beginPath();
     ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
 }
-
-function openPaint() {
-    document.getElementById('paint-canvas-container').style.display = 'flex';
-    initPaint();
-}
-
-function closePaint() {
-    document.getElementById('paint-canvas-container').style.display = 'none';
-}
-
-function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
+function openPaint() { document.getElementById('paint-canvas-container').style.display = 'flex'; initPaint(); }
+function closePaint() { document.getElementById('paint-canvas-container').style.display = 'none'; }
+function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 function changeBg(input) {
     if (input.files && input.files[0]) {
         let r = new FileReader();
@@ -267,13 +269,17 @@ function changeBg(input) {
     }
 }
 
-function changePass(){
-    let n = document.getElementById('new-pass').value;
-    if(!n) return;
-    rdb.ref('users/'+me+'/pass').set(n).then(()=>{
-        alert("Password updated successfully!");
-        document.getElementById('new-pass').value = "";
-    });
+function showHelp() { hidePanes(); document.getElementById('help-pane').style.display = 'flex'; }
+function openCall() { hidePanes(); document.getElementById('call-pane').style.display = 'flex'; }
+function initiateCall() {
+    let target = document.getElementById('call-target').value;
+    if(!target) return;
+    document.getElementById('call-status').textContent = "Calling " + target + "...";
+}
+function openProfile() { openSet(); setTab('prof', document.querySelector('.nav-item')); }
+function goLastContact() { if(recent.length > 0) startChat(recent[0]); else alert("No recent contacts."); }
+function hidePanes() {
+    ['chat-pane', 'home-pane', 'help-pane', 'call-pane'].forEach(p => document.getElementById(p).style.display = 'none');
 }
 
 function login(){
@@ -333,15 +339,11 @@ function loadPeople(){
         });
     });
 }
-function showHome(){ document.getElementById('chat-pane').style.display='none'; document.getElementById('home-pane').style.display='flex'; }
-function goBack(){ document.getElementById('home-pane').style.display='none'; document.getElementById('chat-pane').style.display='flex'; }
+function showHome(){ hidePanes(); document.getElementById('home-pane').style.display='flex'; }
+function goBack(){ hidePanes(); document.getElementById('chat-pane').style.display='flex'; }
 function doSend(){
     let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
     if(t.trim()==='!select'){ if(!selected.includes(chatWith)) selected.push(chatWith); document.getElementById('msg-in').value=""; loadPeople(); return; }
-    if(t.trim()==='!ban' && me === 'Owner'){
-        if(confirm("Ban " + chatWith + "?")){ rdb.ref('users/'+chatWith).remove(); alert("Banned."); chatWith = null; }
-        document.getElementById('msg-in').value=""; return;
-    }
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
     document.getElementById('msg-in').value="";
 }
@@ -362,10 +364,11 @@ function listenMsgs(){
         lastMsgCount = count; b.scrollTop=b.scrollHeight;
     });
 }
+function changePass(){ rdb.ref('users/'+me+'/pass').set(document.getElementById('new-pass').value); alert("Updated!"); }
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
 function setTab(t, el){ document.querySelectorAll('.nav-item, .tab-content').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
-function theme(c){ document.body.style.backgroundImage = 'none'; document.body.style.background = c; }
+function theme(c){ document.body.style.background = c; }
 function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); }
 function setVis(v){ rdb.ref('users/'+me+'/vis').set(v); }
 function upPfp(){ let f=document.getElementById('pfp-file').files[0]; let r=new FileReader(); r.onload=e=>rdb.ref('users/'+me+'/pfp').set(e.target.result); r.readAsDataURL(f); }
