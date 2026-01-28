@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>delemencia</title>
+<title>rel icon hehe!</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -169,6 +169,7 @@ canvas { cursor: crosshair; flex: 1; touch-action: none; }
                 <div class="settings-nav">
                     <div class="nav-item active" onclick="setTab('prof', this)">Profile</div>
                     <div class="nav-item" onclick="setTab('them', this)">Themes</div>
+                    <div class="nav-item" onclick="setTab('priv', this)">Privacy</div>
                     <div class="nav-item" onclick="setTab('visi', this)">Visibility</div>
                     <div class="nav-item" onclick="setTab('cred', this)">Credits</div>
                     <button onclick="closeModal()" style="margin-top:auto;margin-bottom:10px">Close</button>
@@ -194,6 +195,12 @@ canvas { cursor: crosshair; flex: 1; touch-action: none; }
                         <div class="theme-sq" style="background:#ff1493" onclick="theme('#ff1493')"></div>
                         <div class="theme-sq" style="background:#8b4513" onclick="theme('#8b4513')"></div>
                     </div>
+                </div>
+                <div class="tab-content" id="tab-priv">
+                    <h2>Privacy</h2><br>
+                    <p style="font-size:12px;color:#666;margin-bottom:10px">Change your account password below:</p>
+                    <input id="new-pass" type="password" style="width:100%;padding:8px;margin-bottom:15px" placeholder="New Password"><br>
+                    <button onclick="changePass()" style="background:#0078d7;color:#fff;border:none">Save New Password</button>
                 </div>
                 <div class="tab-content" id="tab-visi">
                     <h2>Visibility</h2><br>
@@ -258,6 +265,15 @@ function changeBg(input) {
         r.onload = e => document.body.style.backgroundImage = `url(${e.target.result})`;
         r.readAsDataURL(input.files[0]);
     }
+}
+
+function changePass(){
+    let n = document.getElementById('new-pass').value;
+    if(!n) return;
+    rdb.ref('users/'+me+'/pass').set(n).then(()=>{
+        alert("Password updated successfully!");
+        document.getElementById('new-pass').value = "";
+    });
 }
 
 function login(){
