@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Delemencia 1.3 :+)</title>
+<title>We're back in business</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
@@ -15,7 +15,22 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 ::-webkit-scrollbar-button:single-button:vertical:decrement {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEX///8AAABERERVVVV3d3fMzMwzAAAAAXRSTlMAQObYZgAAADlJREFUeF5jYmBgYGJgYmBkYGZkZGVmZmVmYGJgYmBiYmJiYmJiYmJiYmJiYmJiYGJgYmBiYGJgYmAAAOYAA/FrS00AAAAASUVORK5CYII=')}
 ::-webkit-scrollbar-button:single-button:vertical:increment {background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAAD1BMVEX///8AAABERERVVVV3d3fMzMwzAAAAAXRSTlMAQObYZgAAADlJREFUeF5jYmBiYmJiYmJiYmJiYmJiYmJiYmJiYGJiYmBiYGZkZGVmZmVmYGJgYmBkYGZgYmBkAAAGmAA79XmMAAAAAElFTkSuQmCC')}
 .win-window{width:1050px;height:750px;background:#fff;border:1px solid #555;box-shadow:0 10px 30px rgba(0,0,0,0.4);display:flex;flex-direction:column;position:relative}
-.win-titlebar{background: rgba(240, 240, 240, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); height:35px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;border-bottom:1px solid rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 10}
+
+.win-titlebar {
+    background: rgba(255, 255, 255, 0.4); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); 
+    height:35px;
+    padding:0 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:12px;
+    border-bottom:1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
+}
+
 .win-body{flex:1;display:flex;overflow:hidden}
 #sidebar{width:300px;background:#f3f3f3;border-right:1px solid #ccc;display:flex;flex-direction:column}
 .user-header{padding:15px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px}
