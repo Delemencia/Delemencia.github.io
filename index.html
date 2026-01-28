@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>delemencia!1</title>
+<title>Delemencia 1.3 :+)</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 *{font-family:'Segoe UI', Tahoma, sans-serif;margin:0;padding:0;box-sizing:border-box;border-radius:0 !important}
 body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-content:center;overflow:hidden;transition: background 0.3s;background-size: cover;background-position: center;}
-#messages-box, #contacts-area, .tab-content {overflow-y: scroll}
+#messages-box, #contacts-area, .tab-content, #recent-list, #selected-list {overflow-y: scroll}
 ::-webkit-scrollbar {width: 17px; background: #f0f0f0; border-left: 1px solid #dcdcdc}
 ::-webkit-scrollbar-thumb {background: #cdcdcd; border: 1px solid #ababab; box-shadow: inset 1px 1px 0 #eee}
 .win-window{width:1050px;height:750px;background:#fff;border:1px solid #555;box-shadow:0 10px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;position:relative}
@@ -22,7 +22,9 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 .win-body{flex:1;display:flex;overflow:hidden;position:relative}
 #sidebar{width:300px;background:#f3f3f3;border-right:1px solid #ccc;display:flex;flex-direction:column}
 .user-header{padding:15px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px}
-.section-label{padding:10px 15px;font-size:11px;font-weight:bold;color:#4c76b2;text-transform:uppercase;background:#e9e9e9;border-bottom: 1px solid #ddd;}
+.pfp-wrap{position:relative;width:48px;height:48px}
+.stat-dot{position:absolute;bottom:0;right:0;width:12px;height:12px;border:2px solid #fff}
+.section-label{padding:10px 15px;font-size:11px;font-weight:bold;color:#4c76b2;text-transform:uppercase;background:#e9e9e9;border-bottom:1px solid #ddd;cursor:pointer}
 .search-container { padding: 10px; background: #fff; border-bottom: 1px solid #ddd; }
 .search-input { width: 100%; padding: 6px; border: 1px solid #ccc; font-size: 12px; outline: none; }
 .person-item{padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;border-bottom:1px solid #eee;background:#fff}
@@ -32,7 +34,7 @@ body{height:100vh;background:#0078d7;display:flex;align-items:center;justify-con
 #messages-box{flex:1;padding:20px;display:flex;flex-direction:column;gap:8px}
 .msg-container { margin-bottom: 5px; }
 .msg-sender{font-weight:bold;color:#0078d7;margin-right:8px}
-.read-receipt { font-size: 10px; color: #1a7f37; display: block; margin-top: 2px; font-style: italic;}
+.read-receipt { font-size: 10px; color: #999; display: block; margin-top: 2px; }
 #input-area{padding:15px;border-top:1px solid #ccc;display:flex;gap:10px}
 button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;font-size:12px}
 .modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);z-index:999;align-items:center;justify-content:center}
@@ -49,8 +51,8 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 
 <div id="incoming-call-overlay">
     <p>Incoming Call from <b id="caller-id">...</b></p><br>
-    <button onclick="acceptCall()" style="background:green;color:white;border:none;margin-bottom:5px;width:100%">Accept</button>
-    <button onclick="declineCall()" style="background:red;color:white;border:none;width:100%">Decline</button>
+    <button onclick="acceptCall()" style="background:green;color:white;border:none">Accept</button>
+    <button onclick="declineCall()" style="background:red;color:white;border:none">Decline</button>
 </div>
 
 <div id="auth-screen" style="display:flex;width:100%;height:100%;align-items:center;justify-content:center">
@@ -83,12 +85,13 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
         <div class="win-body">
             <div id="sidebar">
                 <div class="user-header">
-                    <img id="my-pfp" src="" style="width:48px;height:48px;background:#eee;object-fit:cover">
+                    <div class="pfp-wrap"><img id="my-pfp" src="" style="width:48px;height:48px;background:#eee;object-fit:cover"><div id="my-vis-dot" class="stat-dot" style="background:green"></div></div>
                     <div><b id="display-name">User</b><br><span id="my-status-text" style="font-size:11px;color:#777">Online</span></div>
                 </div>
                 <div id="contacts-area">
-                    <div class="search-container"><input type="text" class="search-input" id="user-search" placeholder="Search users..." onkeydown="if(event.key==='Enter')findUser()"></div>
-                    <div class="section-label" onclick="showHome()" style="cursor:pointer">HOME</div>
+                    <div class="search-container"><input type="text" class="search-input" id="user-search" placeholder="Search..." onkeydown="if(event.key==='Enter')findUser()"></div>
+                    <div id="search-result-box"></div>
+                    <div class="section-label" onclick="showHome()">HOME</div>
                     <div id="people-list"></div>
                 </div>
             </div>
@@ -97,8 +100,8 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                 <div style="padding:15px;border-bottom:1px solid #eee;background:#fafafa"><b id="chat-target-label">Select a contact</b></div>
                 <div id="messages-box"></div>
                 <div id="input-area">
-                    <input id="msg-in" type="text" style="flex:1;padding:8px" placeholder="Type a message..." onkeydown="if(event.key==='Enter')doSend()">
-                    <button onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
+                    <input id="msg-in" type="text" style="flex:1;padding:8px" onkeydown="if(event.key==='Enter')doSend()">
+                    <button id="send-btn" onclick="doSend()" style="background:#0078d7;color:#fff;border:none">Send</button>
                 </div>
             </div>
 
@@ -106,9 +109,9 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                 <div style="background:#f9f9f9; padding:40px; border:1px solid #ccc; width:400px">
                     <h2>Voice Call</h2><br>
                     <input id="call-target" placeholder="Enter Username" style="width:100%; padding:10px; margin-bottom:10px">
-                    <button onclick="initiateCall()" style="background:#2e7d32; color:#fff; width:100%; border:none; padding:10px">Call Now</button>
+                    <button onclick="initiateCall()" style="background:#2e7d32; color:#fff; width:100%; border:none; padding:10px">Call</button>
                     <div id="call-status" style="margin-top:20px; font-weight:bold; color:#0078d7"></div>
-                    <button onclick="goBack()" style="margin-top:20px;">Back to Chat</button>
+                    <button onclick="goBack()" style="margin-top:20px;">Cancel</button>
                 </div>
             </div>
 
@@ -119,7 +122,6 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 
             <div id="home-pane" style="align-items:center;justify-content:center;flex:1">
                 <h1 style="font-weight:300;">Welcome home, <span id="home-user"></span></h1>
-                <p style="color:#777; margin-top:10px;">Select a contact to start chatting.</p>
             </div>
         </div>
 
@@ -132,20 +134,14 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
                     <button onclick="logout()" style="color:red;margin-bottom:10px">Logout</button>
                 </div>
                 <div class="tab-content active" id="tab-prof">
-                    <h2>Profile</h2><br>
+                    <h2>Profile Settings</h2><br>
                     <input id="status-in" style="width:100%;padding:8px" placeholder="Update Status"><br><br>
                     <button onclick="saveStat()" style="background:#0078d7;color:#fff;border:none">Update</button>
-                    <hr style="margin:20px 0">
-                    <div id="owner-tools" style="display:none">
-                        <h3>Admin Tools</h3>
-                        <p style="font-size:11px; color:#666">Muted users list:</p>
-                        <div id="muted-list" style="font-size:12px; margin-top:10px"></div>
-                    </div>
                 </div>
                 <div class="tab-content" id="tab-priv">
                     <h2>Privacy</h2><br>
                     <input id="new-pass" type="password" style="width:100%;padding:8px" placeholder="New Password"><br><br>
-                    <button onclick="changePass()" style="background:#0078d7;color:#fff;border:none">Change Password</button>
+                    <button onclick="changePass()" style="background:#0078d7;color:#fff;border:none">Update Password</button>
                 </div>
             </div>
         </div>
@@ -156,7 +152,7 @@ button{padding:6px 15px;background:#f0f0f0;border:1px solid #999;cursor:pointer;
 const firebaseConfig = {apiKey: "AIzaSyCjxTPqRH00ND04p0wDa9tI50Q6LSZEnJ8", authDomain: "delemencia.firebaseapp.com", databaseURL: "https://delemencia-default-rtdb.firebaseio.com", projectId: "delemencia", storageBucket: "delemencia.firebasestorage.app", messagingSenderId: "192535641895", appId: "1:192535641895:web:6a3d97d488ef6481d9f382"};
 firebase.initializeApp(firebaseConfig);
 const rdb = firebase.database();
-let me = localStorage.getItem('del_me'), chatWith = null, recent = [];
+let me = localStorage.getItem('del_me'), chatWith = null, recent = [], lastMsgCount = 0;
 const notify = new Audio('https://waitingforatrain.neocities.org/notif.mp3');
 
 function login(){
@@ -170,19 +166,16 @@ function login(){
 function register(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
     if(!u || !p) return;
-    if(u.toLowerCase().includes("owner")) { alert("Username restricted."); return; }
-    rdb.ref('users/'+u).set({pass:p, status:"New user!", muted:false}).then(()=>session(u));
+    if(u.toLowerCase().includes("owner")) { alert("This name is restricted."); return; }
+    rdb.ref('users/'+u).set({pass:p, pfp:"", status:"", vis:"Online", muted:false}).then(()=>session(u));
 }
 
 function session(u){
     me=u; localStorage.setItem('del_me', u);
     document.getElementById('display-name').textContent=u; 
-    document.getElementById('home-user').textContent=u;
-    document.getElementById('auth-screen').style.display='none'; 
-    document.getElementById('app-screen').style.display='flex';
+    document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='flex';
     
-    if(me.toLowerCase() === 'owner') document.getElementById('owner-tools').style.display = 'block';
-
+    // Check for incoming calls
     rdb.ref('calls/'+me).on('value', s=>{
         if(s.exists() && s.val().status === 'ringing'){
             document.getElementById('caller-id').textContent = s.val().from;
@@ -192,27 +185,29 @@ function session(u){
     });
 
     rdb.ref('users/'+me).on('value', s=>{
-        let isMuted = s.val() && s.val().muted;
-        document.getElementById('msg-in').disabled = isMuted;
-        document.getElementById('msg-in').placeholder = isMuted ? "You are currently muted." : "Type a message...";
+        if(s.val() && s.val().muted) {
+            document.getElementById('msg-in').disabled = true;
+            document.getElementById('msg-in').placeholder = "You are muted.";
+        } else {
+            document.getElementById('msg-in').disabled = false;
+        }
     });
 
     loadPeople();
-    if(me.toLowerCase() === 'owner') listenMuted();
 }
 
 function initiateCall(){
     let t = document.getElementById('call-target').value;
-    if(!t || t === me) return;
+    if(!t) return;
     rdb.ref('calls/'+t).set({ from: me, status: 'ringing' });
-    document.getElementById('call-status').textContent = "Ringing " + t + "...";
+    document.getElementById('call-status').textContent = "Calling " + t + "...";
 }
 
 function acceptCall(){
     let caller = document.getElementById('caller-id').textContent;
     rdb.ref('calls/'+me).update({status: 'connected'});
     document.getElementById('incoming-call-overlay').style.display = 'none';
-    alert("Call Connected. You are now talking with " + caller);
+    alert("Call Connected with " + caller + ". (Simulation Active)");
 }
 
 function declineCall(){
@@ -221,23 +216,19 @@ function declineCall(){
 }
 
 function doSend(){
-    let t=document.getElementById('msg-in').value.trim(); if(!chatWith||!t) return;
+    let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
     
-    if(me.toLowerCase() === "owner"){
-        if(t.startsWith("!mute ")){
-            let target = t.split(" ")[1];
-            rdb.ref('users/'+target+'/muted').set(true);
-            document.getElementById('msg-in').value=""; return;
-        }
-        if(t.startsWith("!unmute ")){
-            let target = t.split(" ")[1];
-            rdb.ref('users/'+target+'/muted').set(false);
-            document.getElementById('msg-in').value=""; return;
-        }
+    // Owner Mute Logic
+    if(t.startsWith("!mute") && me.toLowerCase() === "owner"){
+        let target = t.split(" ")[1];
+        rdb.ref('users/'+target+'/muted').set(true);
+        alert(target + " muted.");
+        document.getElementById('msg-in').value="";
+        return;
     }
 
-    let path = [me,chatWith].sort().join("_");
-    rdb.ref('chats/'+path).push({s:me, t:t, read:false});
+    let time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, read:false, time:time});
     document.getElementById('msg-in').value="";
 }
 
@@ -247,25 +238,16 @@ function listenMsgs(){
         let b=document.getElementById('messages-box'); b.innerHTML="";
         s.forEach(c=>{ 
             let m=c.val(); 
-            if(m.s !== me && !m.read) {
-                rdb.ref('chats/'+path+'/'+c.key).update({read:true, readAt: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})});
-            }
+            // Mark as read if I am the receiver
+            if(m.s !== me && !m.read) rdb.ref('chats/'+path+'/'+c.key).update({read:true, readAt: new Date().toLocaleTimeString()});
+            
             let div = document.createElement('div');
             div.className = "msg-container";
-            let receipt = (m.s === me && m.read) ? `<span class="read-receipt">Read at ${m.readAt}</span>` : "";
-            div.innerHTML = `<span class="msg-sender">${m.s}:</span> ${m.t} ${receipt}`;
+            let readInfo = (m.s === me && m.read) ? `<span class="read-receipt">Read at ${m.readAt}</span>` : "";
+            div.innerHTML = `<span class="msg-sender">${m.s}:</span> ${m.t} ${readInfo}`;
             b.appendChild(div);
         });
         b.scrollTop=b.scrollHeight;
-    });
-}
-
-function listenMuted(){
-    rdb.ref('users').on('value', s=>{
-        let list = document.getElementById('muted-list'); list.innerHTML = "";
-        s.forEach(u=>{
-            if(u.val().muted) list.innerHTML += `• ${u.key} (Muted)<br>`;
-        });
     });
 }
 
@@ -288,7 +270,6 @@ function loadPeople(){
     });
 }
 
-function goLastContact() { if(recent.length > 0) startChat(recent[0]); else showHome(); }
 function hidePanes() { ['chat-pane', 'home-pane', 'help-pane', 'call-pane'].forEach(p => document.getElementById(p).style.display = 'none'); }
 function showHome(){ hidePanes(); document.getElementById('home-pane').style.display='flex'; }
 function goBack(){ hidePanes(); document.getElementById('chat-pane').style.display='flex'; }
@@ -298,8 +279,6 @@ function openProfile() { openSet(); }
 function openSet(){ document.getElementById('settings-box').style.display='flex'; }
 function closeModal(){ document.getElementById('settings-box').style.display='none'; }
 function setTab(t, el){ document.querySelectorAll('.nav-item, .tab-content').forEach(x=>x.classList.remove('active')); el.classList.add('active'); document.getElementById('tab-'+t).classList.add('active'); }
-function saveStat(){ rdb.ref('users/'+me+'/status').set(document.getElementById('status-in').value); alert("Status updated!"); }
-function changePass(){ rdb.ref('users/'+me+'/pass').set(document.getElementById('new-pass').value); alert("Password changed!"); }
 function logout(){ localStorage.clear(); location.reload(); }
 if(me) session(me);
 </script>
