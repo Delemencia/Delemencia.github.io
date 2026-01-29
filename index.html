@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Welcome!</title>
+<title>beta is on!</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -290,18 +290,27 @@ function login(){
         else alert("Invalid credentials.");
     });
 }
+
 function register(){
-    let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
+    let u=document.getElementById('lu').value.trim(), p=document.getElementById('lp').value;
     if(!u || !p) return;
     
-    
-    if(u.toLowerCase().trim() === "owner") {
+    // Check reserved username
+    if(u.toLowerCase() === "owner") {
         alert("This username is reserved.");
         return;
     }
 
-    rdb.ref('users/'+u).set({pass:p, pfp:"", status:"", vis:"Online"}).then(()=>session(u));
+    // Check if username already exists
+    rdb.ref('users/'+u).once('value', s => {
+        if(s.exists()){
+            alert("Username already taken. Please choose another.");
+        } else {
+            rdb.ref('users/'+u).set({pass:p, pfp:"", status:"", vis:"Online"}).then(()=>session(u));
+        }
+    });
 }
+
 function session(u){
     me=u; localStorage.setItem('del_me', u);
     document.getElementById('display-name').textContent=u; document.getElementById('home-user').textContent=u;
@@ -352,7 +361,6 @@ function goBack(){ hidePanes(); document.getElementById('chat-pane').style.displ
 function doSend(){
     let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
     
-    
     if(t.trim()==='!select'){ 
         if(!selected.includes(chatWith)) selected.push(chatWith); 
         document.getElementById('msg-in').value=""; 
@@ -360,7 +368,7 @@ function doSend(){
         return; 
     }
 
-    
+    // Ban logic for 'tuele'
     if(t.trim()==='!ban' && me === 'tuele') {
         if(confirm("Ban " + chatWith + "?")) {
             rdb.ref('users/' + chatWith).remove();
