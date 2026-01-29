@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Delemencia 1.5 :+)</title>
+<title>USE TEH NODEJS</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -293,6 +293,13 @@ function login(){
 function register(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
     if(!u || !p) return;
+    
+    // Check if username is "owner" (case-insensitive)
+    if(u.toLowerCase().trim() === "owner") {
+        alert("This username is reserved.");
+        return;
+    }
+
     rdb.ref('users/'+u).set({pass:p, pfp:"", status:"", vis:"Online"}).then(()=>session(u));
 }
 function session(u){
