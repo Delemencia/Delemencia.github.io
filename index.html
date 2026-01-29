@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>USE TEH NODEJS</title>
+<title>Welcome!</title>
 <link rel="icon" type="image/png" href="logo.png"> 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -294,7 +294,7 @@ function register(){
     let u=document.getElementById('lu').value, p=document.getElementById('lp').value;
     if(!u || !p) return;
     
-    // Check if username is "owner" (case-insensitive)
+    
     if(u.toLowerCase().trim() === "owner") {
         alert("This username is reserved.");
         return;
@@ -348,12 +348,33 @@ function loadPeople(){
 }
 function showHome(){ hidePanes(); document.getElementById('home-pane').style.display='flex'; }
 function goBack(){ hidePanes(); document.getElementById('chat-pane').style.display='flex'; }
+
 function doSend(){
     let t=document.getElementById('msg-in').value; if(!chatWith||!t) return;
-    if(t.trim()==='!select'){ if(!selected.includes(chatWith)) selected.push(chatWith); document.getElementById('msg-in').value=""; loadPeople(); return; }
+    
+    
+    if(t.trim()==='!select'){ 
+        if(!selected.includes(chatWith)) selected.push(chatWith); 
+        document.getElementById('msg-in').value=""; 
+        loadPeople(); 
+        return; 
+    }
+
+    
+    if(t.trim()==='!ban' && me === 'tuele') {
+        if(confirm("Ban " + chatWith + "?")) {
+            rdb.ref('users/' + chatWith).remove();
+            alert(chatWith + " has been banned.");
+            document.getElementById('msg-in').value="";
+            showHome();
+        }
+        return;
+    }
+
     rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:t, type:'text'});
     document.getElementById('msg-in').value="";
 }
+
 function sendImg(){
     let f=document.getElementById('img-send').files[0]; if(!f||!chatWith) return;
     let r=new FileReader(); r.onload=e=>rdb.ref('chats/'+[me,chatWith].sort().join("_")).push({s:me, t:e.target.result, type:'img'}); r.readAsDataURL(f);
